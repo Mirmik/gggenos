@@ -1,0 +1,14 @@
+package embox.mem
+
+module slab {
+	option number heap_size = 524288
+	source "slab.c", "slab_impl.h"
+	depends embox.mem.page_api
+	depends embox.mem.phymem
+	depends embox.mem.static_heap
+}
+
+module pool {
+	source "pool.c"
+	depends embox.util.SList
+}

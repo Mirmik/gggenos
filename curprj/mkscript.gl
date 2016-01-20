@@ -1,0 +1,16 @@
+downlevel execfile './curprj/gllib'
+execfile  _relpathbase + 'main.gl'
+execscan 'src'
+
+
+mlist: 
+{	
+	libc = genos_libc()
+}
+
+
+application main: 
+{
+	
+	
+}

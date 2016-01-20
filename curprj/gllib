@@ -1,0 +1,18 @@
+define mall ["libc"]
+
+deffunc defpath():
+{
+	define abspath _abspath
+	define relpath _relpath
+}
+
+define standart_rule {
+	define CC 'avr-gcc'
+	define CXX 'avr-g++'
+	define CFLAGS ''
+	define CXXFLAGS ''
+	define source []
+	define depend []
+	define mdepend mall
+	define target 0
+	}

@@ -1,0 +1,410 @@
+
+gen:     формат файла elf32-avr
+
+SYMBOL TABLE:
+00800200 l    d  .data	00000000 .data
+00000000 l    d  .text	00000000 .text
+008004f8 l    d  .bss	00000000 .bss
+00800528 l    d  .mirm	00000000 .mirm
+00000000 l    d  .comment	00000000 .comment
+00000000 l    df *ABS*	00000000 diag.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 printk.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00800216 l     O .data	0000000a __func__.1480
+00000262 l     F .text	0000005c printk_printchar
+00800220 l     O .data	00000007 __func__.1510
+00000000 l    df *ABS*	00000000 new.cpp
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00800502 l     O .bss	00000002 _ZL13__new_handler
+00000000 l    df *ABS*	00000000 debug_print.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00800230 l     O .data	0000000a __func__.1563
+000003c6 l     F .text	0000005a diag_putc
+00000000 l    df *ABS*	00000000 subst.cpp
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 time.cpp
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 printf_impl.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+0080028a l     O .data	00000008 __func__.2371
+000014a0 l     F .text	000001b8 print_s
+00800282 l     O .data	00000008 __func__.2411
+00001658 l     F .text	00000480 print_i
+00800292 l     O .data	00000008 __func__.2471
+00000000 l    df *ABS*	00000000 assert.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 ctype.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 atol.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 arch.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+000025aa l     F .text	00000032 __debug_print_init
+000025dc l     F .text	00000016 __debug_putchar
+00000000 l    df *ABS*	00000000 isr_impl.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 main.cpp
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 _main.cpp
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+008003a2 l     O .data	0000000a _ZZL9diag_initvE8__func__
+00000000 l    df *ABS*	00000000 _exit.o
+0000300c l       .text	00000000 __stop_program
+00000000 l    df *ABS*	00000000 _clear_bss.o
+00000250 l       .text	00000000 .do_clear_bss_start
+0000024e l       .text	00000000 .do_clear_bss_loop
+00000000 l    df *ABS*	00000000 malloc.c
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+0000003b l       *ABS*	00000000 __RAMPZ__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 
+0000025e  w      .text	00000000 __vector_38
+0000025e  w      .text	00000000 __vector_22
+00000c08 g     F .text	0000001e debug_printdec_uint16
+0000289e g       .text	00000032 .hidden __ashldi3
+0000025e  w      .text	00000000 __vector_28
+000003ae g     F .text	00000006 _Znaj
+0000061a g     F .text	00000026 debug_printhex_uint16
+00000d02 g     F .text	00000006 debug_asmlink_test_uint16_ret
+0000025e  w      .text	00000000 __vector_1
+00002642 g     F .text	00000002 arch_idle
+008004f8 g     O .bss	0000000a cdiag
+000027b8 g       .text	00000008 .hidden __tablejump__
+0000025e  w      .text	00000000 __vector_32
+000029dc g     F .text	00000004 __divsf3
+00002c32 g     F .text	00000022 __fp_round
+0000025e  w      .text	00000000 __vector_34
+00002aac g     F .text	0000000a __fixsfsi
+00002c54 g     F .text	00000044 __fp_split3
+000024c2 g     F .text	000000e0 atol
+000001ac g       .text	00000000 __trampolines_start
+00800504 g     O .bss	00000002 __operated
+0080051e g     O .bss	00000002 ceil
+00002d74 g     F .text	00000048 __fp_cmp
+00000c86 g     F .text	0000000c debug_asmlink_uint16_dpr
+0000300e g       .text	00000000 _etext
+000005b4 g     F .text	00000066 debug_printhex_uint64
+000026d6 g     F .text	000000ce _Z5setupv
+00002912 g     F .text	0000000a __subsf3
+0000025e  w      .text	00000000 __vector_24
+00000e96 g     F .text	0000008a clone_thread
+00001012 g     F .text	00000016 exec_current_thread
+0000025e  w      .text	00000000 __vector_12
+0000025e  w      .text	00000000 __vector_55
+0000025e  w      .text	00000000 __vector_46
+0000025e g       .text	00000000 __bad_interrupt
+00003306 g       *ABS*	00000000 __data_load_end
+0000025e  w      .text	00000000 __vector_6
+000027a4 g     F .text	00000010 _Z4loopv
+00002dbc g     F .text	00000130 malloc
+0000025e  w      .text	00000000 __vector_31
+00001ad8 g     F .text	00000966 __print
+0000025e  w      .text	00000000 __vector_35
+00800202 g     O .data	00000002 __malloc_heap_start
+0000021c g       .text	00000000 __trampolines_end
+0000025e  w      .text	00000000 __vector_39
+0000025e  w      .text	00000000 __vector_3
+00800506 g     O .bss	00000002 sp_temp
+00000640 g     F .text	0000003a debug_printbin_uint32
+00002c98 g     F .text	0000000e __fp_zero
+0080052e g     O .mirm	00000002 kkkkkkk
+0080051a g     O .bss	00000004 mmtime_inc
+00000d08 g     F .text	00000012 debug_asmlink_test_uint64_ret
+00000d1a g     F .text	0000000a current_thread
+00000dfe g     F .text	00000052 copy_thread
+000027c0 g       .text	00000004 .hidden __umoddi3
+0000264c g     F .text	00000050 __vector_23
+0000300e g       *ABS*	00000000 __data_load_start
+0000021c g       .text	00000000 __dtors_end
+000003a2 g     F .text	00000006 _ZdlPv
+00800528 g       .bss	00000000 __bss_end
+000027c4 g       .text	00000002 .hidden __udivdi3
+0000025e  w      .text	00000000 __vector_30
+00000c48 g     F .text	0000003e debug_asmlink_test
+0000025e  w      .text	00000000 __vector_45
+0000269c g     F .text	00000030 __vector_25
+00800524 g     O .bss	00000002 __brkval
+0000074c g     F .text	00000014 debug_print_bool
+00001122 g     F .text	000000ee sysclock_tick
+0000263c g     F .text	00000006 arch_systimer_state
+00000b8e g     F .text	0000001a debug_printdec_int8
+000006e0 g     F .text	00000026 debug_printbin_uint16
+000029f6 g     F .text	000000cc __divsf3x
+0000025e  w      .text	00000000 __vector_11
+00800508 g     O .bss	00000002 __current
+0000021c  w      .text	00000000 __init
+00000bf2 g     F .text	00000016 debug_printdec_uint8
+0000025e  w      .text	00000000 __vector_54
+000028d0 g       .text	00000018 .hidden __adddi3_s8
+00000cb4 g     F .text	0000004e debug_asmlink_uint16_dpr4
+00002ca6 g       .text	00000000 __gtsf2
+0080052a g     O .mirm	00000002 mmmmmmmm
+0000025e  w      .text	00000000 __vector_13
+00001028 g     F .text	00000042 exec_thread_safe
+00002cca g       .text	00000000 __mulsf3_pse
+0000025e  w      .text	00000000 __vector_17
+00002c10 g     F .text	00000006 __fp_nan
+0000025e  w      .text	00000000 __vector_19
+0000025e  w      .text	00000000 __vector_56
+0080052c g     O .mirm	00000002 gggggggg
+0000025e  w      .text	00000000 __vector_7
+00002c04 g     F .text	0000000c __fp_inf
+000028fa g       .text	00000018 .hidden __cmpdi2_s8
+00000f4c g     F .text	0000008e clone_thread_noret
+000004fe g     F .text	0000007c debug_printbin_uint8
+0000025e  w      .text	00000000 __vector_49
+00000246 g       .text	00000010 .hidden __do_clear_bss
+00000770 g     F .text	00000156 debug_print_dump
+0000025e  w      .text	00000000 __vector_41
+00810000 g       .mirm	00000000 __eeprom_end
+00002cc6 g     F .text	000000c2 __mulsf3x
+00800516 g     O .bss	00000004 mmtime_inc_wide
+0000243e g     F .text	00000084 __assert_handler
+000004be g     F .text	00000040 debug_printbin_uint4
+00000b26 g     F .text	00000068 debug_printdec_int64
+00800200 g     O .data	00000002 __malloc_heap_end
+00002b12 g       .text	00000000 __floatsisf
+00000c92 g     F .text	00000022 debug_asmlink_uint16_dpr2
+0000025e  w      .text	00000000 __vector_43
+00000000 g       .text	00000000 __vectors
+00000326 g     F .text	00000012 vprintk
+0000025e  w      .text	00000000 __vector_27
+008004f8 g       .data	00000000 __data_end
+0000044c g     F .text	0000005a debug_printhex_uint4
+0000287e g       .text	00000020 .hidden __negdi2
+00000000  w      .text	00000000 __vector_default
+0000025e  w      .text	00000000 __vector_5
+0000025e  w      .text	00000000 __vector_33
+00000716 g     F .text	0000001e debug_strlen
+00000fda g     F .text	00000038 exec_thread
+00002b88 g     F .text	0000007c __floatundisf
+000027b4 g       .text	00000004 .hidden __tablejump2__
+000002be g     F .text	00000068 printk
+0000025e  w      .text	00000000 __vector_47
+00000c26 g     F .text	00000022 debug_printdec_uint32
+0000021c g       .text	00000000 __ctors_start
+0080050e g     O .bss	00000008 _minutes
+00000734 g     F .text	00000018 debug_print
+0000025e  w      .text	00000000 __vector_52
+00000d38 g     F .text	0000000c set_stack_thread
+0000025e  w      .text	00000000 __vector_37
+0080029a g     O .data	00000100 _ctype
+0000022c g       .text	0000001a .hidden __do_copy_data
+00000d24 g     F .text	00000014 init_current_thread
+00000bc0 g     F .text	00000032 debug_printdec_int32
+00002c24 g     F .text	0000000e __fp_pscB
+00002c64 g       .text	00000000 __fp_splitA
+008004f8 g       .bss	00000000 __bss_start
+000026cc g     F .text	0000000a main
+0000025e  w      .text	00000000 __vector_4
+0000025e  w      .text	00000000 __vector_44
+000003ba g     F .text	00000006 _ZdaPv
+000028e8 g       .text	00000012 .hidden __subdi3
+0000067a g     F .text	00000066 debug_printbin_uint64
+0000124c g     F .text	000000ac seconds
+000027c6 g       .text	00000016 .hidden __udivdi3_umoddi3
+00001406 g     F .text	00000050 micros
+000003c0 g     F .text	00000006 _ZdaPvRKSt9nothrow_t
+00002cae g     F .text	00000004 __mulsf3
+0000025e  w      .text	00000000 __vector_51
+00000000  w      *ABS*	00000000 __heap_end
+00002b8a g       .text	00000000 __fp_di2sf
+0000025e  w      .text	00000000 __vector_9
+00001456 g     F .text	0000004a delay
+0000025e  w      .text	00000000 __vector_2
+0000108a g     F .text	00000098 set_clock_param
+00002936 g     F .text	000000c0 __addsf3x
+000008c6 g     F .text	00000156 debug_print_dump_ascii
+00002ca6 g     F .text	00000008 __gesf2
+0000025e  w      .text	00000000 __vector_21
+0000025e  w      .text	00000000 __vector_15
+0000025e  w      .text	00000000 __vector_36
+00000420 g     F .text	0000002c debug_write
+00002c16 g     F .text	0000000e __fp_pscA
+00000760 g     F .text	00000010 debug_print_bool_num
+0000025e  w      .text	00000000 __vector_29
+00800528 g     O .mirm	00000002 dddddddd
+00800528 g       .bss	00000000 __heap_start
+0000021c g       .text	00000000 __dtors_start
+00000e50 g     F .text	00000046 copy_thread_part
+0000021c g       .text	00000000 __ctors_end
+000021ff  w      *ABS*	00000000 __stack
+0000025e  w      .text	00000000 __vector_40
+00000338 g     F .text	00000014 _ZSt15set_new_handlerPFvvE
+008004f8 g       .data	00000000 _edata
+0000057a g     F .text	0000003a debug_printhex_uint32
+00800528 g       .bss	00000000 _end
+00800227 g     O .data	00000001 _ZSt7nothrow
+0000106a g     F .text	00000020 exec_current_thread_safe
+000027dc g       .text	000000a2 .hidden __udivmod64
+0000025e  w      .text	00000000 __vector_8
+0000025e  w      .text	00000000 __vector_26
+000025f2 g     F .text	0000004a arch_init
+000029fa g       .text	00000000 __divsf3_pse
+0000025e  w      .text	00000000 __vector_48
+0000034c g     F .text	0000002c _Znwj
+00000706 g     F .text	00000010 debug_printhex_ptr
+0000300a  w      .text	00000000 .hidden exit
+00002b0e g     F .text	0000007a __floatunsisf
+00002644 g     F .text	00000004 arch_halt
+000004a6 g     F .text	00000018 debug_printhex_uint8
+00800526 g     O .bss	00000002 __flp
+00000ba8 g     F .text	00000018 debug_printdec_int16
+000003a8 g     F .text	00000006 _ZdlPvRKSt9nothrow_t
+00000f20 g     F .text	0000002c fork_thread
+000025a2 g     F .text	00000008 atoi
+00002ab6 g     F .text	00000058 __fixunssfsi
+0000300a g       .text	00000000 .hidden _exit
+00001222 g     F .text	0000002a minutes
+00000378 g     F .text	0000002a _ZnwjRKSt9nothrow_t
+0000025e  w      .text	00000000 __vector_14
+0000025e  w      .text	00000000 __vector_53
+0000025e  w      .text	00000000 __vector_10
+00001210 g     F .text	00000012 clock
+0000025e  w      .text	00000000 __vector_50
+0000025e  w      .text	00000000 __vector_16
+00800200 g       .data	00000000 __data_start
+00002648 g     F .text	00000004 arch_shutdown
+0000025e  w      .text	00000000 __vector_18
+00800520 g     O .bss	00000004 systick
+00800204 g     O .data	00000002 __malloc_margin
+0000025e  w      .text	00000000 __vector_20
+000012f8 g     F .text	0000010e millis
+0080050a g     O .bss	00000004 mmtime
+00002914 g       .text	00000000 __addsf3
+0000025e  w      .text	00000000 __vector_42
+00000a1c g     F .text	0000010a debug_printdec_uint64
+000003b4 g     F .text	00000006 _ZnajRKSt9nothrow_t
+00000d44 g     F .text	000000ba change_thread
+00002eec g     F .text	0000011e free
+00002c9a g       .text	00000000 __fp_szero
+
+
+->loading the arm tool
+Waf: Entering directory `/home/mirmik/project/genos/genos/build'
+['diag.c', 'wscript', 'HIDE', 'printk.c']
+['wscript', 'new.cpp']
+['core', 'wscript', 'include']
+['wscript', 'debug_print.c']
+['wscript', 'time.cpp']
+['subst', 'wscript', 'debug', 'time']
+['strncat.c', 'strchrnul.c', 'strcasestr.c', 'strdup.c', 'memcpy.c', 'strncpy.c', 'memrchr.c', 'strcasecmp.c', 'strpbrk.c', 'strerror.c', 'strncasecmp.c', 'memmove.c', 'wscript', 'strrchr.c', 'strcpy.c', 'strcat.c', 'inhibit_libcall.h', 'strstr.c', 'strcmp.c', 'strcspn.c', 'memcmp.c', 'memchr.c', 'memset.c', 'strchr.c', 'strlwr.c', 'strndup.c', 'strtok.c', 'strlen.c', 'strncmp.c', 'strupr.c', 'strspn.c', 'strnlen.c', 'strlcpy.c']
+['wctype.c', 'wcstrtoimax.c', 'wscript', 'wcscmp.c', 'wcsncpy.c', 'wcstrtoumax.c']
+['wscript', 'ctype.c']
+['qsort.c', 'itoa.c', 'random.c', 'strtoll.c', 'lldiv.c', 'atol.c', 'wscript', 'strtod.c', 'div.c', 'HIDE', 'strtoull.c', 'random_r.c', 'strtol.c', 'strtoul.c', 'rand.c', 'bsearch.c', 'ldiv.c']
+['stdarg.h', 'fenv.h', 'stdlib.h', 'locale.h', 'math.h', 'stdbool.h', 'ctype.h', 'complex.h', 'float.h', 'errno.h', 'limits.h', 'wscript', 'HIDE', 'stddef.h', 'iso646.h', 'string.h', 'features.h', 'wctype.h', 'strings.h', 'TODO', 'inttypes.h', 'wchar.h', 'stdint.h', 'stdio.h', 'assert.h', 'string_bsd.h']
+['strtoimax.c', 'wscript', 'imaxmath.c', 'strtoumax.c']
+['ilogb.c', 'j1.c', 'logf.c', '__sin.c', '__signbitl.c', 'cosl.c', 'asinhf.c', 'fdimf.c', 'modfl.c', 'atan2l.c', 'floorf.c', 'sincosf.c', 'asinh.c', 'atanf.c', 'sinf.c', 'tanhf.c', 'fabsl.c', 'sinl.c', 'fmodf.c', 'lgammaf.c', 'sinhl.c', 'rintl.c', 'llrintl.c', 'modff.c', 'expm1.c', 'nexttowardl.c', 'sincos.c', 'ceilf.c', 'sinh.c', 'expl.c', 'logb.c', 'sqrtl.c', 'frexpl.c', 'cosf.c', 'acosl.c', '__fpclassifyf.c', '__tandf.c', 'logl.c', 'jnf.c', 'lrint.c', 'truncl.c', 'asinhl.c', 'fdiml.c', 'frexp.c', 'j1f.c', 'exp2l.c', 'nextafterl.c', 'expf.c', 'fmal.c', 'modf.c', 'asinl.c', 'nanf.c', 'fminl.c', 'finite.c', 'log1pl.c', 'armebhf', 'ldexpf.c', 'remquo.c', 'log10f.c', '__rem_pio2.c', 'lgamma_r.c', 'cbrtf.c', 'llrintf.c', 'lgamma.c', 'lround.c', 'nearbyint.c', 'coshl.c', 'remainderf.c', 'tanhl.c', '__rem_pio2_large.c', 'acos.c', 'asinf.c', '__signbit.c', 'erfl.c', 'scalbnl.c', '__polevll.c', 'i386', 'log1p.c', '__cosl.c', 'wscript', 'lgammal.c', 'atan2.c', 'floor.c', 'significand.c', '__tan.c', '__signbitf.c', 'j0.c', 'fma.c', 'remquof.c', 'atan.c', '__invtrigl.c', 'expm1f.c', 'ldexp.c', 'x86_64', 'nextafter.c', 'asin.c', 'armhf', '__sinl.c', 'sincosl.c', 'tanl.c', '__tanl.c', 'scalbln.c', 'llround.c', 'aarch64', 'lrintl.c', 'log10l.c', 'fmaxl.c', 'cosh.c', 'fabsf.c', 'roundf.c', 'pow.c', 'round.c', 'exp10.c', 'log2.c', 'fminf.c', 'lroundl.c', '__rem_pio2l.c', 'floorl.c', 'remainderl.c', 'ilogbl.c', '__fpclassify.c', 'tanh.c', 'x32', '__sindf.c', 'atanhl.c', 'nanl.c', 'lroundf.c', 'rintf.c', '__rem_pio2f.c', 'cbrtl.c', 'atanl.c', 'j0f.c', 'log10.c', 'log1pf.c', 'ilogbf.c', 'nearbyintf.c', 'powl.c', 'hypotf.c', 'coshf.c', 'log2l.c', 'ceill.c', '__expo2.c', 'roundl.c', 'copysignl.c', 'fmod.c', 'sqrt.c', 'powf.c', 'tgamma.c', 'trunc.c', 'libm.h', 'ceil.c', 'logbf.c', 'tgammaf.c', 'fabs.c', 'sqrtf.c', 'sin.c', 'nearbyintl.c', '__fpclassifyl.c', 'exp10f.c', 'truncf.c', 'erf.c', 'fmaxf.c', 'cbrt.c', 'signgam.c', 'fdim.c', 'acoshf.c', 'rint.c', 'exp10l.c', 'lgammaf_r.c', 'llrint.c', 'jn.c', 'atanhf.c', 'atanh.c', 'acosh.c', 'hypotl.c', 'fmin.c', 'log2f.c', '__invtrigl.h', 'remainder.c', 'nexttoward.c', 'ldexpl.c', 'fmodl.c', 'cos.c', 'hypot.c', 'acosf.c', 'significandf.c', 'remquol.c', 'acoshl.c', '__expo2f.c', '__cosdf.c', 'scalbn.c', 'scalbnf.c', 'erff.c', 'logbl.c', 'exp2.c', 'fmax.c', 'finitef.c', 'frexpf.c', 'scalb.c', 'exp2f.c', 'log.c', 'nexttowardf.c', 'exp.c', 'scalbf.c', 'lrintf.c', 'tan.c', 'copysignf.c', 'scalblnf.c', 'copysign.c', 'llroundf.c', 'atan2f.c', 'sinhf.c', 'expm1l.c', 'tanf.c', 'llroundl.c', 'nextafterf.c', 'scalblnl.c', 'nan.c', 'fmaf.c', 'tgammal.c', '__cos.c']
+['fputc.c', 'fgetc.c', 'printf_impl.c', 'sprintf.c', 'fflush.c', 'ungetc.c', 'snprintf.c', 'printf_impl.h', 'buf.c', 'stdfile_static.c', 'fileno.c', 'wscript', 'HIDE', 'funopen.c', 'fputs.c', 'fread.c', 'printf.c', 'stdio_stubs.c', 'fopen.c', 'file_struct.h', 'fwrite.c', 'fgets.c', 'rename.c', 'fclose.c', 'fprintf.c']
+['wscript', 'assert.c']
+['wscript', 'errno.c']
+['string', 'wchar', 'wscript', 'HIDE', 'ctype', 'stdlib', 'include', 'inttypes', 'math', 'stdio', 'assert', 'errno']
+['arch.c', 'wscript', 'HIDE']
+['wscript', 'HIDE', 'include', 'asm']
+['util', 'mem', 'main.cpp', 'compat', 'kernel', 'embox', 'wscript', 'HIDE', 'arch', 'include', 'drivers', 'fs', '_main.cpp', 'genos_module', 'genos']
+['stm32f10x_it.c', 'device_support', 'stm32f10x_conf.h', 'core_cm3.c', 'system_stm32f10x.h', 'wscript', 'stm32f10x_it.h', 'stm32f10x_gpio.c', 'stm32f10x_gpio.h', 'stm32f10x_rcc.h', 'system_stm32f10x.c', 'stm32f10x_rcc.c', 'core_cm3.h', 'startup_stm32f10x_md_vl.S', 'stm32f10x.h']
+[305/306] Processing project: build/src/kernel/diag.o build/src/kernel/printk.o build/src/compat/cxx/core/new.o build/src/genos/debug/debug_print.o build/src/genos/time/time.o build/src/compat/libc/genos_libc/string/strncat.o build/src/compat/libc/genos_libc/string/strchrnul.o build/src/compat/libc/genos_libc/string/strcasestr.o build/src/compat/libc/genos_libc/string/strdup.o build/src/compat/libc/genos_libc/string/memcpy.o build/src/compat/libc/genos_libc/string/strncpy.o build/src/compat/libc/genos_libc/string/memrchr.o build/src/compat/libc/genos_libc/string/strcasecmp.o build/src/compat/libc/genos_libc/string/strpbrk.o build/src/compat/libc/genos_libc/string/strerror.o build/src/compat/libc/genos_libc/string/strncasecmp.o build/src/compat/libc/genos_libc/string/memmove.o build/src/compat/libc/genos_libc/string/strrchr.o build/src/compat/libc/genos_libc/string/strcpy.o build/src/compat/libc/genos_libc/string/strcat.o build/src/compat/libc/genos_libc/string/strstr.o build/src/compat/libc/genos_libc/string/strcmp.o build/src/compat/libc/genos_libc/string/strcspn.o build/src/compat/libc/genos_libc/string/memcmp.o build/src/compat/libc/genos_libc/string/memchr.o build/src/compat/libc/genos_libc/string/memset.o build/src/compat/libc/genos_libc/string/strchr.o build/src/compat/libc/genos_libc/string/strlwr.o build/src/compat/libc/genos_libc/string/strndup.o build/src/compat/libc/genos_libc/string/strtok.o build/src/compat/libc/genos_libc/string/strlen.o build/src/compat/libc/genos_libc/string/strncmp.o build/src/compat/libc/genos_libc/string/strupr.o build/src/compat/libc/genos_libc/string/strspn.o build/src/compat/libc/genos_libc/string/strnlen.o build/src/compat/libc/genos_libc/string/strlcpy.o build/src/compat/libc/genos_libc/wchar/wctype.o build/src/compat/libc/genos_libc/wchar/wcstrtoimax.o build/src/compat/libc/genos_libc/wchar/wcscmp.o build/src/compat/libc/genos_libc/wchar/wcsncpy.o build/src/compat/libc/genos_libc/wchar/wcstrtoumax.o build/src/compat/libc/genos_libc/ctype/ctype.o build/src/compat/libc/genos_libc/stdlib/qsort.o build/src/compat/libc/genos_libc/stdlib/itoa.o build/src/compat/libc/genos_libc/stdlib/random.o build/src/compat/libc/genos_libc/stdlib/strtoll.o build/src/compat/libc/genos_libc/stdlib/lldiv.o build/src/compat/libc/genos_libc/stdlib/atol.o build/src/compat/libc/genos_libc/stdlib/strtod.o build/src/compat/libc/genos_libc/stdlib/div.o build/src/compat/libc/genos_libc/stdlib/strtoull.o build/src/compat/libc/genos_libc/stdlib/random_r.o build/src/compat/libc/genos_libc/stdlib/strtol.o build/src/compat/libc/genos_libc/stdlib/strtoul.o build/src/compat/libc/genos_libc/stdlib/rand.o build/src/compat/libc/genos_libc/stdlib/bsearch.o build/src/compat/libc/genos_libc/stdlib/ldiv.o build/src/compat/libc/genos_libc/inttypes/strtoimax.o build/src/compat/libc/genos_libc/inttypes/imaxmath.o build/src/compat/libc/genos_libc/inttypes/strtoumax.o build/src/compat/libc/genos_libc/math/ilogb.o build/src/compat/libc/genos_libc/math/j1.o build/src/compat/libc/genos_libc/math/logf.o build/src/compat/libc/genos_libc/math/__sin.o build/src/compat/libc/genos_libc/math/__signbitl.o build/src/compat/libc/genos_libc/math/cosl.o build/src/compat/libc/genos_libc/math/asinhf.o build/src/compat/libc/genos_libc/math/fdimf.o build/src/compat/libc/genos_libc/math/modfl.o build/src/compat/libc/genos_libc/math/atan2l.o build/src/compat/libc/genos_libc/math/floorf.o build/src/compat/libc/genos_libc/math/sincosf.o build/src/compat/libc/genos_libc/math/asinh.o build/src/compat/libc/genos_libc/math/atanf.o build/src/compat/libc/genos_libc/math/sinf.o build/src/compat/libc/genos_libc/math/tanhf.o build/src/compat/libc/genos_libc/math/fabsl.o build/src/compat/libc/genos_libc/math/sinl.o build/src/compat/libc/genos_libc/math/fmodf.o build/src/compat/libc/genos_libc/math/lgammaf.o build/src/compat/libc/genos_libc/math/sinhl.o build/src/compat/libc/genos_libc/math/rintl.o build/src/compat/libc/genos_libc/math/llrintl.o build/src/compat/libc/genos_libc/math/modff.o build/src/compat/libc/genos_libc/math/expm1.o build/src/compat/libc/genos_libc/math/nexttowardl.o build/src/compat/libc/genos_libc/math/sincos.o build/src/compat/libc/genos_libc/math/ceilf.o build/src/compat/libc/genos_libc/math/sinh.o build/src/compat/libc/genos_libc/math/expl.o build/src/compat/libc/genos_libc/math/logb.o build/src/compat/libc/genos_libc/math/sqrtl.o build/src/compat/libc/genos_libc/math/frexpl.o build/src/compat/libc/genos_libc/math/cosf.o build/src/compat/libc/genos_libc/math/acosl.o build/src/compat/libc/genos_libc/math/__fpclassifyf.o build/src/compat/libc/genos_libc/math/__tandf.o build/src/compat/libc/genos_libc/math/logl.o build/src/compat/libc/genos_libc/math/jnf.o build/src/compat/libc/genos_libc/math/lrint.o build/src/compat/libc/genos_libc/math/truncl.o build/src/compat/libc/genos_libc/math/asinhl.o build/src/compat/libc/genos_libc/math/fdiml.o build/src/compat/libc/genos_libc/math/frexp.o build/src/compat/libc/genos_libc/math/j1f.o build/src/compat/libc/genos_libc/math/exp2l.o build/src/compat/libc/genos_libc/math/nextafterl.o build/src/compat/libc/genos_libc/math/expf.o build/src/compat/libc/genos_libc/math/fmal.o build/src/compat/libc/genos_libc/math/modf.o build/src/compat/libc/genos_libc/math/asinl.o build/src/compat/libc/genos_libc/math/nanf.o build/src/compat/libc/genos_libc/math/fminl.o build/src/compat/libc/genos_libc/math/finite.o build/src/compat/libc/genos_libc/math/log1pl.o build/src/compat/libc/genos_libc/math/ldexpf.o build/src/compat/libc/genos_libc/math/remquo.o build/src/compat/libc/genos_libc/math/log10f.o build/src/compat/libc/genos_libc/math/__rem_pio2.o build/src/compat/libc/genos_libc/math/lgamma_r.o build/src/compat/libc/genos_libc/math/cbrtf.o build/src/compat/libc/genos_libc/math/llrintf.o build/src/compat/libc/genos_libc/math/lgamma.o build/src/compat/libc/genos_libc/math/lround.o build/src/compat/libc/genos_libc/math/nearbyint.o build/src/compat/libc/genos_libc/math/coshl.o build/src/compat/libc/genos_libc/math/remainderf.o build/src/compat/libc/genos_libc/math/tanhl.o build/src/compat/libc/genos_libc/math/__rem_pio2_large.o build/src/compat/libc/genos_libc/math/acos.o build/src/compat/libc/genos_libc/math/asinf.o build/src/compat/libc/genos_libc/math/__signbit.o build/src/compat/libc/genos_libc/math/erfl.o build/src/compat/libc/genos_libc/math/scalbnl.o build/src/compat/libc/genos_libc/math/__polevll.o build/src/compat/libc/genos_libc/math/log1p.o build/src/compat/libc/genos_libc/math/__cosl.o build/src/compat/libc/genos_libc/math/lgammal.o build/src/compat/libc/genos_libc/math/atan2.o build/src/compat/libc/genos_libc/math/floor.o build/src/compat/libc/genos_libc/math/significand.o build/src/compat/libc/genos_libc/math/__tan.o build/src/compat/libc/genos_libc/math/__signbitf.o build/src/compat/libc/genos_libc/math/j0.o build/src/compat/libc/genos_libc/math/fma.o build/src/compat/libc/genos_libc/math/remquof.o build/src/compat/libc/genos_libc/math/atan.o build/src/compat/libc/genos_libc/math/__invtrigl.o build/src/compat/libc/genos_libc/math/expm1f.o build/src/compat/libc/genos_libc/math/ldexp.o build/src/compat/libc/genos_libc/math/nextafter.o build/src/compat/libc/genos_libc/math/asin.o build/src/compat/libc/genos_libc/math/__sinl.o build/src/compat/libc/genos_libc/math/sincosl.o build/src/compat/libc/genos_libc/math/tanl.o build/src/compat/libc/genos_libc/math/__tanl.o build/src/compat/libc/genos_libc/math/scalbln.o build/src/compat/libc/genos_libc/math/llround.o build/src/compat/libc/genos_libc/math/lrintl.o build/src/compat/libc/genos_libc/math/log10l.o build/src/compat/libc/genos_libc/math/fmaxl.o build/src/compat/libc/genos_libc/math/cosh.o build/src/compat/libc/genos_libc/math/fabsf.o build/src/compat/libc/genos_libc/math/roundf.o build/src/compat/libc/genos_libc/math/pow.o build/src/compat/libc/genos_libc/math/round.o build/src/compat/libc/genos_libc/math/exp10.o build/src/compat/libc/genos_libc/math/log2.o build/src/compat/libc/genos_libc/math/fminf.o build/src/compat/libc/genos_libc/math/lroundl.o build/src/compat/libc/genos_libc/math/__rem_pio2l.o build/src/compat/libc/genos_libc/math/floorl.o build/src/compat/libc/genos_libc/math/remainderl.o build/src/compat/libc/genos_libc/math/ilogbl.o build/src/compat/libc/genos_libc/math/__fpclassify.o build/src/compat/libc/genos_libc/math/tanh.o build/src/compat/libc/genos_libc/math/__sindf.o build/src/compat/libc/genos_libc/math/atanhl.o build/src/compat/libc/genos_libc/math/nanl.o build/src/compat/libc/genos_libc/math/lroundf.o build/src/compat/libc/genos_libc/math/rintf.o build/src/compat/libc/genos_libc/math/__rem_pio2f.o build/src/compat/libc/genos_libc/math/cbrtl.o build/src/compat/libc/genos_libc/math/atanl.o build/src/compat/libc/genos_libc/math/j0f.o build/src/compat/libc/genos_libc/math/log10.o build/src/compat/libc/genos_libc/math/log1pf.o build/src/compat/libc/genos_libc/math/ilogbf.o build/src/compat/libc/genos_libc/math/nearbyintf.o build/src/compat/libc/genos_libc/math/powl.o build/src/compat/libc/genos_libc/math/hypotf.o build/src/compat/libc/genos_libc/math/coshf.o build/src/compat/libc/genos_libc/math/log2l.o build/src/compat/libc/genos_libc/math/ceill.o build/src/compat/libc/genos_libc/math/__expo2.o build/src/compat/libc/genos_libc/math/roundl.o build/src/compat/libc/genos_libc/math/copysignl.o build/src/compat/libc/genos_libc/math/fmod.o build/src/compat/libc/genos_libc/math/sqrt.o build/src/compat/libc/genos_libc/math/powf.o build/src/compat/libc/genos_libc/math/tgamma.o build/src/compat/libc/genos_libc/math/trunc.o build/src/compat/libc/genos_libc/math/ceil.o build/src/compat/libc/genos_libc/math/logbf.o build/src/compat/libc/genos_libc/math/tgammaf.o build/src/compat/libc/genos_libc/math/fabs.o build/src/compat/libc/genos_libc/math/sqrtf.o build/src/compat/libc/genos_libc/math/sin.o build/src/compat/libc/genos_libc/math/nearbyintl.o build/src/compat/libc/genos_libc/math/__fpclassifyl.o build/src/compat/libc/genos_libc/math/exp10f.o build/src/compat/libc/genos_libc/math/truncf.o build/src/compat/libc/genos_libc/math/erf.o build/src/compat/libc/genos_libc/math/fmaxf.o build/src/compat/libc/genos_libc/math/cbrt.o build/src/compat/libc/genos_libc/math/signgam.o build/src/compat/libc/genos_libc/math/fdim.o build/src/compat/libc/genos_libc/math/acoshf.o build/src/compat/libc/genos_libc/math/rint.o build/src/compat/libc/genos_libc/math/exp10l.o build/src/compat/libc/genos_libc/math/lgammaf_r.o build/src/compat/libc/genos_libc/math/llrint.o build/src/compat/libc/genos_libc/math/jn.o build/src/compat/libc/genos_libc/math/atanhf.o build/src/compat/libc/genos_libc/math/atanh.o build/src/compat/libc/genos_libc/math/acosh.o build/src/compat/libc/genos_libc/math/hypotl.o build/src/compat/libc/genos_libc/math/fmin.o build/src/compat/libc/genos_libc/math/log2f.o build/src/compat/libc/genos_libc/math/remainder.o build/src/compat/libc/genos_libc/math/nexttoward.o build/src/compat/libc/genos_libc/math/ldexpl.o build/src/compat/libc/genos_libc/math/fmodl.o build/src/compat/libc/genos_libc/math/cos.o build/src/compat/libc/genos_libc/math/hypot.o build/src/compat/libc/genos_libc/math/acosf.o build/src/compat/libc/genos_libc/math/significandf.o build/src/compat/libc/genos_libc/math/remquol.o build/src/compat/libc/genos_libc/math/acoshl.o build/src/compat/libc/genos_libc/math/__expo2f.o build/src/compat/libc/genos_libc/math/__cosdf.o build/src/compat/libc/genos_libc/math/scalbn.o build/src/compat/libc/genos_libc/math/scalbnf.o build/src/compat/libc/genos_libc/math/erff.o build/src/compat/libc/genos_libc/math/logbl.o build/src/compat/libc/genos_libc/math/exp2.o build/src/compat/libc/genos_libc/math/fmax.o build/src/compat/libc/genos_libc/math/finitef.o build/src/compat/libc/genos_libc/math/frexpf.o build/src/compat/libc/genos_libc/math/scalb.o build/src/compat/libc/genos_libc/math/exp2f.o build/src/compat/libc/genos_libc/math/log.o build/src/compat/libc/genos_libc/math/nexttowardf.o build/src/compat/libc/genos_libc/math/exp.o build/src/compat/libc/genos_libc/math/scalbf.o build/src/compat/libc/genos_libc/math/lrintf.o build/src/compat/libc/genos_libc/math/tan.o build/src/compat/libc/genos_libc/math/copysignf.o build/src/compat/libc/genos_libc/math/scalblnf.o build/src/compat/libc/genos_libc/math/copysign.o build/src/compat/libc/genos_libc/math/llroundf.o build/src/compat/libc/genos_libc/math/atan2f.o build/src/compat/libc/genos_libc/math/sinhf.o build/src/compat/libc/genos_libc/math/expm1l.o build/src/compat/libc/genos_libc/math/tanf.o build/src/compat/libc/genos_libc/math/llroundl.o build/src/compat/libc/genos_libc/math/nextafterf.o build/src/compat/libc/genos_libc/math/scalblnl.o build/src/compat/libc/genos_libc/math/nan.o build/src/compat/libc/genos_libc/math/fmaf.o build/src/compat/libc/genos_libc/math/tgammal.o build/src/compat/libc/genos_libc/math/__cos.o build/src/compat/libc/genos_libc/stdio/fputc.o build/src/compat/libc/genos_libc/stdio/fgetc.o build/src/compat/libc/genos_libc/stdio/printf_impl.o build/src/compat/libc/genos_libc/stdio/sprintf.o build/src/compat/libc/genos_libc/stdio/fflush.o build/src/compat/libc/genos_libc/stdio/ungetc.o build/src/compat/libc/genos_libc/stdio/snprintf.o build/src/compat/libc/genos_libc/stdio/buf.o build/src/compat/libc/genos_libc/stdio/stdfile_static.o build/src/compat/libc/genos_libc/stdio/fileno.o build/src/compat/libc/genos_libc/stdio/funopen.o build/src/compat/libc/genos_libc/stdio/fputs.o build/src/compat/libc/genos_libc/stdio/fread.o build/src/compat/libc/genos_libc/stdio/printf.o build/src/compat/libc/genos_libc/stdio/stdio_stubs.o build/src/compat/libc/genos_libc/stdio/fopen.o build/src/compat/libc/genos_libc/stdio/fwrite.o build/src/compat/libc/genos_libc/stdio/fgets.o build/src/compat/libc/genos_libc/stdio/rename.o build/src/compat/libc/genos_libc/stdio/fclose.o build/src/compat/libc/genos_libc/stdio/fprintf.o build/src/compat/libc/genos_libc/assert/assert.o build/src/compat/libc/genos_libc/errno/errno.o build/src/arch/arm-stm32f100/asm/arch.o build/src/main.o build/src/_main.o build/stm32_lib/stm32f10x_it.o build/stm32_lib/core_cm3.o build/stm32_lib/stm32f10x_gpio.o build/stm32_lib/system_stm32f10x.o build/stm32_lib/stm32f10x_rcc.o build/stm32_lib/startup_stm32f10x_md_vl.o -> build/project
+arm-none-eabi-ld src/kernel/diag.o src/kernel/printk.o src/compat/cxx/core/new.o src/genos/debug/debug_print.o src/genos/time/time.o src/compat/libc/genos_libc/string/strncat.o src/compat/libc/genos_libc/string/strchrnul.o src/compat/libc/genos_libc/string/strcasestr.o src/compat/libc/genos_libc/string/strdup.o src/compat/libc/genos_libc/string/memcpy.o src/compat/libc/genos_libc/string/strncpy.o src/compat/libc/genos_libc/string/memrchr.o src/compat/libc/genos_libc/string/strcasecmp.o src/compat/libc/genos_libc/string/strpbrk.o src/compat/libc/genos_libc/string/strerror.o src/compat/libc/genos_libc/string/strncasecmp.o src/compat/libc/genos_libc/string/memmove.o src/compat/libc/genos_libc/string/strrchr.o src/compat/libc/genos_libc/string/strcpy.o src/compat/libc/genos_libc/string/strcat.o src/compat/libc/genos_libc/string/strstr.o src/compat/libc/genos_libc/string/strcmp.o src/compat/libc/genos_libc/string/strcspn.o src/compat/libc/genos_libc/string/memcmp.o src/compat/libc/genos_libc/string/memchr.o src/compat/libc/genos_libc/string/memset.o src/compat/libc/genos_libc/string/strchr.o src/compat/libc/genos_libc/string/strlwr.o src/compat/libc/genos_libc/string/strndup.o src/compat/libc/genos_libc/string/strtok.o src/compat/libc/genos_libc/string/strlen.o src/compat/libc/genos_libc/string/strncmp.o src/compat/libc/genos_libc/string/strupr.o src/compat/libc/genos_libc/string/strspn.o src/compat/libc/genos_libc/string/strnlen.o src/compat/libc/genos_libc/string/strlcpy.o src/compat/libc/genos_libc/wchar/wctype.o src/compat/libc/genos_libc/wchar/wcstrtoimax.o src/compat/libc/genos_libc/wchar/wcscmp.o src/compat/libc/genos_libc/wchar/wcsncpy.o src/compat/libc/genos_libc/wchar/wcstrtoumax.o src/compat/libc/genos_libc/ctype/ctype.o src/compat/libc/genos_libc/stdlib/qsort.o src/compat/libc/genos_libc/stdlib/itoa.o src/compat/libc/genos_libc/stdlib/random.o src/compat/libc/genos_libc/stdlib/strtoll.o src/compat/libc/genos_libc/stdlib/lldiv.o src/compat/libc/genos_libc/stdlib/atol.o src/compat/libc/genos_libc/stdlib/strtod.o src/compat/libc/genos_libc/stdlib/div.o src/compat/libc/genos_libc/stdlib/strtoull.o src/compat/libc/genos_libc/stdlib/random_r.o src/compat/libc/genos_libc/stdlib/strtol.o src/compat/libc/genos_libc/stdlib/strtoul.o src/compat/libc/genos_libc/stdlib/rand.o src/compat/libc/genos_libc/stdlib/bsearch.o src/compat/libc/genos_libc/stdlib/ldiv.o src/compat/libc/genos_libc/inttypes/strtoimax.o src/compat/libc/genos_libc/inttypes/imaxmath.o src/compat/libc/genos_libc/inttypes/strtoumax.o src/compat/libc/genos_libc/math/ilogb.o src/compat/libc/genos_libc/math/j1.o src/compat/libc/genos_libc/math/logf.o src/compat/libc/genos_libc/math/__sin.o src/compat/libc/genos_libc/math/__signbitl.o src/compat/libc/genos_libc/math/cosl.o src/compat/libc/genos_libc/math/asinhf.o src/compat/libc/genos_libc/math/fdimf.o src/compat/libc/genos_libc/math/modfl.o src/compat/libc/genos_libc/math/atan2l.o src/compat/libc/genos_libc/math/floorf.o src/compat/libc/genos_libc/math/sincosf.o src/compat/libc/genos_libc/math/asinh.o src/compat/libc/genos_libc/math/atanf.o src/compat/libc/genos_libc/math/sinf.o src/compat/libc/genos_libc/math/tanhf.o src/compat/libc/genos_libc/math/fabsl.o src/compat/libc/genos_libc/math/sinl.o src/compat/libc/genos_libc/math/fmodf.o src/compat/libc/genos_libc/math/lgammaf.o src/compat/libc/genos_libc/math/sinhl.o src/compat/libc/genos_libc/math/rintl.o src/compat/libc/genos_libc/math/llrintl.o src/compat/libc/genos_libc/math/modff.o src/compat/libc/genos_libc/math/expm1.o src/compat/libc/genos_libc/math/nexttowardl.o src/compat/libc/genos_libc/math/sincos.o src/compat/libc/genos_libc/math/ceilf.o src/compat/libc/genos_libc/math/sinh.o src/compat/libc/genos_libc/math/expl.o src/compat/libc/genos_libc/math/logb.o src/compat/libc/genos_libc/math/sqrtl.o src/compat/libc/genos_libc/math/frexpl.o src/compat/libc/genos_libc/math/cosf.o src/compat/libc/genos_libc/math/acosl.o src/compat/libc/genos_libc/math/__fpclassifyf.o src/compat/libc/genos_libc/math/__tandf.o src/compat/libc/genos_libc/math/logl.o src/compat/libc/genos_libc/math/jnf.o src/compat/libc/genos_libc/math/lrint.o src/compat/libc/genos_libc/math/truncl.o src/compat/libc/genos_libc/math/asinhl.o src/compat/libc/genos_libc/math/fdiml.o src/compat/libc/genos_libc/math/frexp.o src/compat/libc/genos_libc/math/j1f.o src/compat/libc/genos_libc/math/exp2l.o src/compat/libc/genos_libc/math/nextafterl.o src/compat/libc/genos_libc/math/expf.o src/compat/libc/genos_libc/math/fmal.o src/compat/libc/genos_libc/math/modf.o src/compat/libc/genos_libc/math/asinl.o src/compat/libc/genos_libc/math/nanf.o src/compat/libc/genos_libc/math/fminl.o src/compat/libc/genos_libc/math/finite.o src/compat/libc/genos_libc/math/log1pl.o src/compat/libc/genos_libc/math/ldexpf.o src/compat/libc/genos_libc/math/remquo.o src/compat/libc/genos_libc/math/log10f.o src/compat/libc/genos_libc/math/__rem_pio2.o src/compat/libc/genos_libc/math/lgamma_r.o src/compat/libc/genos_libc/math/cbrtf.o src/compat/libc/genos_libc/math/llrintf.o src/compat/libc/genos_libc/math/lgamma.o src/compat/libc/genos_libc/math/lround.o src/compat/libc/genos_libc/math/nearbyint.o src/compat/libc/genos_libc/math/coshl.o src/compat/libc/genos_libc/math/remainderf.o src/compat/libc/genos_libc/math/tanhl.o src/compat/libc/genos_libc/math/__rem_pio2_large.o src/compat/libc/genos_libc/math/acos.o src/compat/libc/genos_libc/math/asinf.o src/compat/libc/genos_libc/math/__signbit.o src/compat/libc/genos_libc/math/erfl.o src/compat/libc/genos_libc/math/scalbnl.o src/compat/libc/genos_libc/math/__polevll.o src/compat/libc/genos_libc/math/log1p.o src/compat/libc/genos_libc/math/__cosl.o src/compat/libc/genos_libc/math/lgammal.o src/compat/libc/genos_libc/math/atan2.o src/compat/libc/genos_libc/math/floor.o src/compat/libc/genos_libc/math/significand.o src/compat/libc/genos_libc/math/__tan.o src/compat/libc/genos_libc/math/__signbitf.o src/compat/libc/genos_libc/math/j0.o src/compat/libc/genos_libc/math/fma.o src/compat/libc/genos_libc/math/remquof.o src/compat/libc/genos_libc/math/atan.o src/compat/libc/genos_libc/math/__invtrigl.o src/compat/libc/genos_libc/math/expm1f.o src/compat/libc/genos_libc/math/ldexp.o src/compat/libc/genos_libc/math/nextafter.o src/compat/libc/genos_libc/math/asin.o src/compat/libc/genos_libc/math/__sinl.o src/compat/libc/genos_libc/math/sincosl.o src/compat/libc/genos_libc/math/tanl.o src/compat/libc/genos_libc/math/__tanl.o src/compat/libc/genos_libc/math/scalbln.o src/compat/libc/genos_libc/math/llround.o src/compat/libc/genos_libc/math/lrintl.o src/compat/libc/genos_libc/math/log10l.o src/compat/libc/genos_libc/math/fmaxl.o src/compat/libc/genos_libc/math/cosh.o src/compat/libc/genos_libc/math/fabsf.o src/compat/libc/genos_libc/math/roundf.o src/compat/libc/genos_libc/math/pow.o src/compat/libc/genos_libc/math/round.o src/compat/libc/genos_libc/math/exp10.o src/compat/libc/genos_libc/math/log2.o src/compat/libc/genos_libc/math/fminf.o src/compat/libc/genos_libc/math/lroundl.o src/compat/libc/genos_libc/math/__rem_pio2l.o src/compat/libc/genos_libc/math/floorl.o src/compat/libc/genos_libc/math/remainderl.o src/compat/libc/genos_libc/math/ilogbl.o src/compat/libc/genos_libc/math/__fpclassify.o src/compat/libc/genos_libc/math/tanh.o src/compat/libc/genos_libc/math/__sindf.o src/compat/libc/genos_libc/math/atanhl.o src/compat/libc/genos_libc/math/nanl.o src/compat/libc/genos_libc/math/lroundf.o src/compat/libc/genos_libc/math/rintf.o src/compat/libc/genos_libc/math/__rem_pio2f.o src/compat/libc/genos_libc/math/cbrtl.o src/compat/libc/genos_libc/math/atanl.o src/compat/libc/genos_libc/math/j0f.o src/compat/libc/genos_libc/math/log10.o src/compat/libc/genos_libc/math/log1pf.o src/compat/libc/genos_libc/math/ilogbf.o src/compat/libc/genos_libc/math/nearbyintf.o src/compat/libc/genos_libc/math/powl.o src/compat/libc/genos_libc/math/hypotf.o src/compat/libc/genos_libc/math/coshf.o src/compat/libc/genos_libc/math/log2l.o src/compat/libc/genos_libc/math/ceill.o src/compat/libc/genos_libc/math/__expo2.o src/compat/libc/genos_libc/math/roundl.o src/compat/libc/genos_libc/math/copysignl.o src/compat/libc/genos_libc/math/fmod.o src/compat/libc/genos_libc/math/sqrt.o src/compat/libc/genos_libc/math/powf.o src/compat/libc/genos_libc/math/tgamma.o src/compat/libc/genos_libc/math/trunc.o src/compat/libc/genos_libc/math/ceil.o src/compat/libc/genos_libc/math/logbf.o src/compat/libc/genos_libc/math/tgammaf.o src/compat/libc/genos_libc/math/fabs.o src/compat/libc/genos_libc/math/sqrtf.o src/compat/libc/genos_libc/math/sin.o src/compat/libc/genos_libc/math/nearbyintl.o src/compat/libc/genos_libc/math/__fpclassifyl.o src/compat/libc/genos_libc/math/exp10f.o src/compat/libc/genos_libc/math/truncf.o src/compat/libc/genos_libc/math/erf.o src/compat/libc/genos_libc/math/fmaxf.o src/compat/libc/genos_libc/math/cbrt.o src/compat/libc/genos_libc/math/signgam.o src/compat/libc/genos_libc/math/fdim.o src/compat/libc/genos_libc/math/acoshf.o src/compat/libc/genos_libc/math/rint.o src/compat/libc/genos_libc/math/exp10l.o src/compat/libc/genos_libc/math/lgammaf_r.o src/compat/libc/genos_libc/math/llrint.o src/compat/libc/genos_libc/math/jn.o src/compat/libc/genos_libc/math/atanhf.o src/compat/libc/genos_libc/math/atanh.o src/compat/libc/genos_libc/math/acosh.o src/compat/libc/genos_libc/math/hypotl.o src/compat/libc/genos_libc/math/fmin.o src/compat/libc/genos_libc/math/log2f.o src/compat/libc/genos_libc/math/remainder.o src/compat/libc/genos_libc/math/nexttoward.o src/compat/libc/genos_libc/math/ldexpl.o src/compat/libc/genos_libc/math/fmodl.o src/compat/libc/genos_libc/math/cos.o src/compat/libc/genos_libc/math/hypot.o src/compat/libc/genos_libc/math/acosf.o src/compat/libc/genos_libc/math/significandf.o src/compat/libc/genos_libc/math/remquol.o src/compat/libc/genos_libc/math/acoshl.o src/compat/libc/genos_libc/math/__expo2f.o src/compat/libc/genos_libc/math/__cosdf.o src/compat/libc/genos_libc/math/scalbn.o src/compat/libc/genos_libc/math/scalbnf.o src/compat/libc/genos_libc/math/erff.o src/compat/libc/genos_libc/math/logbl.o src/compat/libc/genos_libc/math/exp2.o src/compat/libc/genos_libc/math/fmax.o src/compat/libc/genos_libc/math/finitef.o src/compat/libc/genos_libc/math/frexpf.o src/compat/libc/genos_libc/math/scalb.o src/compat/libc/genos_libc/math/exp2f.o src/compat/libc/genos_libc/math/log.o src/compat/libc/genos_libc/math/nexttowardf.o src/compat/libc/genos_libc/math/exp.o src/compat/libc/genos_libc/math/scalbf.o src/compat/libc/genos_libc/math/lrintf.o src/compat/libc/genos_libc/math/tan.o src/compat/libc/genos_libc/math/copysignf.o src/compat/libc/genos_libc/math/scalblnf.o src/compat/libc/genos_libc/math/copysign.o src/compat/libc/genos_libc/math/llroundf.o src/compat/libc/genos_libc/math/atan2f.o src/compat/libc/genos_libc/math/sinhf.o src/compat/libc/genos_libc/math/expm1l.o src/compat/libc/genos_libc/math/tanf.o src/compat/libc/genos_libc/math/llroundl.o src/compat/libc/genos_libc/math/nextafterf.o src/compat/libc/genos_libc/math/scalblnl.o src/compat/libc/genos_libc/math/nan.o src/compat/libc/genos_libc/math/fmaf.o src/compat/libc/genos_libc/math/tgammal.o src/compat/libc/genos_libc/math/__cos.o src/compat/libc/genos_libc/stdio/fputc.o src/compat/libc/genos_libc/stdio/fgetc.o src/compat/libc/genos_libc/stdio/printf_impl.o src/compat/libc/genos_libc/stdio/sprintf.o src/compat/libc/genos_libc/stdio/fflush.o src/compat/libc/genos_libc/stdio/ungetc.o src/compat/libc/genos_libc/stdio/snprintf.o src/compat/libc/genos_libc/stdio/buf.o src/compat/libc/genos_libc/stdio/stdfile_static.o src/compat/libc/genos_libc/stdio/fileno.o src/compat/libc/genos_libc/stdio/funopen.o src/compat/libc/genos_libc/stdio/fputs.o src/compat/libc/genos_libc/stdio/fread.o src/compat/libc/genos_libc/stdio/printf.o src/compat/libc/genos_libc/stdio/stdio_stubs.o src/compat/libc/genos_libc/stdio/fopen.o src/compat/libc/genos_libc/stdio/fwrite.o src/compat/libc/genos_libc/stdio/fgets.o src/compat/libc/genos_libc/stdio/rename.o src/compat/libc/genos_libc/stdio/fclose.o src/compat/libc/genos_libc/stdio/fprintf.o src/compat/libc/genos_libc/assert/assert.o src/compat/libc/genos_libc/errno/errno.o src/arch/arm-stm32f100/asm/arch.o src/main.o src/_main.o stm32_lib/stm32f10x_it.o stm32_lib/core_cm3.o stm32_lib/stm32f10x_gpio.o stm32_lib/system_stm32f10x.o stm32_lib/stm32f10x_rcc.o stm32_lib/startup_stm32f10x_md_vl.o -o project -static -Ttext=0x8000000 -T ../stm32_lib/device_support/gcc/stm32f100rb_flash.ld -nodefaultlibs -nostartfiles -nostdlib -nostdinc -I ../src/kernel/arch/arm-stm32f100/include -I ../src/compat/libc/genos_libc/include -I ../src/arch/arm-stm32f100/include -I ../src/include -I ../src/compat/cxx/include -I ../src/compat/libc/genos_libc/include -I ../src/compat/posix/include -I ../stm32_lib/
+
+Waf: Leaving directory `/home/mirmik/project/genos/genos/build'
+->loading the arm tool
+Waf: Entering directory `/home/mirmik/project/genos/genos/build'
+['diag.c', 'wscript', 'HIDE', 'printk.c']
+['wscript', 'new.cpp']
+['core', 'wscript', 'include']
+['wscript', 'debug_print.c']
+['wscript', 'time.cpp']
+['subst', 'wscript', 'debug', 'time']
+['strncat.c', 'strchrnul.c', 'strcasestr.c', 'strdup.c', 'memcpy.c', 'strncpy.c', 'memrchr.c', 'strcasecmp.c', 'strpbrk.c', 'strerror.c', 'strncasecmp.c', 'memmove.c', 'wscript', 'strrchr.c', 'strcpy.c', 'strcat.c', 'inhibit_libcall.h', 'strstr.c', 'strcmp.c', 'strcspn.c', 'memcmp.c', 'memchr.c', 'memset.c', 'strchr.c', 'strlwr.c', 'strndup.c', 'strtok.c', 'strlen.c', 'strncmp.c', 'strupr.c', 'strspn.c', 'strnlen.c', 'strlcpy.c']
+['wctype.c', 'wcstrtoimax.c', 'wscript', 'wcscmp.c', 'wcsncpy.c', 'wcstrtoumax.c']
+['wscript', 'ctype.c']
+['qsort.c', 'itoa.c', 'random.c', 'strtoll.c', 'lldiv.c', 'atol.c', 'wscript', 'strtod.c', 'div.c', 'HIDE', 'strtoull.c', 'random_r.c', 'strtol.c', 'strtoul.c', 'rand.c', 'bsearch.c', 'ldiv.c']
+['stdarg.h', 'fenv.h', 'stdlib.h', 'locale.h', 'math.h', 'stdbool.h', 'ctype.h', 'complex.h', 'float.h', 'errno.h', 'limits.h', 'wscript', 'HIDE', 'stddef.h', 'iso646.h', 'string.h', 'features.h', 'wctype.h', 'strings.h', 'TODO', 'inttypes.h', 'wchar.h', 'stdint.h', 'stdio.h', 'assert.h', 'string_bsd.h']
+['strtoimax.c', 'wscript', 'imaxmath.c', 'strtoumax.c']
+['ilogb.c', 'j1.c', 'logf.c', '__sin.c', '__signbitl.c', 'cosl.c', 'asinhf.c', 'fdimf.c', 'modfl.c', 'atan2l.c', 'floorf.c', 'sincosf.c', 'asinh.c', 'atanf.c', 'sinf.c', 'tanhf.c', 'fabsl.c', 'sinl.c', 'fmodf.c', 'lgammaf.c', 'sinhl.c', 'rintl.c', 'llrintl.c', 'modff.c', 'expm1.c', 'nexttowardl.c', 'sincos.c', 'ceilf.c', 'sinh.c', 'expl.c', 'logb.c', 'sqrtl.c', 'frexpl.c', 'cosf.c', 'acosl.c', '__fpclassifyf.c', '__tandf.c', 'logl.c', 'jnf.c', 'lrint.c', 'truncl.c', 'asinhl.c', 'fdiml.c', 'frexp.c', 'j1f.c', 'exp2l.c', 'nextafterl.c', 'expf.c', 'fmal.c', 'modf.c', 'asinl.c', 'nanf.c', 'fminl.c', 'finite.c', 'log1pl.c', 'armebhf', 'ldexpf.c', 'remquo.c', 'log10f.c', '__rem_pio2.c', 'lgamma_r.c', 'cbrtf.c', 'llrintf.c', 'lgamma.c', 'lround.c', 'nearbyint.c', 'coshl.c', 'remainderf.c', 'tanhl.c', '__rem_pio2_large.c', 'acos.c', 'asinf.c', '__signbit.c', 'erfl.c', 'scalbnl.c', '__polevll.c', 'i386', 'log1p.c', '__cosl.c', 'wscript', 'lgammal.c', 'atan2.c', 'floor.c', 'significand.c', '__tan.c', '__signbitf.c', 'j0.c', 'fma.c', 'remquof.c', 'atan.c', '__invtrigl.c', 'expm1f.c', 'ldexp.c', 'x86_64', 'nextafter.c', 'asin.c', 'armhf', '__sinl.c', 'sincosl.c', 'tanl.c', '__tanl.c', 'scalbln.c', 'llround.c', 'aarch64', 'lrintl.c', 'log10l.c', 'fmaxl.c', 'cosh.c', 'fabsf.c', 'roundf.c', 'pow.c', 'round.c', 'exp10.c', 'log2.c', 'fminf.c', 'lroundl.c', '__rem_pio2l.c', 'floorl.c', 'remainderl.c', 'ilogbl.c', '__fpclassify.c', 'tanh.c', 'x32', '__sindf.c', 'atanhl.c', 'nanl.c', 'lroundf.c', 'rintf.c', '__rem_pio2f.c', 'cbrtl.c', 'atanl.c', 'j0f.c', 'log10.c', 'log1pf.c', 'ilogbf.c', 'nearbyintf.c', 'powl.c', 'hypotf.c', 'coshf.c', 'log2l.c', 'ceill.c', '__expo2.c', 'roundl.c', 'copysignl.c', 'fmod.c', 'sqrt.c', 'powf.c', 'tgamma.c', 'trunc.c', 'libm.h', 'ceil.c', 'logbf.c', 'tgammaf.c', 'fabs.c', 'sqrtf.c', 'sin.c', 'nearbyintl.c', '__fpclassifyl.c', 'exp10f.c', 'truncf.c', 'erf.c', 'fmaxf.c', 'cbrt.c', 'signgam.c', 'fdim.c', 'acoshf.c', 'rint.c', 'exp10l.c', 'lgammaf_r.c', 'llrint.c', 'jn.c', 'atanhf.c', 'atanh.c', 'acosh.c', 'hypotl.c', 'fmin.c', 'log2f.c', '__invtrigl.h', 'remainder.c', 'nexttoward.c', 'ldexpl.c', 'fmodl.c', 'cos.c', 'hypot.c', 'acosf.c', 'significandf.c', 'remquol.c', 'acoshl.c', '__expo2f.c', '__cosdf.c', 'scalbn.c', 'scalbnf.c', 'erff.c', 'logbl.c', 'exp2.c', 'fmax.c', 'finitef.c', 'frexpf.c', 'scalb.c', 'exp2f.c', 'log.c', 'nexttowardf.c', 'exp.c', 'scalbf.c', 'lrintf.c', 'tan.c', 'copysignf.c', 'scalblnf.c', 'copysign.c', 'llroundf.c', 'atan2f.c', 'sinhf.c', 'expm1l.c', 'tanf.c', 'llroundl.c', 'nextafterf.c', 'scalblnl.c', 'nan.c', 'fmaf.c', 'tgammal.c', '__cos.c']
+['fputc.c', 'fgetc.c', 'printf_impl.c', 'sprintf.c', 'fflush.c', 'ungetc.c', 'snprintf.c', 'printf_impl.h', 'buf.c', 'stdfile_static.c', 'fileno.c', 'wscript', 'HIDE', 'funopen.c', 'fputs.c', 'fread.c', 'printf.c', 'stdio_stubs.c', 'fopen.c', 'file_struct.h', 'fwrite.c', 'fgets.c', 'rename.c', 'fclose.c', 'fprintf.c']
+['wscript', 'assert.c']
+['wscript', 'errno.c']
+['string', 'wchar', 'wscript', 'HIDE', 'ctype', 'stdlib', 'include', 'inttypes', 'math', 'stdio', 'assert', 'errno']
+['arch.c', 'wscript', 'HIDE']
+['wscript', 'HIDE', 'include', 'asm']
+['util', 'mem', 'main.cpp', 'compat', 'kernel', 'embox', 'wscript', 'HIDE', 'arch', 'include', 'drivers', 'fs', '_main.cpp', 'genos_module', 'genos']
+['stm32f10x_it.c', 'device_support', 'stm32f10x_conf.h', 'core_cm3.c', 'system_stm32f10x.h', 'wscript', 'stm32f10x_it.h', 'stm32f10x_gpio.c', 'stm32f10x_gpio.h', 'stm32f10x_rcc.h', 'system_stm32f10x.c', 'stm32f10x_rcc.c', 'core_cm3.h', 'startup_stm32f10x_md_vl.S', 'stm32f10x.h']
+[305/306] Processing project: build/src/kernel/diag.o build/src/kernel/printk.o build/src/compat/cxx/core/new.o build/src/genos/debug/debug_print.o build/src/genos/time/time.o build/src/compat/libc/genos_libc/string/strncat.o build/src/compat/libc/genos_libc/string/strchrnul.o build/src/compat/libc/genos_libc/string/strcasestr.o build/src/compat/libc/genos_libc/string/strdup.o build/src/compat/libc/genos_libc/string/memcpy.o build/src/compat/libc/genos_libc/string/strncpy.o build/src/compat/libc/genos_libc/string/memrchr.o build/src/compat/libc/genos_libc/string/strcasecmp.o build/src/compat/libc/genos_libc/string/strpbrk.o build/src/compat/libc/genos_libc/string/strerror.o build/src/compat/libc/genos_libc/string/strncasecmp.o build/src/compat/libc/genos_libc/string/memmove.o build/src/compat/libc/genos_libc/string/strrchr.o build/src/compat/libc/genos_libc/string/strcpy.o build/src/compat/libc/genos_libc/string/strcat.o build/src/compat/libc/genos_libc/string/strstr.o build/src/compat/libc/genos_libc/string/strcmp.o build/src/compat/libc/genos_libc/string/strcspn.o build/src/compat/libc/genos_libc/string/memcmp.o build/src/compat/libc/genos_libc/string/memchr.o build/src/compat/libc/genos_libc/string/memset.o build/src/compat/libc/genos_libc/string/strchr.o build/src/compat/libc/genos_libc/string/strlwr.o build/src/compat/libc/genos_libc/string/strndup.o build/src/compat/libc/genos_libc/string/strtok.o build/src/compat/libc/genos_libc/string/strlen.o build/src/compat/libc/genos_libc/string/strncmp.o build/src/compat/libc/genos_libc/string/strupr.o build/src/compat/libc/genos_libc/string/strspn.o build/src/compat/libc/genos_libc/string/strnlen.o build/src/compat/libc/genos_libc/string/strlcpy.o build/src/compat/libc/genos_libc/wchar/wctype.o build/src/compat/libc/genos_libc/wchar/wcstrtoimax.o build/src/compat/libc/genos_libc/wchar/wcscmp.o build/src/compat/libc/genos_libc/wchar/wcsncpy.o build/src/compat/libc/genos_libc/wchar/wcstrtoumax.o build/src/compat/libc/genos_libc/ctype/ctype.o build/src/compat/libc/genos_libc/stdlib/qsort.o build/src/compat/libc/genos_libc/stdlib/itoa.o build/src/compat/libc/genos_libc/stdlib/random.o build/src/compat/libc/genos_libc/stdlib/strtoll.o build/src/compat/libc/genos_libc/stdlib/lldiv.o build/src/compat/libc/genos_libc/stdlib/atol.o build/src/compat/libc/genos_libc/stdlib/strtod.o build/src/compat/libc/genos_libc/stdlib/div.o build/src/compat/libc/genos_libc/stdlib/strtoull.o build/src/compat/libc/genos_libc/stdlib/random_r.o build/src/compat/libc/genos_libc/stdlib/strtol.o build/src/compat/libc/genos_libc/stdlib/strtoul.o build/src/compat/libc/genos_libc/stdlib/rand.o build/src/compat/libc/genos_libc/stdlib/bsearch.o build/src/compat/libc/genos_libc/stdlib/ldiv.o build/src/compat/libc/genos_libc/inttypes/strtoimax.o build/src/compat/libc/genos_libc/inttypes/imaxmath.o build/src/compat/libc/genos_libc/inttypes/strtoumax.o build/src/compat/libc/genos_libc/math/ilogb.o build/src/compat/libc/genos_libc/math/j1.o build/src/compat/libc/genos_libc/math/logf.o build/src/compat/libc/genos_libc/math/__sin.o build/src/compat/libc/genos_libc/math/__signbitl.o build/src/compat/libc/genos_libc/math/cosl.o build/src/compat/libc/genos_libc/math/asinhf.o build/src/compat/libc/genos_libc/math/fdimf.o build/src/compat/libc/genos_libc/math/modfl.o build/src/compat/libc/genos_libc/math/atan2l.o build/src/compat/libc/genos_libc/math/floorf.o build/src/compat/libc/genos_libc/math/sincosf.o build/src/compat/libc/genos_libc/math/asinh.o build/src/compat/libc/genos_libc/math/atanf.o build/src/compat/libc/genos_libc/math/sinf.o build/src/compat/libc/genos_libc/math/tanhf.o build/src/compat/libc/genos_libc/math/fabsl.o build/src/compat/libc/genos_libc/math/sinl.o build/src/compat/libc/genos_libc/math/fmodf.o build/src/compat/libc/genos_libc/math/lgammaf.o build/src/compat/libc/genos_libc/math/sinhl.o build/src/compat/libc/genos_libc/math/rintl.o build/src/compat/libc/genos_libc/math/llrintl.o build/src/compat/libc/genos_libc/math/modff.o build/src/compat/libc/genos_libc/math/expm1.o build/src/compat/libc/genos_libc/math/nexttowardl.o build/src/compat/libc/genos_libc/math/sincos.o build/src/compat/libc/genos_libc/math/ceilf.o build/src/compat/libc/genos_libc/math/sinh.o build/src/compat/libc/genos_libc/math/expl.o build/src/compat/libc/genos_libc/math/logb.o build/src/compat/libc/genos_libc/math/sqrtl.o build/src/compat/libc/genos_libc/math/frexpl.o build/src/compat/libc/genos_libc/math/cosf.o build/src/compat/libc/genos_libc/math/acosl.o build/src/compat/libc/genos_libc/math/__fpclassifyf.o build/src/compat/libc/genos_libc/math/__tandf.o build/src/compat/libc/genos_libc/math/logl.o build/src/compat/libc/genos_libc/math/jnf.o build/src/compat/libc/genos_libc/math/lrint.o build/src/compat/libc/genos_libc/math/truncl.o build/src/compat/libc/genos_libc/math/asinhl.o build/src/compat/libc/genos_libc/math/fdiml.o build/src/compat/libc/genos_libc/math/frexp.o build/src/compat/libc/genos_libc/math/j1f.o build/src/compat/libc/genos_libc/math/exp2l.o build/src/compat/libc/genos_libc/math/nextafterl.o build/src/compat/libc/genos_libc/math/expf.o build/src/compat/libc/genos_libc/math/fmal.o build/src/compat/libc/genos_libc/math/modf.o build/src/compat/libc/genos_libc/math/asinl.o build/src/compat/libc/genos_libc/math/nanf.o build/src/compat/libc/genos_libc/math/fminl.o build/src/compat/libc/genos_libc/math/finite.o build/src/compat/libc/genos_libc/math/log1pl.o build/src/compat/libc/genos_libc/math/ldexpf.o build/src/compat/libc/genos_libc/math/remquo.o build/src/compat/libc/genos_libc/math/log10f.o build/src/compat/libc/genos_libc/math/__rem_pio2.o build/src/compat/libc/genos_libc/math/lgamma_r.o build/src/compat/libc/genos_libc/math/cbrtf.o build/src/compat/libc/genos_libc/math/llrintf.o build/src/compat/libc/genos_libc/math/lgamma.o build/src/compat/libc/genos_libc/math/lround.o build/src/compat/libc/genos_libc/math/nearbyint.o build/src/compat/libc/genos_libc/math/coshl.o build/src/compat/libc/genos_libc/math/remainderf.o build/src/compat/libc/genos_libc/math/tanhl.o build/src/compat/libc/genos_libc/math/__rem_pio2_large.o build/src/compat/libc/genos_libc/math/acos.o build/src/compat/libc/genos_libc/math/asinf.o build/src/compat/libc/genos_libc/math/__signbit.o build/src/compat/libc/genos_libc/math/erfl.o build/src/compat/libc/genos_libc/math/scalbnl.o build/src/compat/libc/genos_libc/math/__polevll.o build/src/compat/libc/genos_libc/math/log1p.o build/src/compat/libc/genos_libc/math/__cosl.o build/src/compat/libc/genos_libc/math/lgammal.o build/src/compat/libc/genos_libc/math/atan2.o build/src/compat/libc/genos_libc/math/floor.o build/src/compat/libc/genos_libc/math/significand.o build/src/compat/libc/genos_libc/math/__tan.o build/src/compat/libc/genos_libc/math/__signbitf.o build/src/compat/libc/genos_libc/math/j0.o build/src/compat/libc/genos_libc/math/fma.o build/src/compat/libc/genos_libc/math/remquof.o build/src/compat/libc/genos_libc/math/atan.o build/src/compat/libc/genos_libc/math/__invtrigl.o build/src/compat/libc/genos_libc/math/expm1f.o build/src/compat/libc/genos_libc/math/ldexp.o build/src/compat/libc/genos_libc/math/nextafter.o build/src/compat/libc/genos_libc/math/asin.o build/src/compat/libc/genos_libc/math/__sinl.o build/src/compat/libc/genos_libc/math/sincosl.o build/src/compat/libc/genos_libc/math/tanl.o build/src/compat/libc/genos_libc/math/__tanl.o build/src/compat/libc/genos_libc/math/scalbln.o build/src/compat/libc/genos_libc/math/llround.o build/src/compat/libc/genos_libc/math/lrintl.o build/src/compat/libc/genos_libc/math/log10l.o build/src/compat/libc/genos_libc/math/fmaxl.o build/src/compat/libc/genos_libc/math/cosh.o build/src/compat/libc/genos_libc/math/fabsf.o build/src/compat/libc/genos_libc/math/roundf.o build/src/compat/libc/genos_libc/math/pow.o build/src/compat/libc/genos_libc/math/round.o build/src/compat/libc/genos_libc/math/exp10.o build/src/compat/libc/genos_libc/math/log2.o build/src/compat/libc/genos_libc/math/fminf.o build/src/compat/libc/genos_libc/math/lroundl.o build/src/compat/libc/genos_libc/math/__rem_pio2l.o build/src/compat/libc/genos_libc/math/floorl.o build/src/compat/libc/genos_libc/math/remainderl.o build/src/compat/libc/genos_libc/math/ilogbl.o build/src/compat/libc/genos_libc/math/__fpclassify.o build/src/compat/libc/genos_libc/math/tanh.o build/src/compat/libc/genos_libc/math/__sindf.o build/src/compat/libc/genos_libc/math/atanhl.o build/src/compat/libc/genos_libc/math/nanl.o build/src/compat/libc/genos_libc/math/lroundf.o build/src/compat/libc/genos_libc/math/rintf.o build/src/compat/libc/genos_libc/math/__rem_pio2f.o build/src/compat/libc/genos_libc/math/cbrtl.o build/src/compat/libc/genos_libc/math/atanl.o build/src/compat/libc/genos_libc/math/j0f.o build/src/compat/libc/genos_libc/math/log10.o build/src/compat/libc/genos_libc/math/log1pf.o build/src/compat/libc/genos_libc/math/ilogbf.o build/src/compat/libc/genos_libc/math/nearbyintf.o build/src/compat/libc/genos_libc/math/powl.o build/src/compat/libc/genos_libc/math/hypotf.o build/src/compat/libc/genos_libc/math/coshf.o build/src/compat/libc/genos_libc/math/log2l.o build/src/compat/libc/genos_libc/math/ceill.o build/src/compat/libc/genos_libc/math/__expo2.o build/src/compat/libc/genos_libc/math/roundl.o build/src/compat/libc/genos_libc/math/copysignl.o build/src/compat/libc/genos_libc/math/fmod.o build/src/compat/libc/genos_libc/math/sqrt.o build/src/compat/libc/genos_libc/math/powf.o build/src/compat/libc/genos_libc/math/tgamma.o build/src/compat/libc/genos_libc/math/trunc.o build/src/compat/libc/genos_libc/math/ceil.o build/src/compat/libc/genos_libc/math/logbf.o build/src/compat/libc/genos_libc/math/tgammaf.o build/src/compat/libc/genos_libc/math/fabs.o build/src/compat/libc/genos_libc/math/sqrtf.o build/src/compat/libc/genos_libc/math/sin.o build/src/compat/libc/genos_libc/math/nearbyintl.o build/src/compat/libc/genos_libc/math/__fpclassifyl.o build/src/compat/libc/genos_libc/math/exp10f.o build/src/compat/libc/genos_libc/math/truncf.o build/src/compat/libc/genos_libc/math/erf.o build/src/compat/libc/genos_libc/math/fmaxf.o build/src/compat/libc/genos_libc/math/cbrt.o build/src/compat/libc/genos_libc/math/signgam.o build/src/compat/libc/genos_libc/math/fdim.o build/src/compat/libc/genos_libc/math/acoshf.o build/src/compat/libc/genos_libc/math/rint.o build/src/compat/libc/genos_libc/math/exp10l.o build/src/compat/libc/genos_libc/math/lgammaf_r.o build/src/compat/libc/genos_libc/math/llrint.o build/src/compat/libc/genos_libc/math/jn.o build/src/compat/libc/genos_libc/math/atanhf.o build/src/compat/libc/genos_libc/math/atanh.o build/src/compat/libc/genos_libc/math/acosh.o build/src/compat/libc/genos_libc/math/hypotl.o build/src/compat/libc/genos_libc/math/fmin.o build/src/compat/libc/genos_libc/math/log2f.o build/src/compat/libc/genos_libc/math/remainder.o build/src/compat/libc/genos_libc/math/nexttoward.o build/src/compat/libc/genos_libc/math/ldexpl.o build/src/compat/libc/genos_libc/math/fmodl.o build/src/compat/libc/genos_libc/math/cos.o build/src/compat/libc/genos_libc/math/hypot.o build/src/compat/libc/genos_libc/math/acosf.o build/src/compat/libc/genos_libc/math/significandf.o build/src/compat/libc/genos_libc/math/remquol.o build/src/compat/libc/genos_libc/math/acoshl.o build/src/compat/libc/genos_libc/math/__expo2f.o build/src/compat/libc/genos_libc/math/__cosdf.o build/src/compat/libc/genos_libc/math/scalbn.o build/src/compat/libc/genos_libc/math/scalbnf.o build/src/compat/libc/genos_libc/math/erff.o build/src/compat/libc/genos_libc/math/logbl.o build/src/compat/libc/genos_libc/math/exp2.o build/src/compat/libc/genos_libc/math/fmax.o build/src/compat/libc/genos_libc/math/finitef.o build/src/compat/libc/genos_libc/math/frexpf.o build/src/compat/libc/genos_libc/math/scalb.o build/src/compat/libc/genos_libc/math/exp2f.o build/src/compat/libc/genos_libc/math/log.o build/src/compat/libc/genos_libc/math/nexttowardf.o build/src/compat/libc/genos_libc/math/exp.o build/src/compat/libc/genos_libc/math/scalbf.o build/src/compat/libc/genos_libc/math/lrintf.o build/src/compat/libc/genos_libc/math/tan.o build/src/compat/libc/genos_libc/math/copysignf.o build/src/compat/libc/genos_libc/math/scalblnf.o build/src/compat/libc/genos_libc/math/copysign.o build/src/compat/libc/genos_libc/math/llroundf.o build/src/compat/libc/genos_libc/math/atan2f.o build/src/compat/libc/genos_libc/math/sinhf.o build/src/compat/libc/genos_libc/math/expm1l.o build/src/compat/libc/genos_libc/math/tanf.o build/src/compat/libc/genos_libc/math/llroundl.o build/src/compat/libc/genos_libc/math/nextafterf.o build/src/compat/libc/genos_libc/math/scalblnl.o build/src/compat/libc/genos_libc/math/nan.o build/src/compat/libc/genos_libc/math/fmaf.o build/src/compat/libc/genos_libc/math/tgammal.o build/src/compat/libc/genos_libc/math/__cos.o build/src/compat/libc/genos_libc/stdio/fputc.o build/src/compat/libc/genos_libc/stdio/fgetc.o build/src/compat/libc/genos_libc/stdio/printf_impl.o build/src/compat/libc/genos_libc/stdio/sprintf.o build/src/compat/libc/genos_libc/stdio/fflush.o build/src/compat/libc/genos_libc/stdio/ungetc.o build/src/compat/libc/genos_libc/stdio/snprintf.o build/src/compat/libc/genos_libc/stdio/buf.o build/src/compat/libc/genos_libc/stdio/stdfile_static.o build/src/compat/libc/genos_libc/stdio/fileno.o build/src/compat/libc/genos_libc/stdio/funopen.o build/src/compat/libc/genos_libc/stdio/fputs.o build/src/compat/libc/genos_libc/stdio/fread.o build/src/compat/libc/genos_libc/stdio/printf.o build/src/compat/libc/genos_libc/stdio/stdio_stubs.o build/src/compat/libc/genos_libc/stdio/fopen.o build/src/compat/libc/genos_libc/stdio/fwrite.o build/src/compat/libc/genos_libc/stdio/fgets.o build/src/compat/libc/genos_libc/stdio/rename.o build/src/compat/libc/genos_libc/stdio/fclose.o build/src/compat/libc/genos_libc/stdio/fprintf.o build/src/compat/libc/genos_libc/assert/assert.o build/src/compat/libc/genos_libc/errno/errno.o build/src/arch/arm-stm32f100/asm/arch.o build/src/main.o build/src/_main.o build/stm32_lib/stm32f10x_it.o build/stm32_lib/core_cm3.o build/stm32_lib/stm32f10x_gpio.o build/stm32_lib/system_stm32f10x.o build/stm32_lib/stm32f10x_rcc.o build/stm32_lib/startup_stm32f10x_md_vl.o -> build/project
+arm-none-eabi-ld src/kernel/diag.o src/kernel/printk.o src/compat/cxx/core/new.o src/genos/debug/debug_print.o src/genos/time/time.o src/compat/libc/genos_libc/string/strncat.o src/compat/libc/genos_libc/string/strchrnul.o src/compat/libc/genos_libc/string/strcasestr.o src/compat/libc/genos_libc/string/strdup.o src/compat/libc/genos_libc/string/memcpy.o src/compat/libc/genos_libc/string/strncpy.o src/compat/libc/genos_libc/string/memrchr.o src/compat/libc/genos_libc/string/strcasecmp.o src/compat/libc/genos_libc/string/strpbrk.o src/compat/libc/genos_libc/string/strerror.o src/compat/libc/genos_libc/string/strncasecmp.o src/compat/libc/genos_libc/string/memmove.o src/compat/libc/genos_libc/string/strrchr.o src/compat/libc/genos_libc/string/strcpy.o src/compat/libc/genos_libc/string/strcat.o src/compat/libc/genos_libc/string/strstr.o src/compat/libc/genos_libc/string/strcmp.o src/compat/libc/genos_libc/string/strcspn.o src/compat/libc/genos_libc/string/memcmp.o src/compat/libc/genos_libc/string/memchr.o src/compat/libc/genos_libc/string/memset.o src/compat/libc/genos_libc/string/strchr.o src/compat/libc/genos_libc/string/strlwr.o src/compat/libc/genos_libc/string/strndup.o src/compat/libc/genos_libc/string/strtok.o src/compat/libc/genos_libc/string/strlen.o src/compat/libc/genos_libc/string/strncmp.o src/compat/libc/genos_libc/string/strupr.o src/compat/libc/genos_libc/string/strspn.o src/compat/libc/genos_libc/string/strnlen.o src/compat/libc/genos_libc/string/strlcpy.o src/compat/libc/genos_libc/wchar/wctype.o src/compat/libc/genos_libc/wchar/wcstrtoimax.o src/compat/libc/genos_libc/wchar/wcscmp.o src/compat/libc/genos_libc/wchar/wcsncpy.o src/compat/libc/genos_libc/wchar/wcstrtoumax.o src/compat/libc/genos_libc/ctype/ctype.o src/compat/libc/genos_libc/stdlib/qsort.o src/compat/libc/genos_libc/stdlib/itoa.o src/compat/libc/genos_libc/stdlib/random.o src/compat/libc/genos_libc/stdlib/strtoll.o src/compat/libc/genos_libc/stdlib/lldiv.o src/compat/libc/genos_libc/stdlib/atol.o src/compat/libc/genos_libc/stdlib/strtod.o src/compat/libc/genos_libc/stdlib/div.o src/compat/libc/genos_libc/stdlib/strtoull.o src/compat/libc/genos_libc/stdlib/random_r.o src/compat/libc/genos_libc/stdlib/strtol.o src/compat/libc/genos_libc/stdlib/strtoul.o src/compat/libc/genos_libc/stdlib/rand.o src/compat/libc/genos_libc/stdlib/bsearch.o src/compat/libc/genos_libc/stdlib/ldiv.o src/compat/libc/genos_libc/inttypes/strtoimax.o src/compat/libc/genos_libc/inttypes/imaxmath.o src/compat/libc/genos_libc/inttypes/strtoumax.o src/compat/libc/genos_libc/math/ilogb.o src/compat/libc/genos_libc/math/j1.o src/compat/libc/genos_libc/math/logf.o src/compat/libc/genos_libc/math/__sin.o src/compat/libc/genos_libc/math/__signbitl.o src/compat/libc/genos_libc/math/cosl.o src/compat/libc/genos_libc/math/asinhf.o src/compat/libc/genos_libc/math/fdimf.o src/compat/libc/genos_libc/math/modfl.o src/compat/libc/genos_libc/math/atan2l.o src/compat/libc/genos_libc/math/floorf.o src/compat/libc/genos_libc/math/sincosf.o src/compat/libc/genos_libc/math/asinh.o src/compat/libc/genos_libc/math/atanf.o src/compat/libc/genos_libc/math/sinf.o src/compat/libc/genos_libc/math/tanhf.o src/compat/libc/genos_libc/math/fabsl.o src/compat/libc/genos_libc/math/sinl.o src/compat/libc/genos_libc/math/fmodf.o src/compat/libc/genos_libc/math/lgammaf.o src/compat/libc/genos_libc/math/sinhl.o src/compat/libc/genos_libc/math/rintl.o src/compat/libc/genos_libc/math/llrintl.o src/compat/libc/genos_libc/math/modff.o src/compat/libc/genos_libc/math/expm1.o src/compat/libc/genos_libc/math/nexttowardl.o src/compat/libc/genos_libc/math/sincos.o src/compat/libc/genos_libc/math/ceilf.o src/compat/libc/genos_libc/math/sinh.o src/compat/libc/genos_libc/math/expl.o src/compat/libc/genos_libc/math/logb.o src/compat/libc/genos_libc/math/sqrtl.o src/compat/libc/genos_libc/math/frexpl.o src/compat/libc/genos_libc/math/cosf.o src/compat/libc/genos_libc/math/acosl.o src/compat/libc/genos_libc/math/__fpclassifyf.o src/compat/libc/genos_libc/math/__tandf.o src/compat/libc/genos_libc/math/logl.o src/compat/libc/genos_libc/math/jnf.o src/compat/libc/genos_libc/math/lrint.o src/compat/libc/genos_libc/math/truncl.o src/compat/libc/genos_libc/math/asinhl.o src/compat/libc/genos_libc/math/fdiml.o src/compat/libc/genos_libc/math/frexp.o src/compat/libc/genos_libc/math/j1f.o src/compat/libc/genos_libc/math/exp2l.o src/compat/libc/genos_libc/math/nextafterl.o src/compat/libc/genos_libc/math/expf.o src/compat/libc/genos_libc/math/fmal.o src/compat/libc/genos_libc/math/modf.o src/compat/libc/genos_libc/math/asinl.o src/compat/libc/genos_libc/math/nanf.o src/compat/libc/genos_libc/math/fminl.o src/compat/libc/genos_libc/math/finite.o src/compat/libc/genos_libc/math/log1pl.o src/compat/libc/genos_libc/math/ldexpf.o src/compat/libc/genos_libc/math/remquo.o src/compat/libc/genos_libc/math/log10f.o src/compat/libc/genos_libc/math/__rem_pio2.o src/compat/libc/genos_libc/math/lgamma_r.o src/compat/libc/genos_libc/math/cbrtf.o src/compat/libc/genos_libc/math/llrintf.o src/compat/libc/genos_libc/math/lgamma.o src/compat/libc/genos_libc/math/lround.o src/compat/libc/genos_libc/math/nearbyint.o src/compat/libc/genos_libc/math/coshl.o src/compat/libc/genos_libc/math/remainderf.o src/compat/libc/genos_libc/math/tanhl.o src/compat/libc/genos_libc/math/__rem_pio2_large.o src/compat/libc/genos_libc/math/acos.o src/compat/libc/genos_libc/math/asinf.o src/compat/libc/genos_libc/math/__signbit.o src/compat/libc/genos_libc/math/erfl.o src/compat/libc/genos_libc/math/scalbnl.o src/compat/libc/genos_libc/math/__polevll.o src/compat/libc/genos_libc/math/log1p.o src/compat/libc/genos_libc/math/__cosl.o src/compat/libc/genos_libc/math/lgammal.o src/compat/libc/genos_libc/math/atan2.o src/compat/libc/genos_libc/math/floor.o src/compat/libc/genos_libc/math/significand.o src/compat/libc/genos_libc/math/__tan.o src/compat/libc/genos_libc/math/__signbitf.o src/compat/libc/genos_libc/math/j0.o src/compat/libc/genos_libc/math/fma.o src/compat/libc/genos_libc/math/remquof.o src/compat/libc/genos_libc/math/atan.o src/compat/libc/genos_libc/math/__invtrigl.o src/compat/libc/genos_libc/math/expm1f.o src/compat/libc/genos_libc/math/ldexp.o src/compat/libc/genos_libc/math/nextafter.o src/compat/libc/genos_libc/math/asin.o src/compat/libc/genos_libc/math/__sinl.o src/compat/libc/genos_libc/math/sincosl.o src/compat/libc/genos_libc/math/tanl.o src/compat/libc/genos_libc/math/__tanl.o src/compat/libc/genos_libc/math/scalbln.o src/compat/libc/genos_libc/math/llround.o src/compat/libc/genos_libc/math/lrintl.o src/compat/libc/genos_libc/math/log10l.o src/compat/libc/genos_libc/math/fmaxl.o src/compat/libc/genos_libc/math/cosh.o src/compat/libc/genos_libc/math/fabsf.o src/compat/libc/genos_libc/math/roundf.o src/compat/libc/genos_libc/math/pow.o src/compat/libc/genos_libc/math/round.o src/compat/libc/genos_libc/math/exp10.o src/compat/libc/genos_libc/math/log2.o src/compat/libc/genos_libc/math/fminf.o src/compat/libc/genos_libc/math/lroundl.o src/compat/libc/genos_libc/math/__rem_pio2l.o src/compat/libc/genos_libc/math/floorl.o src/compat/libc/genos_libc/math/remainderl.o src/compat/libc/genos_libc/math/ilogbl.o src/compat/libc/genos_libc/math/__fpclassify.o src/compat/libc/genos_libc/math/tanh.o src/compat/libc/genos_libc/math/__sindf.o src/compat/libc/genos_libc/math/atanhl.o src/compat/libc/genos_libc/math/nanl.o src/compat/libc/genos_libc/math/lroundf.o src/compat/libc/genos_libc/math/rintf.o src/compat/libc/genos_libc/math/__rem_pio2f.o src/compat/libc/genos_libc/math/cbrtl.o src/compat/libc/genos_libc/math/atanl.o src/compat/libc/genos_libc/math/j0f.o src/compat/libc/genos_libc/math/log10.o src/compat/libc/genos_libc/math/log1pf.o src/compat/libc/genos_libc/math/ilogbf.o src/compat/libc/genos_libc/math/nearbyintf.o src/compat/libc/genos_libc/math/powl.o src/compat/libc/genos_libc/math/hypotf.o src/compat/libc/genos_libc/math/coshf.o src/compat/libc/genos_libc/math/log2l.o src/compat/libc/genos_libc/math/ceill.o src/compat/libc/genos_libc/math/__expo2.o src/compat/libc/genos_libc/math/roundl.o src/compat/libc/genos_libc/math/copysignl.o src/compat/libc/genos_libc/math/fmod.o src/compat/libc/genos_libc/math/sqrt.o src/compat/libc/genos_libc/math/powf.o src/compat/libc/genos_libc/math/tgamma.o src/compat/libc/genos_libc/math/trunc.o src/compat/libc/genos_libc/math/ceil.o src/compat/libc/genos_libc/math/logbf.o src/compat/libc/genos_libc/math/tgammaf.o src/compat/libc/genos_libc/math/fabs.o src/compat/libc/genos_libc/math/sqrtf.o src/compat/libc/genos_libc/math/sin.o src/compat/libc/genos_libc/math/nearbyintl.o src/compat/libc/genos_libc/math/__fpclassifyl.o src/compat/libc/genos_libc/math/exp10f.o src/compat/libc/genos_libc/math/truncf.o src/compat/libc/genos_libc/math/erf.o src/compat/libc/genos_libc/math/fmaxf.o src/compat/libc/genos_libc/math/cbrt.o src/compat/libc/genos_libc/math/signgam.o src/compat/libc/genos_libc/math/fdim.o src/compat/libc/genos_libc/math/acoshf.o src/compat/libc/genos_libc/math/rint.o src/compat/libc/genos_libc/math/exp10l.o src/compat/libc/genos_libc/math/lgammaf_r.o src/compat/libc/genos_libc/math/llrint.o src/compat/libc/genos_libc/math/jn.o src/compat/libc/genos_libc/math/atanhf.o src/compat/libc/genos_libc/math/atanh.o src/compat/libc/genos_libc/math/acosh.o src/compat/libc/genos_libc/math/hypotl.o src/compat/libc/genos_libc/math/fmin.o src/compat/libc/genos_libc/math/log2f.o src/compat/libc/genos_libc/math/remainder.o src/compat/libc/genos_libc/math/nexttoward.o src/compat/libc/genos_libc/math/ldexpl.o src/compat/libc/genos_libc/math/fmodl.o src/compat/libc/genos_libc/math/cos.o src/compat/libc/genos_libc/math/hypot.o src/compat/libc/genos_libc/math/acosf.o src/compat/libc/genos_libc/math/significandf.o src/compat/libc/genos_libc/math/remquol.o src/compat/libc/genos_libc/math/acoshl.o src/compat/libc/genos_libc/math/__expo2f.o src/compat/libc/genos_libc/math/__cosdf.o src/compat/libc/genos_libc/math/scalbn.o src/compat/libc/genos_libc/math/scalbnf.o src/compat/libc/genos_libc/math/erff.o src/compat/libc/genos_libc/math/logbl.o src/compat/libc/genos_libc/math/exp2.o src/compat/libc/genos_libc/math/fmax.o src/compat/libc/genos_libc/math/finitef.o src/compat/libc/genos_libc/math/frexpf.o src/compat/libc/genos_libc/math/scalb.o src/compat/libc/genos_libc/math/exp2f.o src/compat/libc/genos_libc/math/log.o src/compat/libc/genos_libc/math/nexttowardf.o src/compat/libc/genos_libc/math/exp.o src/compat/libc/genos_libc/math/scalbf.o src/compat/libc/genos_libc/math/lrintf.o src/compat/libc/genos_libc/math/tan.o src/compat/libc/genos_libc/math/copysignf.o src/compat/libc/genos_libc/math/scalblnf.o src/compat/libc/genos_libc/math/copysign.o src/compat/libc/genos_libc/math/llroundf.o src/compat/libc/genos_libc/math/atan2f.o src/compat/libc/genos_libc/math/sinhf.o src/compat/libc/genos_libc/math/expm1l.o src/compat/libc/genos_libc/math/tanf.o src/compat/libc/genos_libc/math/llroundl.o src/compat/libc/genos_libc/math/nextafterf.o src/compat/libc/genos_libc/math/scalblnl.o src/compat/libc/genos_libc/math/nan.o src/compat/libc/genos_libc/math/fmaf.o src/compat/libc/genos_libc/math/tgammal.o src/compat/libc/genos_libc/math/__cos.o src/compat/libc/genos_libc/stdio/fputc.o src/compat/libc/genos_libc/stdio/fgetc.o src/compat/libc/genos_libc/stdio/printf_impl.o src/compat/libc/genos_libc/stdio/sprintf.o src/compat/libc/genos_libc/stdio/fflush.o src/compat/libc/genos_libc/stdio/ungetc.o src/compat/libc/genos_libc/stdio/snprintf.o src/compat/libc/genos_libc/stdio/buf.o src/compat/libc/genos_libc/stdio/stdfile_static.o src/compat/libc/genos_libc/stdio/fileno.o src/compat/libc/genos_libc/stdio/funopen.o src/compat/libc/genos_libc/stdio/fputs.o src/compat/libc/genos_libc/stdio/fread.o src/compat/libc/genos_libc/stdio/printf.o src/compat/libc/genos_libc/stdio/stdio_stubs.o src/compat/libc/genos_libc/stdio/fopen.o src/compat/libc/genos_libc/stdio/fwrite.o src/compat/libc/genos_libc/stdio/fgets.o src/compat/libc/genos_libc/stdio/rename.o src/compat/libc/genos_libc/stdio/fclose.o src/compat/libc/genos_libc/stdio/fprintf.o src/compat/libc/genos_libc/assert/assert.o src/compat/libc/genos_libc/errno/errno.o src/arch/arm-stm32f100/asm/arch.o src/main.o src/_main.o stm32_lib/stm32f10x_it.o stm32_lib/core_cm3.o stm32_lib/stm32f10x_gpio.o stm32_lib/system_stm32f10x.o stm32_lib/stm32f10x_rcc.o stm32_lib/startup_stm32f10x_md_vl.o -o project -static -Ttext=0x8000000 -T ../stm32_lib/device_support/gcc/stm32f100rb_flash.ld -nodefaultlibs -nostartfiles -nostdlib -nostdinc -I ../src/kernel/arch/arm-stm32f100/include -I ../src/compat/libc/genos_libc/include -I ../src/arch/arm-stm32f100/include -I ../src/include -I ../src/compat/cxx/include -I ../src/compat/libc/genos_libc/include -I ../src/compat/posix/include -I ../stm32_lib/
+
+Waf: Leaving directory `/home/mirmik/project/genos/genos/build'

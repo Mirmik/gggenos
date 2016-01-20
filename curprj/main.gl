@@ -1,0 +1,11 @@
+
+
+
+module main:{
+	downlevel standart_rule
+	defpath()
+
+	source += ['main.cpp']
+	
+	target = 'genos'
+}

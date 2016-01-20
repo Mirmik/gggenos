@@ -1,0 +1,9 @@
+
+
+module genos_libc:
+{
+	downlevel standart_rule
+	defpath()
+	mdepend = []
+	target = 'libc.a'
+}

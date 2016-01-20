@@ -1,0 +1,52 @@
+
+import os
+import glob
+
+tgt = 'libc.a'
+
+
+def GetFilesList(flist, cflist,PathForBackup):
+        for f in os.listdir(PathForBackup):
+            path = os.path.join(PathForBackup, f)
+            if not os.path.isdir(path):
+                flist.append(path)
+                if path[-2:] == ".c":
+                	cflist.append(path)
+            else:
+            	if path[-4:] != "HIDE":
+                	GetFilesList(flist, cflist, path)
+        return flist
+
+def _echo(s):
+	return 'echo ' + s + ' && ' + s 
+
+def build(ctx):
+	ctx.env.OBJS_LIBC = ''
+	src = ""
+	o_tgt = ""
+	
+	path = ctx.path.abspath()
+
+	flist = []
+	cflist = []
+	GetFilesList(flist, cflist, path)
+
+	length = len(path)
+	c2flist = []
+	
+	for s in cflist:
+		c2flist.append(s[length+1:]) 
+
+	#print c2flist 
+	for s in c2flist:
+		o = s[:-1] + 'o'
+		o_tgt += o + ' ' 
+		ctx(rule = "echo " + ctx.env.CC_OBJ + " && " +  ctx.env.CC_OBJ , source= s, target=o)
+		#ctx.env.OBJS_LIBC += ctx.path.relpath() + '/' + o + ' ' 
+
+
+	ctx.env.LD_LIBS += ctx.path.relpath() + '/' + tgt + ' '
+	#ctx.env.LD_LIBS += ' -l' + tgt + ' '
+	
+	ctx(rule = _echo("${AR} rc ${TGT} ${SRC}"), source= o_tgt, target= tgt)
+	

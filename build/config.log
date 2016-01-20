@@ -1,0 +1,10 @@
+# project  configured on Mon Jan 18 01:59:29 2016 by
+# waf 1.8.17 (abi 98, python 2070af0 on linux2)
+# using ./waf configure
+#
+----------------------------------------
+Setting top to
+/home/mirmik/project/genos/genos
+----------------------------------------
+Setting out to
+/home/mirmik/project/genos/genos/build
