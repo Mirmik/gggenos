@@ -50,6 +50,10 @@ def equal_var(name, var):
 	exit()
 
 def new_var(name, var):
+	for v in contextlevels[-1]:
+		if v[0] == name:
+			print("that name exist on top level")
+			exit()
 	contextlevels[-1].append([name, var]);
 	
 @see
@@ -138,6 +142,12 @@ def list_to_list(l):
 	for v in l.parts:
 		ll.append([evaluate(v)])
 	return ll
+
+def dict_to_dict(d):
+	dd = {}
+	for v in d.parts:
+		dd.update({evaluate(v.parts[0]) : evaluate(v.parts[1])})
+	return dd
 
 def find_module(name):
 	for m in modules:
@@ -247,6 +257,7 @@ def evaluate_func(expr):
 def evaluate(expr):	
 	if expr.type == 'int': return expr.parts[0] 
 	if expr.type == 'list': return list_to_list(expr)
+	if expr.type == 'dict': return dict_to_dict(expr)
 	if expr.type == '+': return evaluate(expr.parts[0]) + evaluate(expr.parts[1]) 
 	if expr.type == '*': return evaluate(expr.parts[0]) * evaluate(expr.parts[1]) 
 	if expr.type == '-': return evaluate(expr.parts[0]) - evaluate(expr.parts[1]) 
@@ -315,6 +326,7 @@ def evaluate(expr):
 	
 	if expr.type == 'modules': return modules; 
 	if expr.type == 'input': return input(); 
+	if expr.type == 'pass': return None; 
 	if expr.type == 'print': 
 		ev = evaluate(expr.parts[0])
 		print(ev)

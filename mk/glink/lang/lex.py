@@ -55,6 +55,8 @@ tokens = (
     'EXECSCAN',
     'INVRELPATH',
     'COMPILE',
+    'DEFOP',
+    'PASS',
     'IN',
     'PRINT',
 )
@@ -102,6 +104,7 @@ t_COMMA            = r','
 t_COLON            = r':'
 t_APPEND           = r'(\+\=)'
 t_DOUBLECOLON      = r'::'
+t_DEFOP           = r'(\=\=\=)'
 t_EQUALS           = r'\='
 t_OR               = r'\|'
 t_AMPERSAND        = r'\&'
@@ -138,6 +141,7 @@ def t_WORD(t):
     if t.value == '_curfile': t.type = "CURFILE"
     if t.value == '_abspath': t.type = "ABSPATH"
     if t.value == '_relpath': t.type = "RELPATH"
+    if t.value == 'pass': t.type = "PASS"
     if t.value == '_relpathbase': t.type = "RELPATHBASE"
     if t.value == '_invrelpath': t.type = "INVRELPATH"
     if t.value == 'exfiles': t.type = "EXFILES"

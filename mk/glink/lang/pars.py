@@ -46,8 +46,7 @@ def p_block(p):
     p[0] = p[2]
 
 def p_inblock(p):
-    """inblock :  
-               | metaexpr 
+    """inblock :  metaexpr 
                | inblock divider metaexpr
                | divider inblock
                | inblock divider"""
@@ -79,8 +78,29 @@ def p_define(p):
     """define : DEFINE WORD expr"""
     p[0] = Node("define", [p[2], p[3]])
 
+def p_defop(p):
+    """define : WORD DEFOP expr"""
+    p[0] = Node("define", [p[1], p[3]])
+
+def p_dict(p):
+    """dict : LBRACE declares RBRACE
+            | LBRACE RBRACE"""
+    if len(p) == 3:
+        p[0] = Node("dict", [])
+    else:
+        p[0] = change_type(p[2], "dict")
+
+def p_declares(p):
+    """declares : declare
+                | declares COMMA declare"""
+    if len(p) == 2:
+        p[0] = Node("declares", [p[1]])
+    else:
+        p[0] = p[1].add_parts([p[3]])
+
+
 def p_declare(p):
-    """declare : WORD COLON expr"""
+    """declare : expr COLON expr"""
     p[0] = Node("declare", [p[1], p[3]])
 
 def p_if(p):
@@ -196,6 +216,8 @@ def p_expr(p):
             | mlist
             | yield
             | repeat
+            | pass
+            | dict
             | return
             | modules
             | exfiles
@@ -311,6 +333,10 @@ def p_relpathbase(p):
 def p_compile(p):
     """compile : COMPILE"""
     p[0] = Node("compile", [None])
+
+def p_pass(p):
+    """pass : PASS"""
+    p[0] = Node("pass", [None])
 
 def p_invrelpath(p):
     """invrelpath : INVRELPATH"""

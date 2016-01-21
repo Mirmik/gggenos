@@ -9,8 +9,15 @@ mlist:
 }
 
 
-application main: 
-{
+g === {'a' : 3 , 'b':6}
+
+
+print g['b']
+
+pass
+
+#application main: 
+#{
 	
 	
-}
+#}
