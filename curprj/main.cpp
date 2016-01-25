@@ -9,39 +9,45 @@
 #include "util/hashtable.h"
 #include "aiop2560.h"
 
-#include <string.h>
+//#include <string.h>
 
 
-extern char __heap_start;
+//extern char __heap_start;
 
-#include "stdlib.h"
-
-#include "genos/allocator/allocator.h"
-#include "genos/allocator/la_alloc.h"
-#include <genos/allocator/heap_bm.h>
+//#include "stdlib.h"
+#include "string.h"
+//#include "genos/allocator/allocator.h"
+//#include "genos/allocator/la_alloc.h"
+//#include <genos/allocator/heap_bm.h>
 
 
 int main(){
-	arch_init();
-	diag_init();
+//	arch_init();
+//	diag_init();
 	leds_init();
+	red_on();
+	green_on();
 	//la_init(&__heap_start);
-	bm_init(&__heap_start, 0x1000);
+//	bm_init(&__heap_start, 0x1000);
 
-	sei();
+//	sei();
 	
-	debug_delay(20000);
-
-	debug_print_test();
-
-	malloc(28);
-
-	while(1) 
-	{
-		delay(1000);
-		red_change();
-	};
+//strcmp("aa","bb");
 
 
-while(1);
+
+//	debug_delay(20000);
+
+//	debug_print_test();
+
+//	malloc(28);
+
+//	while(1) 
+//	{
+//		delay(1000);
+//		red_change();
+//	};
+
+
+//while(1);
 }

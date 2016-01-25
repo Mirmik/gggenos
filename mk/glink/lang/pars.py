@@ -195,6 +195,10 @@ def p_equal(p):
     """equal : WORD EQUALS expr"""
     p[0] = Node("equal", [p[1], p[3]])
 
+def p_dequal(p):
+    """dequal : element EQUALS expr"""
+    p[0] = Node("dequal", [p[1], p[3]])
+
 def p_application(p):
     """application : APPLICATION var"""
     p[0] = Node("application", [p[2]])
@@ -212,6 +216,7 @@ def p_expr(p):
             | curfile
             | exectext
             | equal
+            | dequal
             | element
             | mlist
             | yield

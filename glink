@@ -7,6 +7,9 @@ sys.path.append("./mk")
 
 a=28
 
+
+
+
 from glink.lang.pars import parse_file as parse_file 
 from glink.lang.interpret import global_start 
 

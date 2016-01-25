@@ -1,4 +1,5 @@
 downlevel execfile './curprj/gllib'
+execfile './curprj/gllib'
 execfile  _relpathbase + 'main.gl'
 execscan 'src'
 
@@ -8,13 +9,12 @@ mlist:
 	libc = genos_libc()
 }
 
+define k {
+g === 3
+}
+print k.g
+k.g = 4
 
-g === {'a' : 3 , 'b':6}
-
-
-print g['b']
-
-pass
 
 #application main: 
 #{

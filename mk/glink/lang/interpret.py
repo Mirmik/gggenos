@@ -43,34 +43,35 @@ def invrelpath():
 def equal_var(name, var):
 	for context in contextlevels[::-1]:
 		for v in context:
-			if v[0] == name:
-				v[1] = var
+			if name in context:
+				context[name] = var
 				return var
 	print("wrong name to equal")
 	exit()
-
+@see
+def dequal_var(name, el, var):
+	for context in contextlevels[::-1]:
+		for v in context:
+			if name in context:
+				context[name][el] = var
+				return var
+	print("wrong name to equal", name, ' ' , el)
+	exit()
 def new_var(name, var):
-	for v in contextlevels[-1]:
-		if v[0] == name:
-			print("that name exist on top level")
-			exit()
-	contextlevels[-1].append([name, var]);
+	contextlevels[-1].update({name : var});
 	
 @see
 def get_var(name):
 	for context in contextlevels[::-1]:
 		for v in context:
-			if v[0] == name:
-				return v[1]
+			if name in context:
+				return context[name]
 	print("wrong variable " , name)
 	exit()
 
 @see
 def find_in(list, name):
-	for v in list:
-		if v[0] == name:
-			return v[1]
-	print("wrong variable " , name)
+	return(list[name])
 	exit()
 
 @see
@@ -81,14 +82,7 @@ def append(expr):
 
 @see
 def downlevel(blk):
-	for v in blk:
-		for c in contextlevels[-1]:
-			if v[0] == c[0]:
-				c[1] = v[1]
-				break
-		else:
-			new_var(v[0], v[1])
-	pass
+	contextlevels[-1].update(blk)
 
 #@see
 #def moduleblock(name, blk):
@@ -128,7 +122,7 @@ def global_start(blk, glb,_seed):
 	global seed
 	_glb = glb
 	seed = _seed
-	contextlevels.append([])
+	contextlevels.append({})
 	executed_files.append(_str)
 	return execblock(blk, 0)
 
@@ -213,7 +207,7 @@ def execscan(expr):
 	return execscan_dir(_basepath +  evaluate(expr.parts[0]))
 
 def __execfile_abs(_str):
-	contextlevels.append([])
+	contextlevels.append({})
 	executed_files.append(_str)
 	_file = open(_str)
 	ret = execblock(parse_file(_file), 0)
@@ -223,7 +217,7 @@ def __execfile_abs(_str):
 	return ret
 
 def __execfile(_str):
-	contextlevels.append([])
+	contextlevels.append({})
 	executed_files.append(_basepath + _str)
 	_file = open(_str)
 	ret = execblock(parse_file(_file), 0)
@@ -236,14 +230,14 @@ def _execfile(expr):
 	return __execfile(evaluate(expr.parts[0]))
 
 def evaluate_block(expr, yield_slot):
-	contextlevels.append([]) 
+	contextlevels.append({}) 
 	ret = execblock(expr, 0)
 	del contextlevels[-1]
 	return ret 
 
 def evaluate_func(expr):
 	v = get_var(expr.parts[0])
-	contextlevels.append([])
+	contextlevels.append({})
 	for z in zip(v[0].parts[1].parts, expr.parts[1].parts):
 		new_var(z[0].parts[0], evaluate(z[1]))
 	yield_slot = expr.parts[2]
@@ -345,6 +339,12 @@ def evaluate(expr):
 	if expr.type == 'equal':
 		ev = evaluate(expr.parts[1])
 		equal_var(expr.parts[0], ev)
+		return(ev)
+
+
+	if expr.type == 'dequal':
+		ev = evaluate(expr.parts[1])
+		dequal_var(expr.parts[0].parts[0].parts[0], evaluate(expr.parts[0].parts[1]), ev)
 		return(ev)
 
 
