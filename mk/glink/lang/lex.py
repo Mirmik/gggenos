@@ -27,6 +27,7 @@ tokens = (
     'DIVMUL', 'PLUSMINUS',
     'DIVIDER',
     'QUESTION',
+    'NEWLINE',
 
     #KEYWORDS
     'DEFFUNC',
@@ -52,6 +53,7 @@ tokens = (
     'RELPATH',
     'RELPATHBASE',
     'EXFILES',
+    'EVALUATE',
     'EXECSCAN',
     'INVRELPATH',
     'COMPILE',
@@ -68,10 +70,14 @@ def t_ignore_COMMENT(t):
     return None
 
 def t_DIVIDER(t):
-    r'([\n\;])+'
+    r';+'
+    return t
+
+def t_NEWLINE(t):
+    r'\n+'
     nr_newlines = t.value.count('\n')
     t.lexer.lineno += nr_newlines
-    return t
+    return None
 
 
 def lexer_error(str, t):
@@ -145,6 +151,7 @@ def t_WORD(t):
     if t.value == '_relpathbase': t.type = "RELPATHBASE"
     if t.value == '_invrelpath': t.type = "INVRELPATH"
     if t.value == 'exfiles': t.type = "EXFILES"
+    if t.value == 'evaluate': t.type = "EVALUATE"
     if t.value == 'yield': t.type = "YIELD"
     if t.value == 'execscan': t.type = "EXECSCAN"
     if t.value == 'aplication': t.type = "APLICATION"

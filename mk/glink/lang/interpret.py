@@ -8,8 +8,7 @@ import os
 contextlevels = []
 executed_files = []
 modules = []
-cmodules = []
-application = 0
+application = []
 
 _basepath = os.getcwd() + '/'
 
@@ -57,6 +56,7 @@ def dequal_var(name, el, var):
 				return var
 	print("wrong name to equal", name, ' ' , el)
 	exit()
+
 def new_var(name, var):
 	contextlevels[-1].update({name : var});
 	
@@ -176,14 +176,9 @@ def construct_ord(ord,app):
 	return ord
 
 
-def construct_application(application):
-	ord_modules = []
-	app = find_module(application)
-	ord_modules.append(app)
-	ord_modules = construct_ord(ord_modules, app) 
-	print(ord_modules) 
-	
-
+def construct_application(app, block):
+	global application
+	application.append([[app, block]])
 
 
 def mlist(blk):
@@ -238,7 +233,7 @@ def evaluate_block(expr, yield_slot):
 def evaluate_func(expr):
 	v = get_var(expr.parts[0])
 	contextlevels.append({})
-	for z in zip(v[0].parts[1].parts, expr.parts[1].parts):
+	for z in zip(v[0].parts, expr.parts[1].parts):
 		new_var(z[0].parts[0], evaluate(z[1]))
 	yield_slot = expr.parts[2]
 	ret = execblock(v[1], expr.parts[2])
@@ -260,7 +255,7 @@ def evaluate(expr):
 	
 	if expr.type == 'append': return append(expr) 
 	
-	if expr.type == 'deffunc': new_var(expr.parts[0].parts[0], [expr.parts[0],expr.parts[1]]); return 0
+	if expr.type == 'deffunc': new_var(expr.parts[0], [expr.parts[1],expr.parts[2]]); return 0
 	if expr.type == 'var': return get_var(expr.parts[0]) 
 	if expr.type == 'module': return module(expr); 
 	if expr.type == 'inblock': 
@@ -280,7 +275,7 @@ def evaluate(expr):
 	if expr.type == 'relpathbase': return relpathbase();
 	if expr.type == 'invrelpath': return invrelpath();
 	if expr.type == 'application': 
-		construct_application(expr.parts[0].parts[0]); return 0;
+		construct_application(expr.parts[0],expr.parts[1]); return 0;
 
 	if expr.type == 'compile': return compile(expr);
 
@@ -311,6 +306,7 @@ def evaluate(expr):
 	if expr.type == 'execfile': return _execfile(expr)
 
 	if expr.type == 'execscan': return execscan(expr)
+	if expr.type == 'evaluate': return evaluate(evaluate(expr.parts[0]))
 
 	if expr.type == 'exectext': 
 		return execblock(parse_text(evaluate(expr.parts[0])))

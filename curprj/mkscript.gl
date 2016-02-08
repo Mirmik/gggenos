@@ -1,23 +1,13 @@
-downlevel execfile './curprj/gllib'
-execfile './curprj/gllib'
-execfile  _relpathbase + 'main.gl'
-execscan 'src'
 
 
-mlist: 
-{	
-	libc = genos_libc()
-}
+module main 
+{
+source === ["main.cpp", "_main.cpp"];
+target === "main.a";
+options === "GENOS";
+};
 
-define k {
-g === 3
-}
-print k.g
-k.g = 4
-
-
-#application main: 
-#{
-	
-	
-#}
+print & application genos 
+{
+	main(GENOS = "GOD", K = 3);
+};

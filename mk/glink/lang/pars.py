@@ -35,12 +35,6 @@ class Node:
 def change_type(r, str):
     r2 = r; r2.type = str; return r2
 
-def p_dblock(p):
-    """dblock : block
-              | divider block"""
-    if len(p) == 2: p[0] = p[1]
-    if len(p) == 3: p[0] = p[2]
-
 def p_block(p):
     """block : LBRACE inblock RBRACE"""
     p[0] = p[2]
@@ -63,16 +57,16 @@ def p_print(p):
     p[0] = Node("print", [p[2]])
 
 def p_module(p):
-    """module : MODULE WORD COLON dblock"""
-    p[0] = Node("module", [p[2], p[4]])
+    """module : MODULE WORD block"""
+    p[0] = Node("module", [p[2], p[3]])
 
 def p_deffunc(p):
-    """deffunc : DEFFUNC func COLON dblock"""
-    p[0] = Node("deffunc", [p[2], p[4]])
+    """deffunc : DEFFUNC WORD LPAREN args RPAREN block"""
+    p[0] = Node("deffunc", [p[2], p[4], p[6]])
     
 def p_application(p):
-    """application : APPLICATION WORD COLON dblock"""
-    p[0] = Node("application", [p[2], p[4]])
+    """application : APPLICATION WORD block"""
+    p[0] = Node("application", [p[2], p[3]])
 
 def p_define(p):
     """define : DEFINE WORD expr"""
@@ -125,8 +119,8 @@ def p_append(p):
     p[0] = Node("append", [p[1], p[3]])
 
 def p_func(p):
-    """func : WORD LPAREN args RPAREN
-            | WORD LPAREN args RPAREN block
+    """func : WORD LPAREN args RPAREN block
+            | WORD LPAREN args RPAREN
             """
     if len(p) == 5:
         p[0] = Node("func", [p[1], p[3], 'noblock'])
@@ -138,11 +132,11 @@ def p_metaexpr(p):
     """metaexpr : expr
                 | deffunc
                 | module
+                | application
                 | declare
                 | append
                 | define
                 | execscan
-                | application
                 | compile
                 | downlevel
                 | if"""
@@ -200,8 +194,8 @@ def p_dequal(p):
     p[0] = Node("dequal", [p[1], p[3]])
 
 def p_application(p):
-    """application : APPLICATION var"""
-    p[0] = Node("application", [p[2]])
+    """application : APPLICATION WORD block"""
+    p[0] = Node("application", [p[2], p[3]])
 
 def p_expr(p):
     """expr : expralg
@@ -219,6 +213,7 @@ def p_expr(p):
             | dequal
             | element
             | mlist
+            | evaluate
             | yield
             | repeat
             | pass
@@ -264,6 +259,10 @@ def p_execfile(p):
     """execfile : EXECFILE expr"""
     p[0] = Node("execfile", [p[2]])
 
+def p_evaluate(p):
+    """evaluate : EVALUATE expr"""
+    p[0] = Node("evaluate", [p[2]])
+
 def p_execscan(p):
     """execscan : EXECSCAN expr"""
     p[0] = Node("execscan", [p[2]])
@@ -307,7 +306,7 @@ def p_variables(p):
 
 
 def p_mlist(p):
-    """mlist : MLIST COLON dblock"""
+    """mlist : MLIST COLON block"""
     p[0] = change_type(p[3], "mlist")
     
 def p_varvar(p):
