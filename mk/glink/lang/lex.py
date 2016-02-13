@@ -11,7 +11,7 @@ __date__ = "2015-01-11"
 brackets = []
 
 tokens = (
-    "SUPERWORD",
+    #"SUPERWORD",
     'WORD', 
     'FLOAT',
     'HEXNUMBER', 'BINNUMBER', 'NUMBER', 'STRING', "WRONGSTRING",
@@ -35,6 +35,7 @@ tokens = (
     'MODULE',
     'DOWNLEVEL',
     'IF',
+    'AT',
     'APPLICATION',
     'VARIABLES',
     'PYTHON',
@@ -47,16 +48,24 @@ tokens = (
     'APLICATION',
     'YIELD',
     'MLIST',
+    'UNLESS',
     'MODULES',
+    'LENGTH',
     'CURFILE',
     'ABSPATH',
     'RELPATH',
+    'ELSE',
+    'LISTDIR',
+    'ISDIR',
     'RELPATHBASE',
     'EXFILES',
     'EVALUATE',
     'EXECSCAN',
     'INVRELPATH',
+    'CYCLE',
+    'LESS',
     'COMPILE',
+    'SUBST',
     'DEFOP',
     'PASS',
     'IN',
@@ -106,6 +115,7 @@ def t_MPROD(t):
     return t
 
 # Delimeters
+t_AT            = r'\@'
 t_COMMA            = r','
 t_COLON            = r':'
 t_APPEND           = r'(\+\=)'
@@ -113,15 +123,11 @@ t_DOUBLECOLON      = r'::'
 t_DEFOP           = r'(\=\=\=)'
 t_EQUALS           = r'\='
 t_OR               = r'\|'
+t_LESS               = r'\<'
 t_AMPERSAND        = r'\&'
 t_DIVMUL           = r'\/'
 t_QUESTION           = r'\?'
 t_PLUSMINUS        = r'\+|\-'
-
-def t_SUPERWORD(t):
-    r'\@[A-Za-z_]\w*'
-    t.value=t.value[1:]
-    return t
 
 def t_WORD(t):
     r'[A-Za-z_]\w*'
@@ -130,14 +136,18 @@ def t_WORD(t):
     if t.value == 'application': t.type = "APPLICATION"
     if t.value == 'define': t.type = "DEFINE"
     if t.value == 'print': t.type = "PRINT"
+    if t.value == 'cycle': t.type = "CYCLE"
     if t.value == 'return': t.type = "RETURN"
     if t.value == 'variables': t.type = "VARIABLES"
     if t.value == 'input': t.type = "INPUT"
     if t.value == 'downlevel': t.type = "DOWNLEVEL"
     if t.value == 'execfile': t.type = "EXECFILE"
+    if t.value == 'subst': t.type = "SUBST"
     if t.value == 'exectext': t.type = "EXECTEXT"
     if t.value == 'python': t.type = "PYTHON"
-   # if t.value == 'for': t.type = "FOR"
+    if t.value == 'unless': t.type = "UNLESS"
+    if t.value == 'length': t.type = "LENGTH"
+    if t.value == 'else': t.type = "ELSE"
     if t.value == 'in': t.type = "IN"
     if t.value == 'if': t.type = "IF"
     #if t.value == 'while': t.type = "WHILE"
@@ -152,6 +162,8 @@ def t_WORD(t):
     if t.value == '_invrelpath': t.type = "INVRELPATH"
     if t.value == 'exfiles': t.type = "EXFILES"
     if t.value == 'evaluate': t.type = "EVALUATE"
+    if t.value == 'isdir': t.type = "ISDIR"
+    if t.value == 'listdir': t.type = "LISTDIR"
     if t.value == 'yield': t.type = "YIELD"
     if t.value == 'execscan': t.type = "EXECSCAN"
     if t.value == 'aplication': t.type = "APLICATION"

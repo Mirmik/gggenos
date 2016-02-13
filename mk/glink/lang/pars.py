@@ -64,9 +64,6 @@ def p_deffunc(p):
     """deffunc : DEFFUNC WORD LPAREN args RPAREN block"""
     p[0] = Node("deffunc", [p[2], p[4], p[6]])
     
-def p_application(p):
-    """application : APPLICATION WORD block"""
-    p[0] = Node("application", [p[2], p[3]])
 
 def p_define(p):
     """define : DEFINE WORD expr"""
@@ -98,8 +95,16 @@ def p_declare(p):
     p[0] = Node("declare", [p[1], p[3]])
 
 def p_if(p):
-    """if : IF expr QUESTION expr COLON expr"""
-    p[0] = Node("if", [p[2],p[4],p[6]])
+    """if : IF LPAREN expr RPAREN expr"""
+    p[0] = Node("if", [p[3],p[5]])
+
+def p_unless(p):
+    """unless : UNLESS LPAREN expr RPAREN expr
+              | UNLESS LPAREN expr RPAREN expr ELSE expr"""
+    if len(p) == 6:
+        p[0] = Node("unless", [p[3],p[5], None])
+    else:
+        p[0] = Node("unless", [p[3],p[5], p[7]])
 
 def p_divider(p):
     """divider : DIVIDER"""
@@ -151,6 +156,15 @@ def p_list(p):
     else:
         p[0] = change_type(p[2], "list")
   
+
+def p_undervar(p):
+    """undervar : AT undervar
+                | AT var"""
+    if p[2].type == "undervar":
+        p[2].parts[1] = p[2].parts[1] - 1; 
+    else:
+        p[0] = Node("undervar", [p[2], -2]);
+
 #def p_for(p):
 #    """for : FOR var IN expr COLON expr"""
 #    p[0] = Node("pfor", [p[2],p[4],p[6]])
@@ -186,16 +200,21 @@ def p_comms(p):
         p[0] = p[1].add_parts([p[3]])
 
 def p_equal(p):
-    """equal : WORD EQUALS expr"""
+    """equal : expr EQUALS expr"""
     p[0] = Node("equal", [p[1], p[3]])
 
-def p_dequal(p):
-    """dequal : element EQUALS expr"""
-    p[0] = Node("dequal", [p[1], p[3]])
 
 def p_application(p):
     """application : APPLICATION WORD block"""
     p[0] = Node("application", [p[2], p[3]])
+
+def p_isdir(p):
+    """isdir : ISDIR LPAREN expr RPAREN"""
+    p[0] = Node("isdir", [p[3]])
+
+def p_listdir(p):
+    """listdir : LISTDIR LPAREN expr RPAREN """
+    p[0] = Node("listdir", [p[3]])
 
 def p_expr(p):
     """expr : expralg
@@ -207,11 +226,14 @@ def p_expr(p):
             | python
             | execfile
             | break
+            | unless
             | curfile
             | exectext
             | equal
-            | dequal
             | element
+            | less
+            | length
+            | cycle
             | mlist
             | evaluate
             | yield
@@ -229,9 +251,12 @@ def p_expralg(p):
     """expralg : term
             | abspath
             | invrelpath
+            | subst
             | relpath
             | relpathbase
             | func
+            | listdir
+            | isdir
             | block
             | list"""
     p[0] = p[1]
@@ -240,11 +265,18 @@ def p_return(p):
     """return : RETURN expr"""
     p[0] = Node("return", [p[2]])
 
+
+def p_cycle(p):
+    """cycle : CYCLE"""
+    p[0] = Node("cycle", [None])
+
+
 def p_term(p):
     """term : str
             | float
             | int 
-            | var"""
+            | var
+            | undervar"""
     p[0] = p[1]
 
 def p_int(p):
@@ -263,9 +295,22 @@ def p_evaluate(p):
     """evaluate : EVALUATE expr"""
     p[0] = Node("evaluate", [p[2]])
 
+def p_subst(p):
+    """subst : SUBST LPAREN expr RPAREN"""
+    p[0] = Node("subst", [p[3]])
+
 def p_execscan(p):
     """execscan : EXECSCAN expr"""
     p[0] = Node("execscan", [p[2]])
+
+
+def p_less(p):
+    """less : expr LESS expr"""
+    p[0] = Node("less", [p[1], p[3]])
+
+def p_length(p):
+    """length : LENGTH LPAREN expr RPAREN"""
+    p[0] = Node("length", [p[3]])
 
 def p_exectext(p):
     """exectext : EXECTEXT expr"""

@@ -1,13 +1,3 @@
 
-
-module main 
-{
-source === ["main.cpp", "_main.cpp"];
-target === "main.a";
-options === "GENOS";
-};
-
-print & application genos 
-{
-	main(GENOS = "GOD", K = 3);
-};
+execfile "mk/glink/glib/cycles.gl";
+fl = listdir(".");

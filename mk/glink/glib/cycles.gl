@@ -1,0 +1,43 @@
+
+print "Cycles library include";
+
+
+deffunc loop()
+{
+	yield;
+	repeat;
+};
+
+deffunc while(cond)
+{
+	unless (evaluate cond) break;
+	yield;
+	repeat;	
+};
+
+deffunc for(init, cond, step)
+{
+	evaluate init; init = & pass;
+	unless (evaluate cond) break;
+	yield;
+	evaluate step;
+	repeat;	
+};
+
+deffunc foreach(var, container)
+{
+	for = @for;
+	n = length(container);
+	print n;
+	for (& i = 0, & i < @n, & i = i + 1 )
+	{
+		subst(@var) = @container[i];
+		yield;
+	}
+};
+
+l = [2,3];
+
+foreach(& f, l){
+print f; 
+};
