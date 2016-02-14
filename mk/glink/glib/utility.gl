@@ -1,0 +1,72 @@
+print "Utility library include";
+
+fn sublast_list(list,len)
+{
+	var nlist = [];
+	foreach(l, unvar(list))
+	{
+		nlist = nlist + [unvar(substring(unvar(unvar(l)), unvar(len), length(unvar(unvar(l))) - unvar(len) ))];
+	};
+	return nlist;
+};
+
+
+
+fn dired_list(list, dir)
+{
+	var nlist = [];
+	foreach(l, unvar(list))
+	{
+		nlist = nlist + [dir + "/" + l];
+	};
+	return nlist;
+};
+
+fn module_print(name)
+{
+	var modules = python "modules";
+	var mod = modules[unvar(name)];
+
+	print "Module " + mod.name + ":";
+	print mod.name;
+	print mod.source;
+	print mod.target;
+	print mod.local_incl;
+	print mod.global_incl;
+	
+#printl "global_list ->> "; print unvar(dired_list(unvar(mod.global_incl), unvar(mod.dirpath)));
+#printl "local_list ->> "; print unvar(dired_list(unvar(mod.local_incl), unvar(mod.dirpath)));
+	
+	print mod.options;
+	print mod.filename;
+	print mod.relpath;
+	print mod.dirpath;
+};
+
+
+fn application_print(name)
+{
+	var applications = python "applications";
+	var app = applications[unvar(name)];
+
+	print "Application " + app.name + ":";
+	print app.name;
+	print app.modules;
+	print app.target;
+};
+
+fn uu(f) {
+var t = unvar(unvar(f));
+return t;
+};
+
+fn scantree_regex(path, prot, hide){
+	var toexec = [];
+	var dirpath = path + '/';
+	foreach(f, listdir(unvar(dirpath)))
+	{
+		if (length(regex(unvar(prot), dirpath + unvar(unvar(f)))) != 0) toexec = toexec + [dirpath + unvar(unvar(f))]; 
+		if (isdir(dirpath + unvar(unvar(f)))) if (unvar(unvar(f)) != unvar(hide)) toexec = toexec + scantree_regex(path + '/' + unvar(unvar(f)), unvar(prot), unvar(hide)); 
+	};
+	return toexec;
+};

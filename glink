@@ -7,9 +7,8 @@ sys.path.append("./mk")
 
 from glink.lang.pars import parse_file as parse_file 
 from glink.lang.interpret import global_start  
-from glink.lang.interpret import global_start_module_mode 
 
-mod = global_start_module_mode('./curprj/' + 'mkscript.gl', globals(), 0)
+mod = global_start('mkscript.gl', globals())
 
 #print(mod["applications"])
 #print(mod["modules"])

@@ -1,0 +1,22 @@
+
+downlevel execfile "mk/glink/glib/delay.gl";
+downlevel execfile "mk/glink/glib/cycles.gl";
+downlevel execfile "mk/glink/glib/files.gl";
+downlevel execfile "mk/glink/glib/string.gl";
+downlevel execfile "mk/glink/glib/utility.gl";
+
+downlevel execfile "curprj/mkscript.gl";
+
+
+var gls = scantree_regex(".", ".gls$", "HIDE");
+
+foreach(f, gls)
+{
+	execfile unvar(unvar(f));
+};
+
+
+#application_print("genos");
+module_print("genos_libc");
+
+print & print 3 + 6;

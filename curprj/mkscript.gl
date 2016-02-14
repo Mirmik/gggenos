@@ -1,3 +1,31 @@
+print "Standart rules include";
 
-execfile "mk/glink/glib/cycles.gl";
-fl = listdir(".");
+fn init_module() downleveled 
+{
+var source = [];
+var global_incl = [];
+var local_incl = [];
+var target = name + ".a";
+var options = [];
+var filename = __filename__();
+var relpath = __relpath__();
+var dirpath = __dirpath__();
+};
+
+fn init_application() downleveled 
+{
+var modules = [];
+var target = name;
+};
+
+
+module test
+{
+	pass;
+};
+
+application test
+{
+	pass;
+};
+

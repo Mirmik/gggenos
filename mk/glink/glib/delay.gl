@@ -1,0 +1,11 @@
+
+print "Delay library include";
+
+fn delay(interval)
+{
+	var stop = interval + millis();
+	loop()
+	{
+		if (stop - millis() <= 0) break;
+	};
+};

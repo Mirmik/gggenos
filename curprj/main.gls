@@ -1,0 +1,19 @@
+
+
+module main {
+	source = ["main.cpp"];
+	options = ["GENOS"];
+};
+
+
+application genos 
+{
+	modules = 
+	[
+	["test", None, {"GENOS": "GOD"}],
+	["main", None, {"GENOS": "GOD"}],
+	];
+
+	target = "genos";
+};
+

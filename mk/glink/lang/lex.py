@@ -4,8 +4,6 @@
 from libpy.colortext  import *
 import ply.lex
 
-__author__ = "Mirmik"
-__date__ = "2015-01-11"
 
 
 brackets = []
@@ -16,59 +14,81 @@ tokens = (
     'FLOAT',
     'HEXNUMBER', 'BINNUMBER', 'NUMBER', 'STRING', "WRONGSTRING",
 
-    'APPEND',
+    'BOOLOP',
     'LPAREN',   'RPAREN',   # ( )
     'LBRACKET', 'RBRACKET', # [ ]
     'LBRACE',   'RBRACE',   # { }
-    'COMMA', 'POINT', 'COLON', 'DOUBLECOLON', 'EQUALS', 'SEMI', 
-    'AMPERSAND','OR',
+    'COMMA', 'DOT', 'COLON', 'DOUBLECOLON', 'EQUALS', 'SEMI', 'AMPERSAND',
+    'OR',
 
     'MPROD', 'DPROD',
     'DIVMUL', 'PLUSMINUS',
+    'APPEND',
+    
     'DIVIDER',
+    
+    
+    'IF', 'ELSE',
+    'LOOP',
+    
+
+    #PYTHON_FUNC
+    'LISTDIR',
+    'ISDIR',    
+
     'QUESTION',
     'NEWLINE',
 
     #KEYWORDS
-    'DEFFUNC',
-    'DEFINE',
+    'FN',
+    #'DEFINE',
     'MODULE',
     'DOWNLEVEL',
-    'IF',
+    
+    'NOT',
     'AT',
     'APPLICATION',
     'VARIABLES',
     'PYTHON',
     'EXECFILE',
-    'EXECTEXT',
+    'FILENAME',
+    #'EXECTEXT',
     'INPUT',
     'RETURN',
-    'REPEAT',
+    'REGEX',
+    #'REPEAT',
     'BREAK',
-    'APLICATION',
+    #'APLICATION',
     'YIELD',
-    'MLIST',
+    #'MLIST',
     'UNLESS',
-    'MODULES',
+    'AND',
+    #'MODULES',
     'LENGTH',
-    'CURFILE',
-    'ABSPATH',
+    'MILLIS',
+    'NONE',
+    'NODE',
+    #'CURFILE',
+    #'ABSPATH',
     'RELPATH',
-    'ELSE',
-    'LISTDIR',
-    'ISDIR',
-    'RELPATHBASE',
-    'EXFILES',
-    'EVALUATE',
-    'EXECSCAN',
-    'INVRELPATH',
-    'CYCLE',
-    'LESS',
-    'COMPILE',
+    'DIRPATH',
+    #'RELPATHBASE',
+    #'EXFILES',
+    'EVALVAR',
+    'EVALTREE',
+    'DEFINE',
+    'SLICE',
+    'PRINTL',
     'SUBST',
-    'DEFOP',
+    #'EXECSCAN',
+    #'INVRELPATH',
+    #'CYCLE',
+    #'COMPILE',
+    #'SUBST',
+    #'DEFOP',
     'PASS',
-    'IN',
+    'UNVAR',
+    #'IN',
     'PRINT',
 )
 
@@ -120,19 +140,20 @@ t_COMMA            = r','
 t_COLON            = r':'
 t_APPEND           = r'(\+\=)'
 t_DOUBLECOLON      = r'::'
-t_DEFOP           = r'(\=\=\=)'
+#t_DEFOP           = r'(\=\=\=)'
+t_BOOLOP           = r'((\>\=)|(\<\=)|\<|\>|(\=\=)|(\!\=))'
 t_EQUALS           = r'\='
 t_OR               = r'\|'
-t_LESS               = r'\<'
 t_AMPERSAND        = r'\&'
 t_DIVMUL           = r'\/'
 t_QUESTION           = r'\?'
+t_DOT           = r'\.'
 t_PLUSMINUS        = r'\+|\-'
 
 def t_WORD(t):
     r'[A-Za-z_]\w*'
     if t.value == 'module': t.type = "MODULE"
-    if t.value == 'deffunc': t.type = "DEFFUNC"
+    if t.value == 'fn': t.type = "FN"
     if t.value == 'application': t.type = "APPLICATION"
     if t.value == 'define': t.type = "DEFINE"
     if t.value == 'print': t.type = "PRINT"
@@ -146,35 +167,37 @@ def t_WORD(t):
     if t.value == 'exectext': t.type = "EXECTEXT"
     if t.value == 'python': t.type = "PYTHON"
     if t.value == 'unless': t.type = "UNLESS"
+    if t.value == 'None': t.type = "NONE"
     if t.value == 'length': t.type = "LENGTH"
     if t.value == 'else': t.type = "ELSE"
+    if t.value == 'printl': t.type = "PRINTL"
     if t.value == 'in': t.type = "IN"
     if t.value == 'if': t.type = "IF"
-    #if t.value == 'while': t.type = "WHILE"
     if t.value == 'break': t.type = "BREAK"
+    if t.value == 'regex': t.type = "REGEX"
     if t.value == 'repeat': t.type = "REPEAT"
-    if t.value == 'mlist': t.type = "MLIST"
-    if t.value == '_curfile': t.type = "CURFILE"
-    if t.value == '_abspath': t.type = "ABSPATH"
-    if t.value == '_relpath': t.type = "RELPATH"
+    if t.value == 'subst': t.type = "SUBST"
+    if t.value == 'unvar': t.type = "UNVAR"
+    if t.value == '__dirpath__': t.type = "DIRPATH"
+    if t.value == '__filename__': t.type = "FILENAME"
     if t.value == 'pass': t.type = "PASS"
-    if t.value == '_relpathbase': t.type = "RELPATHBASE"
-    if t.value == '_invrelpath': t.type = "INVRELPATH"
     if t.value == 'exfiles': t.type = "EXFILES"
-    if t.value == 'evaluate': t.type = "EVALUATE"
+    if t.value == 'evalvar': t.type = "EVALVAR"
+    if t.value == 'evaltree': t.type = "EVALTREE"
+    if t.value == 'var': t.type = "DEFINE"
     if t.value == 'isdir': t.type = "ISDIR"
+    if t.value == 'slice': t.type = "SLICE"
     if t.value == 'listdir': t.type = "LISTDIR"
+    if t.value == 'millis': t.type = "MILLIS"
     if t.value == 'yield': t.type = "YIELD"
     if t.value == 'execscan': t.type = "EXECSCAN"
+    if t.value == 'and': t.type = "AND"
     if t.value == 'aplication': t.type = "APLICATION"
     if t.value == 'compile': t.type = "COMPILE"
-    if t.value == 'modules': t.type = "MODULES"
-    #if t.value == 'loop': t.type = "LOOP"
+    if t.value == '__relpath__': t.type = "RELPATH"
+    if t.value == 'loop': t.type = "LOOP"
+    if t.value == 'Node': t.type = "NODE"
     return t
-
-def t_POINT(t):
-    r'\.'
-    return t 
 
 def t_HEXNUMBER(t):
     r'(0x)[\da-fA-F]+'

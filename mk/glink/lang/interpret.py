@@ -3,452 +3,527 @@
 
 from glink.lang.pars import parse_file as parse_file 
 from glink.lang.pars import parse_text as parse_text 
+from glink.lang.pars import Node
 	
 import os
-contextlevels = []
-executed_files = []
-modules = []
-application = []
+
+import time
+
+levels = []
+yieldblk = []
+exfiles = []
+block_except = None
+	
+def see(f):
+    def _f(expr):
+        print(expr)
+        ret = f(expr)
+        print("ret = " + ret.__str__())
+        return ret 
+    return _f
 
 class Variable:
-	def __init__(self, var):
-		self.var  = var
 
-	def __repr__(self):
-		return("Var(v:" + self.var.__repr__() + ")")
+	def __init__(self, name, val):
+		self.name = name; self.val = val;
 
-	def equal(self, nvar):
-		self.var = nvar
+	def __str__(self):
+		return self.name + " -> " + self.val.__str__() 
+
+	def set(self, nval):
+		self.val = nval 
+
+	def get(self):
+		return self.val 
+
+	def __add__(self, b):
+		return self.val + b
+
+	def __radd__(self, b):
+		return b + self.val
+
+	def __sub__(self, other):
+		return self.val - other
+
+	def __rsub__(self, b):
+		return b - self.val
+
+	def __lt__(self, other):
+		return self.val < other
+
+	def __eq__(self, other):
+		return self.val == other
+
+	def __ne__(self, other):
+		return self.val != other
+
+	def __gt__(self, other):
+		return self.val > other
+
+	def __le__(self, other):
+		return self.val <= other
+
+	def __ge__(self, other):
+		return self.val >= other
+
+	def __len__(self):
+		return len(self.val)
+
+	def __getitem__(self, key):
+		#print (self.val)
+		return self.val[key]
+
+	def __index__(self):
+		return self.val
 
 class GFunction:
-	def __init__(self, args, block):
-		self.args = args; self.block = block;
 
-	def exec(self, args, yblock):
-		#print(self.args.parts)
-		#print (args.parts)
-		nn = [evaluate(e) for e in args.parts]
-		contextlevels.append({})
-		for z in zip(self.args.parts, nn):
-			new_local_var(z[0].parts[0], z[1])
-		new_local_var("__yield__", yblock);
-		new_local_var("__repeat__", False);
-		#print (contextlevels[-1])
-		ret = execblock(self.block)
-		try:
-			if ret[0] == "__block__return__":
-				return ret[1]
-		except:
-			pass
-		if ret == "__break__":
-			ret = contextlevels[-1]
-		del contextlevels[-1]
-		return ret
-	#print(contextlevels)
+	def __init__(self, name, args, block, attr):
+		self.name = name; self.args = args; self.block = block; 
+		self.attr = attr; self.leveled = True; self.downleveled = False;
+
+	def __str__(self):
+		return "gfunc:" + self.name 
+
+
+	def invoke_names_helper(self, slfarg, extarg):
+		#print (slfarg.parts[0].parts[0]);
+		if slfarg.type == "var":
+			return slfarg.parts[0] 
+		if slfarg.type == "parttree":
+			return slfarg.parts[0].parts[0]
+
+	def invoke_vars_helper(self, slfarg, extarg):
+		#print(evaluate(extarg))
+		if slfarg.type == "var":
+			return Variable(slfarg.parts[0], evaluate(extarg)) 
+		if slfarg.type == "parttree":
+			if extarg.type != "parttree":
+				return Variable(slfarg.parts[0].parts[0], extarg)
+			else:
+				return Variable(slfarg.parts[0].parts[0], evaluate(evaluate(extarg)).val)
 	
+	def attribute_parser(self, attr):
+		for var in attr:
+			if var.parts[0] == "noleveled":
+				self.leveled = False;
+		for var in attr:
+			if var.parts[0] == "downleveled":
+				self.leveled = False;
 
-_basepath = os.getcwd() + '/'
-
-seed = 0
-
-def see(f):
-	def func(*e):
-		if seed == 1:
-			print(f.__name__)
-			print (*e)
-		ret = f(*e)
+	def invoke(self, ext_args, yblock):
+		global block_except;
+		dict = {
+		self.invoke_names_helper(self.args.parts[i], ext_args.parts[i]): 
+		self.invoke_vars_helper(self.args.parts[i], ext_args.parts[i])
+		for i in range(len(self.args.parts))}
+		if self.attr!=None: self.attribute_parser(self.attr.parts)
+		if self.leveled == True: add_level()
+		levels[-1].update(dict)
+		if yblock != None:	yieldblk.append(yblock)
+		ret = execblock(self.block)
+		if yblock != None:	del yieldblk[-1]
+		block_except = None
+		if self.leveled == True: del_level()
+		if self.downleveled == True: levels[-1].update(ret);
 		return ret
-	return func
 
-def curfile():
-	return executed_files[-1].split('/')[-1]
 
-def abspath():
-	return executed_files[-1] + '/'
+class LIterator:
 
-def relpath():
-	return 0
+	def __init__(self, list, key):
+		self.list = list; self.key = key;
 
-def relpathbase():
-	return os.path.relpath(os.path.dirname(executed_files[-1]), _basepath) + '/'
+	def set(self, nval):
+		self.list[self.key] = nval 
 
-def invrelpath():
-	return 0
+	def __str__(self):
+		return "li" + " -> " + self.list[self.key] 
 
-@see
-def downlevel(blk):
-	contextlevels[-1].update(blk)
+	def __add__(self, b):
+		return self.list[self.key] + b
 
-@see 
-def new_local_var(name, val = None):
-	if name in contextlevels[-1]:
-		print("that name already exist")
+	def __radd__(self, b):
+		return b + self.list[self.key]
+
+	def __sub__(self, other):
+		return self.list[self.key] - other
+
+	def __rsub__(self, b):
+		return b - self.list[self.key]
+
+	def __lt__(self, other):
+		return self.list[self.key] < other
+
+	def __eq__(self, other):
+		return self.list[self.key] == other
+
+	def __ne__(self, other):
+		return self.list[self.key] != other
+
+	def __gt__(self, other):
+		return self.list[self.key] > other
+
+	def __le__(self, other):
+		return self.list[self.key] <= other
+
+	def __ge__(self, other):
+		return self.list[self.key] >= other
+
+	def __len__(self):
+		return len(self.list[self.key])
+
+	def __index__(self):
+		return self.list[self.key]
+
+	def __getitem__(self, key):
+		#print (self.val)
+		return self.list[self.key][key]
+
+	def get(self):
+		return self.list[self.key]
+
+
+def add_level():
+	levels.append({})
+
+def del_level():
+	del levels[-1]
+
+def global_start(_f, glb):
+	gexecfile(_f)
+
+def gexecfile(_f):
+	f = open(_f)
+	global exfiles;
+	exfiles.append(_f)
+	tree = parse_file(f)
+	add_level()
+	execblock(tree)
+	ret = levels[-1]
+	del_level()
+	del exfiles[-1]
+	block_except = None
+	return ret
+
+def execblock(block):
+	ret = None
+	global block_except 
+	for metaexpr in block.parts:
+		ret = evaluate(metaexpr)
+		if block_except != None:
+			if block_except == "yield":
+				block_except = None;
+				yblock = yieldblk[-1]
+				del yieldblk[-1]
+				execblock(yblock)
+				yieldblk.append(yblock)
+			if block_except == "return":
+				return ret
+			if block_except == "break":
+				return ret
+	return levels[-1] 
+
+def evaluate_loop(expr):
+	ret = None
+	global block_except 
+	while(True):
+		ret = execblock(expr.parts[0])
+		if block_except != None:
+			if block_except == "return":
+				return ret
+			if block_except == "break":
+				block_except = None
+				return ret
+	return ret 
+
+def evaluate_downlevel(expr):
+	levels[-1].update(evaluate(expr.parts[0]))
+
+def evaluate(expr):
+	if expr.type in evaluate_table:
+		return evaluate_table[expr.type](expr)
+	else:
+		print("evaluate_error \n" + expr.__str__())
+		exit()
+
+
+def new_local_var(expr, val):
+	if expr.parts[0] in levels[-1]:
+		print("new_local_var error")
 		exit()
 	else:
-		v = Variable(None)
-		v.equal(val)
-		contextlevels[-1].update({name: v})
-		return v
+		levels[-1].update({expr.parts[0]: Variable(expr.parts[0],val)})
+		return levels[-1][expr.parts[0]]
 
-@see
-def get_local_var(name):
-	ret = None
-	if name in contextlevels[-1]:
-		return contextlevels[-1][name]
+def get_var(expr):
+	for l in levels[::-1]:
+		if expr.parts[0] in l:
+			return l[expr.parts[0]]
 	else:
-		return new_local_var(name) 
-
-@see
-def get_exist_local_var(name):
-	ret = None
-	if name in contextlevels[-1]:
-		return contextlevels[-1][name]
-	else:
-		print("Wrong Local name " + name)
-		exit(); 
-@see
-def under_get_var(name, level):
-	ret = None
-	if name in contextlevels[level]:
-		return contextlevels[level][name]
-	else:
-		print("Wrong name on level" + level.__repr__())
-		exit(); 
-
-@see
-def execblock(blk):
-	ret = None
-	while(True):
-		for p in blk.parts:
-			ret = evaluate(p)
-			if ret == "__yield__":
-				ret = execblock(get_local_var("__yield__").var);
-			if ret == "__repeat__":
-				get_local_var("__repeat__").equal(True);
-			if ret == "__break__":
-				return "__break__";
-			try:
-				if ret[0] == "__block__return__": 
-					return ret			
-			except: 
-				pass
-		if get_local_var("__repeat__").var == True:
-			get_local_var("__repeat__").equal(False)
-			continue 
-		break
-	return contextlevels[-1]
-
-_glb = None
-
-def global_start(blk, glb,_seed):
-	_str = _basepath + 'curprj/' + 'mkscript.gl'
-	file = open(_str)
-	blk = parse_file(file)
-	global _glb 
-	global seed
-	_glb = glb
-	seed = _seed
-	contextlevels.append({})
-	executed_files.append(_str)
-	return execblock(blk, 0)
-
-
-def global_start_module_mode(blk, glb,_seed):
-	_str = _basepath + 'curprj/' + 'mkscript.gl'
-	file = open(_str)
-	blk = parse_file(file)
-	global _glb 
-	global seed
-	_glb = glb
-	seed = _seed
-	contextlevels.append({})
-	executed_files.append(_str)
-	execblock(blk)
-	return {"modules": modules, "applications": application}
-
-def python_import_impl(str):
-	kkk = _glb
-	kkk.update(globals())
-	return kkk[str]	
-
-def list_to_list(l):
-	ll = []
-	for v in l.parts:
-		ll.append([evaluate(v)])
-	return ll
-
-def dict_to_dict(d):
-	dd = {}
-	for v in d.parts:
-		dd.update({evaluate(v.parts[0]) : evaluate(v.parts[1])})
-	return dd
-
-def find_module(name):
-	for m in modules:
-		if m[0] == name:
-			return m
-	print("wrong module " , name)
-	exit()
-
-def find_cmodule(name):
-	for m in cmodules:
-		if m[0] == name[0]:
-			return m
-	print("wrong module " , name)
-	exit()
-
-def module(expr):
-	for m in modules:
-		if m[0] == expr.parts[0]:
-			print("modules names conflict")
-			exit()
-	modules.append(Module(expr.parts[0], evaluate(expr.parts[1])))
-	return 0
-
-def construct_ord(ord,app):
-	for n in find_in(app[1],'mdepend'):
-		m = find_cmodule(n)
-		if m in ord:
-			pass
-		else:
-			ord.append(m)
-			ord = construct_ord(ord, m)
-	return ord
-
-def option_parse(option):
-	opt = {}
-	for o in option.parts:
-		if o.type == "equal":
-			#opt.update({"a": 2})
-			opt.update({o.parts[0]: evaluate(o.parts[1])})
-		else:
-			print("ERROR SYNTAX option_parse")
-			exit()
-	return opt
-
-class Module(object):
-	""" """
-	def __init__ (self, name, variables):
-		self.name = name
-		self.variables = variables
-	def __repr__(self):
-		return "Module(n:" + self.name + " v:" + self.variables.__repr__() + ")" 
-
-class Application(object):
-	""" """
-	def __init__ (self, name, mlist):
-		self.name = name
-		self.mlist = mlist
-	def __repr__ (self):
-		return "Application(n:" + self.name + " mlist:" + self.mlist.__repr__() + ")"
-
-class ModuleInc(object):
-	"""docstring for ModuleInc"""
-	def __init__(self, name, implname, options):
-		super(ModuleInc, self).__init__()
-		self.name = name
-		self.implname = implname
-		self.options = options
-	def __repr__ (self):
-		return "ModuleInc(n:" + self.name + " i:" + self.implname + " o:" + self.options.__repr__() + ")"  		
-
-def application_interpreter(block):
-	ret = []
-	for e in block.parts:
-		if e.type == "var":
-			ret.append(ModuleInc(e.parts[0], e.parts[0], None));
-		if e.type == "func":
-			ret.append(ModuleInc(e.parts[0], e.parts[0], option_parse(e.parts[1])));
-		if e.type == "equal":
-			if e.parts[1].type == "var":
-				ret.append(ModuleInc(e.parts[0], e.parts[1].parts[0], None));
-			if e.parts[1].type == "func":
-				ret.append(ModuleInc(e.parts[0], e.parts[1].parts[0], option_parse(e.parts[1].parts[1])));
-			
-
-	return ret
-
-def construct_application(app, block):
-	global application
-	#print(block)
-	application.append(Application(app, application_interpreter(block)))
-
-def execscan_dir(path):
-	files = os.listdir(path)
-	for f in files:
-		if os.path.isdir(path + '/' + f) and f!='HIDE':
-			execscan_dir(path + '/' + f)
-		elif f[-2:] == 'gl': 
-			print(f)
-			__execfile_abs(path + '/' + f)
-
-def execscan(expr):
-	return execscan_dir(_basepath +  evaluate(expr.parts[0]))
-
-def __execfile_abs(_str):
-	contextlevels.append({})
-	executed_files.append(_str)
-	_file = open(_str)
-	ret = execblock(parse_file(_file), 0)
-	_file.close()
-	del contextlevels[-1]
-	del executed_files[-1]
-	return ret
-
-def __execfile(_str):
-	contextlevels.append({})
-	executed_files.append(_basepath + _str)
-	_file = open(_str)
-	ret = execblock(parse_file(_file))
-	_file.close()
-	del contextlevels[-1]
-	del executed_files[-1]
-	return ret
-
-def _execfile(expr):
-	return __execfile(evaluate(expr.parts[0]))
-
-def evaluate_func(expr):
-	v = get_exist_local_var(expr.parts[0])
-	ret = v.var.exec(expr.parts[1], expr.parts[2])
-	return(ret)
-
-
-@see
-def evaluate(expr):	
-	if expr.type == 'int': return expr.parts[0] 
-	if expr.type == 'list': return list_to_list(expr)
-	if expr.type == 'dict': return dict_to_dict(expr)
-	if expr.type == '+': return evaluate(expr.parts[0]) + evaluate(expr.parts[1]) 
-	if expr.type == '*': return evaluate(expr.parts[0]) * evaluate(expr.parts[1]) 
-	if expr.type == '-': return evaluate(expr.parts[0]) - evaluate(expr.parts[1]) 
-	if expr.type == '/': return evaluate(expr.parts[0]) / evaluate(expr.parts[1]) 
-	if expr.type == '**': return evaluate(expr.parts[0]) ** evaluate(expr.parts[1]) 
-	
-	if expr.type == 'less': return evaluate(expr.parts[0]) < evaluate(expr.parts[1]) 
+		print("wrong var name " + expr.parts[0])
+		exit()
 	
 
-	if expr.type == 'append': return append(expr) 
-	
-	if expr.type == 'deffunc': 
-		 v = new_local_var(expr.parts[0]);
-		 v.equal( GFunction(expr.parts[1],expr.parts[2]) ); 
-		 return 0
-	if expr.type == 'var': return get_local_var(expr.parts[0]).var 
-	if expr.type == 'undervar': return under_get_var(expr.parts[0].parts[0], expr.parts[1]).var
 
+def evaluate_var(expr):
+	return get_var(expr)
 
-	if expr.type == 'module': return module(expr); 
-	if expr.type == 'inblock': 
-		return evaluate_block(expr, 0)
-	if expr.type == 'python': return python_import_impl(evaluate(expr.parts[0])) 
-	if expr.type == 'downlevel': return downlevel(evaluate(expr.parts[0])) 
-	if expr.type == 'repeat': return '__repeat__' 
-	if expr.type == 'variables': return contextlevels[evaluate(expr.parts[0])]
-	if expr.type == 'yield': return "__yield__"
+def evaluate_print(expr):
+	print(evaluate(expr.parts[0]))
+	return "__print__"
 
-	if expr.type == 'isdir': return os.path(evaluate(expr.parts[0]));
-	if expr.type == 'listdir': return os.listdir(evaluate(expr.parts[0]));	
+import sys;
+def evaluate_printl(expr):
+	sys.stdout.write(evaluate(expr.parts[0]))
+	return "__printl__"
 
-	if expr.type == 'mlist': return mlist(expr);
-	if expr.type == 'curfile': return curfile();
-	if expr.type == 'exfiles': return executed_files;
-	if expr.type == 'abspath': return abspath();
-	if expr.type == 'relpath': return relpath();
-	if expr.type == 'relpathbase': return relpathbase();
-	if expr.type == 'cycle': return "__cycle__";
-	if expr.type == 'length': return len(evaluate(expr.parts[0]));
-	if expr.type == 'invrelpath': return invrelpath();
-	if expr.type == 'application': 
-		construct_application(expr.parts[0],expr.parts[1]); return 0;
+def evaluate_int(expr):
+	return expr.parts[0]
+def evaluate_str(expr):
+	return expr.parts[0]
 
-	if expr.type == 'compile': return compile(expr);
+def evaluate_plus(expr):
+	return evaluate(expr.parts[0]) + evaluate(expr.parts[1]) 
+def evaluate_minus(expr):
+	return evaluate(expr.parts[0]) - evaluate(expr.parts[1]) 
+def evaluate_mul(expr):
+	return evaluate(expr.parts[0]) * evaluate(expr.parts[1]) 
+def evaluate_div(expr):
+	return evaluate(expr.parts[0]) / evaluate(expr.parts[1]) 
 
-	if expr.type == 'loop':  
-		while True:
-			ret = evaluate(expr.parts[0])
-			if ret == "__break__": break
-		return 0
+def evaluate_equal(expr):
+	ev = evaluate(expr.parts[1])
+	var = evaluate(expr.parts[0])
+	#print (type(var))
+	if type(ev) == Variable:
+		var.set(ev.get())
+	else:	
+		var.set(ev)
+	return ev;
 
-	if expr.type == 'break':
-		return "__break__"
-
-	#if expr.type == 'pfor':  return 0
-
-	if expr.type == 'while':  
-		while True:
-			if evaluate(expr.parts[0]) == 0: break
-			ret = evaluate(expr.parts[1])
-			if ret == "__break__": break
-		return 0
-	
-	if expr.type == 'varvar': 
-		#print (get_var(expr.parts[0].parts[0]))
-		#print (expr.parts[1].parts[0])
-		return find_in(evaluate(expr.parts[0]), expr.parts[1].parts[0]) 
-
-	if expr.type == 'element': return evaluate(expr.parts[0])[evaluate(expr.parts[1])]
-	if expr.type == 'execfile': return _execfile(expr)
-
-	
-
-	if expr.type == 'execscan': return execscan(expr)
-	if expr.type == 'evaluate': return evaluate(evaluate(expr.parts[0]))
-
-	if expr.type == 'exectext': 
-		return execblock(parse_text(evaluate(expr.parts[0])))
-	if expr.type == 'str': return expr.parts[0]
-	if expr.type == 'return': 
-		return ["__block__return__", evaluate(expr.parts[0])]
-	
-	if expr.type == 'modules': return modules; 
-	if expr.type == 'input': return input(); 
-	if expr.type == 'pass': return None; 
-	if expr.type == 'print': 
-		ev = evaluate(expr.parts[0])
-		print(ev)
-		return(ev)
-	
-	if expr.type == 'if': 
-		if evaluate(expr.parts[0]):
-			ret = evaluate(expr.parts[1])
-		else:
-			ret = evaluate(expr.parts[2])
-		return(ret)
-
-	if expr.type == 'unless': 
-		if not evaluate(expr.parts[0]):
-			ret = evaluate(expr.parts[1])
-		else:
-			if expr.parts[2] != None:
-				ret = evaluate(expr.parts[2])
-			else: 
-				ret = None
-		return(ret)
-	if expr.type == 'func': 
-		return evaluate_func(expr)
-
-	if expr.type == 'equal':
+def evaluate_define(expr):
+	var = new_local_var(expr.parts[0], None)
+	if expr.parts[1] != None:
 		ev = evaluate(expr.parts[1])
-		if expr.parts[0].type == "subst":
-			v = get_exist_local_var(expr.parts[0].parts[0].parts[0]).var
-			if v.type == "var":
-				var = get_local_var(v.parts[0])
-			if v.type == "undervar":
-				var = under_get_var(v.parts[0].parts[0], v.parts[1])
-		if expr.parts[0].type == "var":
-			var = get_local_var(expr.parts[0].parts[0])
-		if expr.parts[0].type == "undervar":
-			var = under_get_var(expr.parts[0].parts[0].parts[0], expr.parts[0].parts[1])
-		var.equal(ev)
-		return(ev)
+		if type(ev) == Variable:
+			var.set(ev.get())
+		else:	
+			var.set(ev)
 
-	if expr.type == 'parttree':
-		return(expr.parts[0])
+def evaluate_fn(expr):
+	var = new_local_var(expr.parts[0], GFunction(expr.parts[0].parts[0],expr.parts[1],expr.parts[2], expr.parts[3]))
+	return "__deffunc__"
 
-#	if expr.type == 'define':
-#		ev = evaluate(expr.parts[1])
-#		new_var(expr.parts[0], ev)
-#		return(ev)
-	print(expr, "EVALUATE ERROR")
+def evaluate_dict(expr):
+	dict = {evaluate(decl.parts[0]):evaluate(decl.parts[1]) for decl in expr.parts}
+	return dict
+
+def evaluate_list(expr):
+	list = [evaluate(l) for l in expr.parts]
+	return list
+
+def evaluate_invoke(expr):
+	if expr.parts[0].type == "var":
+		var = evaluate(expr.parts[0])
+		return var.val.invoke(expr.parts[1],expr.parts[2])
+
+def evaluate_return(expr):
+	global block_except
+	block_except = "return"
+	return evaluate(expr.parts[0])
+def evaluate_break(expr):
+	global block_except
+	block_except = "break"
+	return None
+def evaluate_yield(expr):
+	global block_except
+	block_except = "yield"
+	return  
+
+def evaluate_and(expr):
+	return evaluate(expr.parts[0]) and evaluate(expr.parts[1])
+
+def evaluate_less(expr):
+	return evaluate(expr.parts[0]) < evaluate(expr.parts[1])
+def evaluate_more(expr):
+	return evaluate(expr.parts[0]) > evaluate(expr.parts[1])
+def evaluate_eqless(expr):
+	return evaluate(expr.parts[0]) <= evaluate(expr.parts[1])
+def evaluate_eqmore(expr):
+	return evaluate(expr.parts[0]) >= evaluate(expr.parts[1])
+def evaluate_eq(expr):
+	return evaluate(expr.parts[0]) == evaluate(expr.parts[1])
+def evaluate_noteq(expr):
+	return evaluate(expr.parts[0]) != evaluate(expr.parts[1])
+
+def evaluate_if(expr):
+	if evaluate(expr.parts[0]): 
+		return evaluate(expr.parts[1]) 
+	else: 
+		if expr.parts[2] != None:
+			return evaluate(expr.parts[2])
+		else:
+			return None
+
+def evaluate_unless(expr):
+	if not evaluate(expr.parts[0]): 
+		return evaluate(expr.parts[1]) 
+	else: 
+		if expr.parts[2] != None:
+			return evaluate(expr.parts[2])
+		else:
+			return None
+	
+def evaluate_millis(expr):
+	return time.time() * 1000
+
+def evaluate_element(expr):
+	return LIterator(evaluate(expr.parts[0]).get(), evaluate(expr.parts[1]))
+
+def evaluate_execfile(expr):
+	return gexecfile(evaluate(expr.parts[0]))
+
+def evaluate_evaltree(expr):
+	#print(expr.parts[0])
+	#print(evaluate(expr.parts[0]).val)
+	return evaluate(evaluate(expr.parts[0]))
+
+def evaluate_evalvar(expr):
+	return evaluate(evaluate(expr.parts[0]).val)
+
+def evaluate_unvar(expr):
+	return evaluate(expr.parts[0]).get()
+
+def evaluate_subst(expr):
+	return evaluate(expr.parts[0])
+
+def evaluate_variables(expr):
+	return levels[evaluate(expr.parts[0])]
+
+def evaluate_Node(expr):
+	return Node(evaluate(expr.parts[0].parts[0]),evaluate(expr.parts[0].parts[1]))
+
+def evaluate_None(expr):
+	return None
+
+def evaluate_parttree(expr):
+	return expr.parts[0];
+
+def evaluate_length(expr):
+	return len(evaluate(expr.parts[0]));
+	
+def evaluate_slice(expr):
+	if len(expr.parts[0].parts) == 4:
+		return evaluate(expr.parts[0].parts[0])[evaluate(expr.parts[0].parts[1]):evaluate(expr.parts[0].parts[2]):evaluate(expr.parts[0].parts[3])]
+	if len(expr.parts[0].parts) == 3:
+		return evaluate(expr.parts[0].parts[0])[evaluate(expr.parts[0].parts[1]):evaluate(expr.parts[0].parts[2])]
+	print("Slice error")
 	exit()
+
+def evaluate_listdir(expr):
+	return os.listdir(evaluate(expr.parts[0]));
+
+def evaluate_pass(expr):
+	return None;
+
+
+modules = {}
+applications = {}
+
+def evaluate_application(expr):
+	add_level()
+	new_local_var(Node("var", ["name"]), expr.parts[0])
+	evaluate(Node("invoke", [Node("var", ["init_application"]), Node("args", []), 'noblock']))
+	execblock(expr.parts[1])
+	applications.update({expr.parts[0]: levels[-1]});
+	del_level()
+	return None
+
+def evaluate_module(expr):
+	add_level()
+	new_local_var(Node("var", ["name"]), expr.parts[0])
+	evaluate(Node("invoke", [Node("var", ["init_module"]), Node("args", []), 'noblock']))
+	execblock(expr.parts[1])
+	modules.update({expr.parts[0]: levels[-1]});
+	del_level()
+	return None
+
+def evaluate_python(expr):
+	return globals()[evaluate(expr.parts[0])]
+
+def evaluate_isdir(expr):
+	return os.path.isdir(evaluate(expr.parts[0]))
+
+def evaluate_member(expr):
+	return evaluate(expr.parts[0])[expr.parts[1].parts[0]]
+
+def evaluate_relpath(expr):
+	return exfiles[-1] 
+
+def evaluate_dirpath(expr):
+	return os.path.dirname(exfiles[-1]) 
+
+def evaluate_filename(expr):
+	return os.path.basename(exfiles[-1]) 
+
+import re
+def evaluate_regex(expr):
+	args = expr.parts[0]
+	return  (re.findall(evaluate(args.parts[0]),evaluate(args.parts[1])))
+
+evaluate_table = {
+	"print" : evaluate_print,	
+	"int" : evaluate_int,	
+	"str" : evaluate_str,	
+	"+" : evaluate_plus,	
+	"-" : evaluate_minus,	
+	"*" : evaluate_mul,	
+	"/" : evaluate_div,	
+	"equal" : evaluate_equal,	
+	"var" : evaluate_var,	
+	"dict" : evaluate_dict,	
+	"list" : evaluate_list,	
+	"element" : evaluate_element,	
+	"return" : evaluate_return,	
+	"break" : evaluate_break,	
+	"fn" : evaluate_fn,
+	"invoke" : evaluate_invoke,
+	"if" : evaluate_if,
+	"unless" : evaluate_unless,
+	"<" : evaluate_less,
+	">" : evaluate_more,
+	"<=" : evaluate_eqless,
+	">=" : evaluate_eqmore,
+	"==" : evaluate_eq,
+	"!=" : evaluate_noteq,
+	"loop" : evaluate_loop,
+	"millis" : evaluate_millis,
+	"execfile" : evaluate_execfile,
+	"yield" : evaluate_yield,
+	"define" : evaluate_define,
+	"downlevel" : evaluate_downlevel,
+	"evalvar" : evaluate_evalvar,
+	"evaltree" : evaluate_evaltree,
+	"unvar" : evaluate_unvar,
+	"subst" : evaluate_subst,
+	"variables" : evaluate_variables,
+	"parttree" : evaluate_parttree,
+	"pass" : evaluate_pass,
+	"length" : evaluate_length,
+	"slice" : evaluate_slice,
+	"Node" : evaluate_Node,
+	"None" : evaluate_None,
+	"member" : evaluate_member,
+	"and" : evaluate_and,
+	"python" : evaluate_python,
+	"listdir" : evaluate_listdir,
+	"isdir" : evaluate_isdir,
+	"relpath" : evaluate_relpath,
+	"filename" : evaluate_filename,
+	"dirpath" : evaluate_dirpath,
+	"printl" : evaluate_printl,
+	"module" : evaluate_module,
+	"regex" : evaluate_regex,
+	"application" : evaluate_application,
+}

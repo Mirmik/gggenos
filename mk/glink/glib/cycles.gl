@@ -1,43 +1,34 @@
 
 print "Cycles library include";
 
-
-deffunc loop()
-{
-	yield;
-	repeat;
-};
-
-deffunc while(cond)
-{
-	unless (evaluate cond) break;
-	yield;
-	repeat;	
-};
-
-deffunc for(init, cond, step)
-{
-	evaluate init; init = & pass;
-	unless (evaluate cond) break;
-	yield;
-	evaluate step;
-	repeat;	
-};
-
-deffunc foreach(var, container)
-{
-	for = @for;
-	n = length(container);
-	print n;
-	for (& i = 0, & i < @n, & i = i + 1 )
+fn while (& cond) 
+{	
+	loop()
 	{
-		subst(@var) = @container[i];
+		unless (evalvar(cond)) break;
 		yield;
 	}
 };
 
-l = [2,3];
-
-foreach(& f, l){
-print f; 
+fn for (&init, &cond, &step) 
+{
+	evalvar(init);
+	while(&cond)
+	{
+		yield;
+		evalvar(step);
+	}
 };
+
+fn foreach (&_var, container) 
+{
+	evaltree(Node("define", [unvar(_var), Node("None", [None])]));
+	var elem = & container[i];
+
+	for (var i = 0, i < length(container), i = i + 1)
+	{
+		evaltree(Node("equal", [unvar(_var), unvar(elem)]));
+		yield;
+	}
+};
+

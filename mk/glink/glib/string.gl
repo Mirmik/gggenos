@@ -1,0 +1,12 @@
+print "String library include";
+
+
+fn substring(str, start, num)
+{
+	var ret = "";
+	for(var i = 0, i < num, i = i + 1)
+	{
+	ret = ret + str[start + i];
+	}; 
+	return ret;
+}
