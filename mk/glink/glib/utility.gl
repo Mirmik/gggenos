@@ -31,8 +31,7 @@ fn module_print(name)
 	print mod.name;
 	print mod.source;
 	print mod.target;
-	print mod.local_incl;
-	print mod.global_incl;
+	print mod.include;
 	
 #printl "global_list ->> "; print unvar(dired_list(unvar(mod.global_incl), unvar(mod.dirpath)));
 #printl "local_list ->> "; print unvar(dired_list(unvar(mod.local_incl), unvar(mod.dirpath)));

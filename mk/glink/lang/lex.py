@@ -26,6 +26,7 @@ tokens = (
     'APPEND',
     
     'DIVIDER',
+    'ISEXIST',
     
     
     'IF', 'ELSE',
@@ -78,6 +79,7 @@ tokens = (
     'EVALTREE',
     'DEFINE',
     'SLICE',
+    'SYSTEM',
     'PRINTL',
     'SUBST',
     #'EXECSCAN',
@@ -186,6 +188,8 @@ def t_WORD(t):
     if t.value == 'evaltree': t.type = "EVALTREE"
     if t.value == 'var': t.type = "DEFINE"
     if t.value == 'isdir': t.type = "ISDIR"
+    if t.value == 'system': t.type = "SYSTEM"
+    if t.value == 'isexist': t.type = "ISEXIST"
     if t.value == 'slice': t.type = "SLICE"
     if t.value == 'listdir': t.type = "LISTDIR"
     if t.value == 'millis': t.type = "MILLIS"

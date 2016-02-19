@@ -3,13 +3,18 @@ print "Standart rules include";
 fn init_module() downleveled 
 {
 var source = [];
-var global_incl = [];
-var local_incl = [];
+var include = [];
 var target = name + ".a";
 var options = [];
 var filename = __filename__();
 var relpath = __relpath__();
 var dirpath = __dirpath__();
+
+var CC = "gcc ";
+var CPP = "g++ ";
+#var LD = "g++ ";
+var CCFLAGS = "";
+var CPPFLAGS = "";
 };
 
 fn init_application() downleveled 
@@ -18,14 +23,4 @@ var modules = [];
 var target = name;
 };
 
-
-module test
-{
-	pass;
-};
-
-application test
-{
-	pass;
-};
 

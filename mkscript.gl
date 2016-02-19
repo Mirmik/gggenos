@@ -16,7 +16,9 @@ foreach(f, gls)
 };
 
 
-#application_print("genos");
-module_print("genos_libc");
+application_print("genos");
+#module_print("genos_libc");
 
-print & print 3 + 6;
+
+#isexist("build");
+print system("ls");

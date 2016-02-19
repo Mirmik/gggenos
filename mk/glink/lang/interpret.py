@@ -13,6 +13,9 @@ levels = []
 yieldblk = []
 exfiles = []
 block_except = None
+
+def print_location():
+	print("In file " + exfiles[-1]);
 	
 def see(f):
     def _f(expr):
@@ -262,6 +265,7 @@ def get_var(expr):
 			return l[expr.parts[0]]
 	else:
 		print("wrong var name " + expr.parts[0])
+		print_location();
 		exit()
 	
 
@@ -455,6 +459,9 @@ def evaluate_python(expr):
 def evaluate_isdir(expr):
 	return os.path.isdir(evaluate(expr.parts[0]))
 
+def evaluate_isexist(expr):
+	return os.path.isexist(evaluate(expr.parts[0]))
+
 def evaluate_member(expr):
 	return evaluate(expr.parts[0])[expr.parts[1].parts[0]]
 
@@ -466,6 +473,12 @@ def evaluate_dirpath(expr):
 
 def evaluate_filename(expr):
 	return os.path.basename(exfiles[-1]) 
+
+import pipes
+import subprocess
+def evaluate_system(expr):
+	 #return os.popen(evaluate(expr.parts[0]))
+	 return subprocess.check_output(evaluate(expr.parts[0]).split())
 
 import re
 def evaluate_regex(expr):
@@ -517,8 +530,10 @@ evaluate_table = {
 	"member" : evaluate_member,
 	"and" : evaluate_and,
 	"python" : evaluate_python,
+	"system" : evaluate_system,
 	"listdir" : evaluate_listdir,
 	"isdir" : evaluate_isdir,
+	"isexist" : evaluate_isexist,
 	"relpath" : evaluate_relpath,
 	"filename" : evaluate_filename,
 	"dirpath" : evaluate_dirpath,

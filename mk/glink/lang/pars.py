@@ -226,6 +226,14 @@ def p_isdir(p):
     """isdir : ISDIR LPAREN expr RPAREN"""
     p[0] = Node("isdir", [p[3]])
 
+def p_system(p):
+    """system : SYSTEM LPAREN expr RPAREN"""
+    p[0] = Node("system", [p[3]])
+
+def p_isexist(p):
+    """isexist : ISEXIST LPAREN expr RPAREN"""
+    p[0] = Node("isexist", [p[3]])
+
 def p_listdir(p):
     """listdir : LISTDIR LPAREN expr RPAREN """
     p[0] = Node("listdir", [p[3]])
@@ -289,6 +297,8 @@ def p_expralg(p):
             | filename
             | dirpath
             | isdir
+            | system
+            | isexist
             | block
             | length
             | list"""

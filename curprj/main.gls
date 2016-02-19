@@ -10,8 +10,9 @@ application genos
 {
 	modules = 
 	[
-	["test", None, {"GENOS": "GOD"}],
-	["main", None, {"GENOS": "GOD"}],
+	["test", {"GENOS": "GOD"}],
+	["main", {"GENOS": "GOD"}],
+	["libc", "genos_libc", {}]
 	];
 
 	target = "genos";
