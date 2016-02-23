@@ -1,8 +1,13 @@
 
 
 module main {
-	source = ["main.cpp"];
-	options = ["GENOS"];
+	cpp_source = ["main.cpp", "main2.cpp"];
+	cc_source = ["main3.c"];
+
+	depends = depends + ["main.gls"];
+	defines = ["GENOS=222"];
+
+	mdepends = ["libc"]
 };
 
 
@@ -10,9 +15,9 @@ application genos
 {
 	modules = 
 	[
-	["test", {"GENOS": "GOD"}],
-	["main", {"GENOS": "GOD"}],
-	["libc", "genos_libc", {}]
+	["main", "-DLLL=12"],
+	["libc", "genos_libc", ""],
+	["arch", "arch_avr", ""],
 	];
 
 	target = "genos";

@@ -5,10 +5,23 @@ import sys
 import os
 sys.path.append("./mk")
 
+import sys
+import subprocess
+
+
 from glink.lang.pars import parse_file as parse_file 
 from glink.lang.interpret import global_start  
 
-mod = global_start('mkscript.gl', globals())
+
+if len(sys.argv) != 1:
+	if sys.argv[1] == "clean":
+		print("rm -rf build")
+		subprocess.check_output("rm -rf build".split())
+	else:
+		print("Wrong param")
+		exit()
+else:
+	mod = global_start('mkscript.gl', globals())
 
 #print(mod["applications"])
 #print(mod["modules"])

@@ -1,0 +1,21 @@
+print "Makesystem library include";
+
+
+#fn getmodule(name)
+#{
+#	var modules = python "modules";
+#	return modules[unvar(name)];
+#};
+
+#fn mlist(name)
+#{
+#	var modules = python "modules";
+#	var l = [];
+
+#	var apps = python "applications";
+#	var app = apps[name];
+
+#	print apps[name];
+
+#	return 0;
+#}

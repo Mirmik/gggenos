@@ -52,8 +52,8 @@ def savechange(p):
 	
 def load(p):
 	uassert(len(p)>=1 ,"You should get template conf name.")
-	echo_rmtree('./conf')
-	echo_copytree('./saveconf/' + p[0], './conf')
+	echo_rmtree(curdir)
+	echo_copytree(savedir + '/' + p[0], curdir)
 	current_name_set(p[0])
 	print green("operation success")
 

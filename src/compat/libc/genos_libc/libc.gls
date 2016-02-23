@@ -1,10 +1,16 @@
 
 
-var _cc_source = scantree_regex(__dirpath__(), ".c$", "HIDE");
-var cc_source = sublast_list(unvar(_cc_source), length(__dirpath__()) + 1);
+var __cc_source = scantree_regex(__dirpath__(), ".c$", "HIDE");
+var _cc_source = sublast_list(unvar(__cc_source), length(__dirpath__()) + 1);
+var __cc_headers = scantree_regex(__dirpath__(), ".h$", "HIDE");
+var _cc_headers = sublast_list(unvar(__cc_headers), length(__dirpath__()) + 1);
 
 module genos_libc {
-	source = cc_source;
+	cc_source = _cc_source;
+	headers = _cc_headers;
 	options = ["GENOS"];
-	include = ["include"]
+	include = ["include"];
+
+	depends = depends + ["libc.gls"];
+	mdepends = ["arch"]
 };

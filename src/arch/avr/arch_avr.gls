@@ -1,0 +1,10 @@
+
+
+module arch_avr
+{
+	include = ["include"];
+
+	defines = ["F_CPU=16000000"];
+
+	target = "";
+}

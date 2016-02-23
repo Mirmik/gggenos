@@ -45,7 +45,8 @@ def echo_rmtree(tree):
 	now = datetime.now()
 
 	str = datetime.strftime(datetime.now(), "%Y.%m.%d_%H:%M:%S")
-	shutil.copytree(tree, path([cm_basket, str]))
+	if os.path.exists(tree):
+		shutil.copytree(tree, path([cm_basket, str]))
 	dirs=[]
 	dirst = []
 	while len(dirs) > 20:

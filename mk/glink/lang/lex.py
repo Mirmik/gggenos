@@ -80,6 +80,8 @@ tokens = (
     'DEFINE',
     'SLICE',
     'SYSTEM',
+    'DECODE',
+    'MAKESYSTEM',
     'PRINTL',
     'SUBST',
     #'EXECSCAN',
@@ -180,6 +182,7 @@ def t_WORD(t):
     if t.value == 'repeat': t.type = "REPEAT"
     if t.value == 'subst': t.type = "SUBST"
     if t.value == 'unvar': t.type = "UNVAR"
+    if t.value == 'decode': t.type = "DECODE"
     if t.value == '__dirpath__': t.type = "DIRPATH"
     if t.value == '__filename__': t.type = "FILENAME"
     if t.value == 'pass': t.type = "PASS"
@@ -196,6 +199,7 @@ def t_WORD(t):
     if t.value == 'yield': t.type = "YIELD"
     if t.value == 'execscan': t.type = "EXECSCAN"
     if t.value == 'and': t.type = "AND"
+    if t.value == 'makesystem': t.type = "MAKESYSTEM"
     if t.value == 'aplication': t.type = "APLICATION"
     if t.value == 'compile': t.type = "COMPILE"
     if t.value == '__relpath__': t.type = "RELPATH"

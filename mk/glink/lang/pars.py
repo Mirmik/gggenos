@@ -238,6 +238,10 @@ def p_listdir(p):
     """listdir : LISTDIR LPAREN expr RPAREN """
     p[0] = Node("listdir", [p[3]])
 
+def p_decode(p):
+    """decode : DECODE LPAREN expr RPAREN """
+    p[0] = Node("decode", [p[3]])
+
 def p_regex(p):
     """regex : REGEX LPAREN args RPAREN """
     p[0] = Node("regex", [p[3]])
@@ -253,6 +257,10 @@ def p_dirpath(p):
 def p_filename(p):
     """filename : FILENAME LPAREN RPAREN """
     p[0] = Node("filename", [])
+
+def p_makesystem(p):
+    """makesystem : MAKESYSTEM """
+    p[0] = Node("makesystem", [])
 
 def p_expr(p):
     """expr : expralg
@@ -272,7 +280,9 @@ def p_expr(p):
             | yield
             | pass
             | define
+            | makesystem
             | printl
+            | decode
             | and
             | regex
             | dict

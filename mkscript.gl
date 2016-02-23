@@ -4,21 +4,60 @@ downlevel execfile "mk/glink/glib/cycles.gl";
 downlevel execfile "mk/glink/glib/files.gl";
 downlevel execfile "mk/glink/glib/string.gl";
 downlevel execfile "mk/glink/glib/utility.gl";
+downlevel execfile "mk/glink/glib/makesystem.gl";
 
+#Исполнение скрипта стандартных правил.
 downlevel execfile "curprj/mkscript.gl";
 
+var gls;
+#Обходим деревья в поиске скриптов системы сборки.
+gls = scantree_regex("src", ".gls$", "HIDE");
+foreach(f, gls)
+{
+	execfile unvar(unvar(f));
+};
 
-var gls = scantree_regex(".", ".gls$", "HIDE");
-
+gls = scantree_regex("curprj", ".gls$", "HIDE");
 foreach(f, gls)
 {
 	execfile unvar(unvar(f));
 };
 
 
-application_print("genos");
-#module_print("genos_libc");
+#Проверяем наличие директории build
+unless (isexist("build")) {system("mkdir build"); print "'build' directory is created"} 
+else print "'build' is exist";
+
+#Инициализация временных переменных.
+var dirlist = scantree_isdir("src","HIDE");
+var b;
+
+#Проверяем наличие директории src и всех поддиректорий.
+dirlist = scantree_isdir("src","HIDE");
+
+unless (isexist("build/" + "src")) {system("mkdir build/src"); print "'build/src' directory is created"} 
+else print "'build/src' is exist";
+
+foreach(f, dirlist)
+{
+	b = "build" + '/' + f;
+	unless (isexist(b)) system("mkdir " + b);
+};
 
 
-#isexist("build");
-print system("ls");
+#Проверяем наличие директории curprj и всех поддиректорий.
+dirlist = scantree_isdir("curprj","HIDE");
+
+unless (isexist("build/" + "curprj")) {system("mkdir build/curprj"); print "'build/curprj' directory is created"} 
+else print "'build/curprj' is exist";
+
+foreach(f, dirlist)
+{
+	b = "build" + '/' + f;
+	unless (isexist(b)) system("mkdir " + b);
+};
+
+
+
+#Собственно сборка. Реализовано в питоне.
+makesystem;

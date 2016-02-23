@@ -3,6 +3,7 @@
 
 from glink.lang.pars import parse_file as parse_file 
 from glink.lang.pars import parse_text as parse_text 
+from glink.mk.makesystem import makesystem 
 from glink.lang.pars import Node
 	
 import os
@@ -78,6 +79,12 @@ class Variable:
 
 	def __index__(self):
 		return self.val
+
+
+def unvar(v):
+	if v.__class__ == Variable:
+		return unvar(v.val)
+	return v	
 
 class GFunction:
 
@@ -226,6 +233,14 @@ def execblock(block):
 			if block_except == "break":
 				return ret
 	return levels[-1] 
+
+def evaluate_inblock(expr):
+	add_level()
+	execblock(expr)
+	ret = levels[-1]
+	del_level()
+	block_except = None
+	return ret
 
 def evaluate_loop(expr):
 	ret = None
@@ -460,7 +475,8 @@ def evaluate_isdir(expr):
 	return os.path.isdir(evaluate(expr.parts[0]))
 
 def evaluate_isexist(expr):
-	return os.path.isexist(evaluate(expr.parts[0]))
+	print(unvar(evaluate(expr.parts[0])))
+	return os.path.exists(unvar(evaluate(expr.parts[0])))
 
 def evaluate_member(expr):
 	return evaluate(expr.parts[0])[expr.parts[1].parts[0]]
@@ -474,11 +490,22 @@ def evaluate_dirpath(expr):
 def evaluate_filename(expr):
 	return os.path.basename(exfiles[-1]) 
 
-import pipes
+
+def evaluate_makesystem(expr):
+	makesystem(modules, applications)
+	return 0 
+
 import subprocess
+import codecs
 def evaluate_system(expr):
-	 #return os.popen(evaluate(expr.parts[0]))
-	 return subprocess.check_output(evaluate(expr.parts[0]).split())
+	task = subprocess.Popen(evaluate(expr.parts[0]), shell=True, stdout=subprocess.PIPE)
+	data = task.stdout.read()
+	return data
+
+import codecs
+def evaluate_decode(expr):
+	ret = codecs.decode(evaluate(expr.parts[0]), 'unicode_escape')
+	return ret
 
 import re
 def evaluate_regex(expr):
@@ -519,6 +546,7 @@ evaluate_table = {
 	"evalvar" : evaluate_evalvar,
 	"evaltree" : evaluate_evaltree,
 	"unvar" : evaluate_unvar,
+	"decode" : evaluate_decode,
 	"subst" : evaluate_subst,
 	"variables" : evaluate_variables,
 	"parttree" : evaluate_parttree,
@@ -533,12 +561,14 @@ evaluate_table = {
 	"system" : evaluate_system,
 	"listdir" : evaluate_listdir,
 	"isdir" : evaluate_isdir,
+	"makesystem" : evaluate_makesystem,
 	"isexist" : evaluate_isexist,
 	"relpath" : evaluate_relpath,
 	"filename" : evaluate_filename,
 	"dirpath" : evaluate_dirpath,
 	"printl" : evaluate_printl,
 	"module" : evaluate_module,
+	"inblock" : evaluate_inblock,
 	"regex" : evaluate_regex,
 	"application" : evaluate_application,
 }
