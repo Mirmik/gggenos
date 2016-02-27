@@ -32,6 +32,8 @@ else print "'build' is exist";
 var dirlist = scantree_isdir("src","HIDE");
 var b;
 
+#Создаем отражение деревьев в папке build
+
 #Проверяем наличие директории src и всех поддиректорий.
 dirlist = scantree_isdir("src","HIDE");
 

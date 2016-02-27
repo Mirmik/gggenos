@@ -17,6 +17,8 @@ if len(sys.argv) != 1:
 	if sys.argv[1] == "clean":
 		print("rm -rf build")
 		subprocess.check_output("rm -rf build".split())
+	elif sys.argv[1] == "install":
+		subprocess.check_output(["sh", "./curprj/install.sh"])
 	else:
 		print("Wrong param")
 		exit()

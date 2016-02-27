@@ -1,0 +1,18 @@
+
+module debug_print_manually
+{
+	cc_source = ["debug_print_manually.c"];
+	mdepends = [];
+};
+
+module debug_print_diag
+{
+	cc_source = ["debug_print_diag.c"];
+	mdepends = []
+};
+
+module debug_print_stub
+{
+	cc_source = ["debug_print_stub.c"];
+	mdepends = []
+};

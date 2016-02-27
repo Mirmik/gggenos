@@ -2,7 +2,7 @@
 	#define GENOS_DEBUG_PRINT
 	
 #include <stdint.h> 
-#include <asm/genos/debug.h> 
+//#include <asm/genos/debug.h> 
 
 /*	
 	2012-2015 Mirmik
@@ -23,6 +23,7 @@
 */
 
 #include "kernel/diag.h"
+#include "stddef.h"
 #include "sys/cdefs.h"
 
 __BEGIN_DECLS
@@ -30,11 +31,7 @@ __BEGIN_DECLS
 //void debug_print_init(); - в platform
 
 //Платформозависимый !блокирующий процессор! вывод char
-static void debug_putchar(char c){diag_putc(c);};
-static int debug_print_isready(){return 
-	(current_diag != NULL)? 
-	(current_diag->putc != NULL) ? 
-	1 : 0 : 0;};
+void debug_putchar(char c);
 
 //Вывод строки указанной длины.
  void debug_write(const char* c,int i);

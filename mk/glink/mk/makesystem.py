@@ -62,10 +62,12 @@ class Module:
 				self.pathed_cpp_source + 
 				self.pathed_headers +
 				self.pathed_depends)
+		#print(deps);
+		#exit();
 		if len(deps) != 0:
 			self.source_date = os.path.getmtime(deps[0])
 			for d in deps:
-				if os.path.getmtime(deps[0]) > self.source_date:
+				if os.path.getmtime(d) > self.source_date:
 					self.source_date = os.path.getmtime(d)
 
 			if self.target_date == None:
@@ -165,11 +167,11 @@ def makesystem(mods, apps):
 				ReverseModDelegateList.update({m[0]: m[0]})
 				options = m[1]
 			else:
-				print("Error makesystem")
+				print("Makesystem error")
 				exit()
 			if mm in mods:
 				modules.append(Module(mods[mm], options))
-				print("Used module " + mm)
+				print("Using module " + mm)
 			else:
 				print("Error makesystem 2 " + mm)
 				exit();
@@ -197,3 +199,18 @@ def makesystem(mods, apps):
 
 		targets = [value for value in targets if value]
 		print(targets)
+
+		LD = app["LD"].val;
+		LDFLAGS = app["LDFLAGS"].val;
+		atarget = app["target"].val;
+
+		targstr = " ".join(targets)
+
+		command = LD + " -Wl,--start-group " + targstr + " -Wl,--end-group " + " -o " + atarget + " " + LDFLAGS + " "
+		print(command)
+		subprocess.check_output(command.split())
+
+		print("Application was successfully constructed");
+
+
+

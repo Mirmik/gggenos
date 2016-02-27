@@ -31,6 +31,20 @@ def saveto(p):
    	os.remove(path([savedir,p[0],profile]))
    	print(green("succesffualy saved"))
 
+
+def savetotemplate(p):
+	uassert (len(p) != 0, "you should get new name") 
+	uassert (cur_ex(), 'current directory is not exist. load any config at first.')
+	uassert (not super_ex(p[0]), p[0] + ' config allready exist')
+	try:
+		echo_copytree(curdir, path([superdir, p[0]]))
+	except IOError:
+   		print('Makedir error. Mb permition???')
+   		exit()
+   	os.remove(path([superdir,p[0],profile]))
+   	print(green("succesffualy saved"))
+
+
 def copy(p):
 	uassert (len(p) >= 2, "need more param") 
 	uassert (not save_ex(p[1]), 'script allready exists')

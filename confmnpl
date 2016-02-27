@@ -12,6 +12,7 @@ funclist = 				{
 "name" 		: impl.name,
 "setname" 	: impl.setname,
 "saveto" 	: impl.saveto,
+"savetotemplate" 	: impl.savetotemplate,
 "savechange" : impl.savechange,
 "copy" 		: impl.copy,
 "load" 		: impl.load,
@@ -33,6 +34,7 @@ if len(sys.argv) == 1:
 	print(impl.decl("copyto @name:") + " save current config with new name. @name - new name")
 	print(impl.decl("savechange:") + " save current config with current name.")
 	print(impl.decl("saveto:") + " save current config with new name.")
+	print(impl.decl("savetotemplate:") + " save current config with new template name.")
 	print(impl.decl("load @name:") + " load config. @name - name of loaded config")
 	print(impl.decl("template @name:") + " load config from template dir. @name - name of loaded config")
 	print(impl.decl("ls:") + " list of saved config")

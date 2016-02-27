@@ -1,0 +1,9 @@
+
+
+module arch_linux 
+{
+	include = ["include"];
+
+	cc_source = ["asm/diag.c"];
+	target = "arch_linux.a";
+}

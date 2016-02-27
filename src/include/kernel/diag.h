@@ -8,40 +8,37 @@
 //или вывода в файл. То есть cdiag является просто точкой монтирования функций ввода-вывода,
 //используемых отладочным вводом-выводом.
 
-#include "assert.h"
+#include "sys/cdefs.h"
+
+__BEGIN_DECLS
 
 struct diag_ops 
 {
-	void (*putc)(char c);
-	char (*getc)();
-	
-	int (*write)(char* buf, int n);
-	int (*read)	(char* buf, int n);
-	
-	void (*init)();
+	int (*putc)(int c);
+	int (*getc)();
+	int (*write)(void* buf, int n);
+	int (*read)(void* buf, int n);
+	int (*init)();
 };
 
+typedef int(*diag_putc_t)(int);
+typedef int(*diag_getc_t)();
+typedef int(*diag_write_t)(void*, int);
+typedef int(*diag_read_t)(void*, int);
+typedef int(*diag_init_t)();
 
 extern struct diag_ops* current_diag;
 
+void diag_setup(struct diag_ops* ndiag);
+int diag_putc(int c);
+int diag_getc();
+int diag_write(void* buf, int len);
+int diag_read(void* buf, int len);
+int diag_init();
 
-static void diag_setup(struct diag_ops* ndiag){current_diag = ndiag;};
+int diag_write_stub(void* buf, int len);
+int diag_read_stub(void* buf, int len);
 
-static void diag_putc(char c){
-	assert(current_diag);
-	assert(current_diag->putc);
-	current_diag->putc(c);
-};
+__END_DECLS
 
-static char diag_getc(){
-	assert(current_diag);
-	assert(current_diag->getc);
-	return current_diag->getc();
-};
-
-static char diag_init(){
-	assert(current_diag);
-	assert(current_diag->init);
-	current_diag->init();
-};
 #endif
