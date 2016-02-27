@@ -1,0 +1,35 @@
+print "Standart rules include";
+
+fn init_module() downleveled 
+{
+var cc_source = [];
+var cpp_source = [];
+var include = [];
+var target = name + ".a";
+var options = [];
+var headers = [];
+var depends = [];
+var defines = [];
+var mdepends = [];
+var filename = __filename__();
+var relpath = __relpath__();
+var dirpath = __dirpath__();
+
+var CC = "gcc";
+var CPP = "g++";
+var AR = "ar";
+var CFLAGS = "-std=gnu99";
+var CXXFLAGS = "-std=c++11";
+
+var global_include = "src/include"
+};
+
+fn init_application() downleveled 
+{
+var modules = [];
+var target = name;
+var LDFLAGS = "-mmcu=atmega2560 -DF_CPU=16000000  -std=c++11 -O1";
+var LD = "avr-g++";
+};
+
+

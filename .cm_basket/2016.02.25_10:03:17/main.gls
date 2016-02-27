@@ -1,0 +1,23 @@
+
+
+module main {
+	cpp_source = ["main.cpp"];
+	cc_source = [];
+
+	depends = ["main.gls"];
+	defines = ["GENOS=01"];
+
+	mdepends = []
+};
+
+
+application genos 
+{
+	modules = 
+	[
+	["main", ""],
+	];
+
+	target = "genos";
+};
+

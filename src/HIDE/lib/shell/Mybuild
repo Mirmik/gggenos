@@ -1,8 +1,0 @@
-package embox.lib
-
-static module Tokenizer {
-	source "tokenizer.c"
-
-	@IncludeExport(path="cmd")
-	source "cmdline.h"
-}
