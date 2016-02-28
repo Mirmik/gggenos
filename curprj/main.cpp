@@ -1,6 +1,6 @@
 
 
-#include "genos/debug/debug_print.h"
+#include "genos/debug/debug.h"
 #include "kernel/diag.h"
 #include "stddef.h"
 #include "stdio.h"
@@ -23,6 +23,13 @@ diag_ops sss = {
 int main(){
 	current_diag = &sss;
 //	diag_write((void*)"Mirmik", 6);
+
+
+
 	debug_print("Here you are\n");
+
+	debug_delay(20000000);
+
 	debug_print("Mirmik\n");
+	debug_print_test();
 }

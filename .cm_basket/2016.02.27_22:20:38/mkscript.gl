@@ -21,8 +21,7 @@ var AR = "ar";
 var CFLAGS = "";
 var CXXFLAGS = "";
 
-var global_include = "src/include";
-var global_mdepends = [];
+var global_include = "src/include"
 };
 
 fn init_application() downleveled 

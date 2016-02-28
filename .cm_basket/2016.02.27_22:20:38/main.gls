@@ -5,8 +5,9 @@ module main {
 	cc_source = [];
 
 	depends = ["main.gls"];
+	defines = ["GENOS=01"];
 
-	mdepends = ["arch"]
+	mdepends = []
 };
 
 
@@ -15,9 +16,6 @@ application genos
 	modules = 
 	[
 	["main", ""],
-	["arch", "arch_linux", ""],
-	["diag", "diag_impl", ""],
-	["debug_print", "debug_print_diag", ""],
 	];
 
 	target = "genos";

@@ -9,8 +9,8 @@
 #ifndef HAL_ARCH_H_
 #define HAL_ARCH_H_
 
-#include <asm/hal/arch.h>
-#include <sys/compiler.h>
+//#include <asm/hal/arch.h>
+#include <compiler.h>
 #include <sys/cdefs.h>
 
 typedef enum {

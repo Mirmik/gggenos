@@ -34,7 +34,7 @@ __BEGIN_DECLS
 void debug_putchar(char c);
 
 //Вывод строки указанной длины.
- void debug_write(const char* c,int i);
+ void debug_write(char* c, int i);
 //Вывод интов, согласно типам. Возможен вывод в системах dec, hex, bin.
  void debug_printhex_uint4(uint8_t b);
  void debug_printhex_uint8 (uint8_t b);

@@ -1,7 +1,7 @@
 #ifndef GENOS_DEBUG_ERRSERV
 	#define GENOS_DEBUG_ERRSERV
 	
-	#include "asm/genos/debug.h"
+	//#include "asm/genos/debug.h"
 	#include "hal/arch.h"
 	
 	#define debug_halt() \

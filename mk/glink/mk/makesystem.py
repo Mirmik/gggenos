@@ -3,6 +3,7 @@
 
 import os
 import subprocess
+import mk.libpy.colortext
 
 modules = []
 ModDelegateList = {}
@@ -11,7 +12,7 @@ ReverseModDelegateList = {}
 def exist_list_test(lst):
 	for l in lst:
 		if os.path.exists(l) == False:
-			print ("File " + l + "is not exist")
+			print ("File " + l + " is not exist")
 			exit()
 
 
@@ -25,7 +26,7 @@ class Module:
 		self.cc_source = pmod["cc_source"].val
 		self.cpp_source = pmod["cpp_source"].val
 		self.depends = pmod["depends"].val
-		self.mdepends = pmod["mdepends"].val
+		self.mdepends = pmod["mdepends"].val + pmod["global_mdepends"].val
 		self.headers = pmod["headers"].val
 		self.include = pmod["include"].val
 		self.defines = pmod["defines"].val
@@ -124,19 +125,25 @@ class Module:
 		for fcpp in self.pathed_cpp_source:
 			ocpp = "build/" + fcpp[:-4] + ".o"
 			command = self.cpp + " " + fcpp + " -c -o " + ocpp + " " + self.cpp_flags + " " + inclstr + " " + defstr + " " + optionsstr
-			print(command)
+			print('\n' + command)
 			subprocess.check_output(command.split())
 			otarget.append(ocpp)
 
 		for fcc in self.pathed_cc_source:
 			occ = "build/" + fcc[:-2] + ".o"
 			command = self.cc + " " + fcc + " -c -o " + occ + " " + self.cc_flags + " " + inclstr + " " + defstr + " " + optionsstr
-			print(command)
+			print('\n' + command)
 			subprocess.check_output(command.split())
 			otarget.append(occ)
 
+		#print(self.name)
+		#print(self.ar)
+		#print(self.pathed_target)
+		#print(otarget)
+
+
 		command = self.ar + " rc " + self.pathed_target + " " + " ".join(otarget)
-		print (command)
+		print ('\n' + command)
 		subprocess.check_output(command.split())
 
 def find_module(name):
@@ -191,7 +198,7 @@ def makesystem(mods, apps):
 			if m.need_to_compile == True:
 				ntc += 1
 				m.compile()
-		print(ntc.__repr__() + " modules was compiled")
+		print('\n' + ntc.__repr__() + " modules was compiled")
 
 		targets = []
 		for m in modules:
@@ -207,10 +214,10 @@ def makesystem(mods, apps):
 		targstr = " ".join(targets)
 
 		command = LD + " -Wl,--start-group " + targstr + " -Wl,--end-group " + " -o " + atarget + " " + LDFLAGS + " "
-		print(command)
+		print('\n' + command + '\n')
 		subprocess.check_output(command.split())
 
-		print("Application was successfully constructed");
+		print(mk.libpy.colortext.green("Application was successfully constructed"));
 
 
 

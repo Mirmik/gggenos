@@ -3,8 +3,8 @@
 module arch_avr
 {
 	include = ["include"];
+	depends = ["arch_avr.gls"];
 
-	defines = ["F_CPU=16000000"];
-
-	target = "";
+	cc_source = ["asm/diag.c", "asm/arch.c"];
+	target = "arch_avr.a";
 }

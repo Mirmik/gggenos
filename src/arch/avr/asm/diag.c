@@ -1,15 +1,11 @@
+#include "hal/arch.h"
+#include "avr/io.h"
+#include "kernel/diag.h"
+#include "util/stub.h"
 
-#ifndef GENOS_PLATFORM_DEBUG_H
-	#define GENOS_PLATFORM_DEBUG_H
-	
-	#include "hal/arch.h"
-	#include "sys/cdefs.h"
-	
-	__BEGIN_DECLS 
-				
 		#define SERIAL_8N1 0x06
 		#include <avr/io.h>
-		static void __debug_print_init()
+		static void usart0_diag_init()
 		{
 			
 			UCSR0A = 0;
@@ -31,8 +27,8 @@
 			UCSR0B|= _BV(RXCIE0);
 			UCSR0B&= ~_BV(UDRIE0);
 		};
-
-		static void __debug_putchar(char c)
+		
+		void usart0_diag_putchar(char c)
 		{
 			static uint8_t debug_print_inited = 0;		
 			arch_atomic_temp(temp);
@@ -40,12 +36,14 @@
 			arch_deatomic_temp(temp);
 		};
 
-	
-	
-	
-	__END_DECLS
-	
-	
-#endif
+		struct diag_ops usart0_diag = {
+			usart0_diag_putchar, 
+			(diag_getc_t) do_nothing, 
+			diag_write_stub, 
+			(diag_read_t) do_nothing, 
+			usart0_diag_init
+		}; 
 
 
+				
+		

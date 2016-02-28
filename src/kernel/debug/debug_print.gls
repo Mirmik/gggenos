@@ -1,18 +1,37 @@
 
+
+#Реализации модуля debug_print
+
+
+
+#Функция debug_putchar требует реализации в основном коде.
+#Функция debug_write может быть переопределена. По умолчанию использует debug_putchar.
+
 module debug_print_manually
 {
-	cc_source = ["debug_print_manually.c"];
+	cc_source = ["debug_print_manually.c" , "debug_print_func_impl.c"];
 	mdepends = [];
+	CFLAGS = CFLAGS + " -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast";
 };
+
+
+
+#Рекомендуемый вариант.
+#Функция debug_putchar и debug_write используют интерфейс diag (объект current_diag). 
 
 module debug_print_diag
 {
-	cc_source = ["debug_print_diag.c"];
-	mdepends = []
+	cc_source = ["debug_print_diag.c", "debug_print_func_impl.c"];
+	mdepends = ["diag"];
+	CFLAGS = CFLAGS + " -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast";
 };
+
+
+
+#Заглушка. Нулевые реализации функций.
 
 module debug_print_stub
 {
-	cc_source = ["debug_print_stub.c"];
+	cc_source = ["debug_print_stub.c", "debug_print_func_stub.c"];
 	mdepends = []
 };

@@ -12,7 +12,7 @@
 	//#include <genos/debug/errserv.h>
 	#include <genos/debug/debug_print.h>
 	#include <genos/debug/helper_macro.h>
-	#include <asm/genos/debug.h>	
+	//#include <asm/genos/debug.h>	
 	
 	#define debug_delay(a) for (volatile uint64_t i = 0; i < a; i++);
 	

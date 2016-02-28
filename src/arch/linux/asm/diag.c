@@ -10,4 +10,4 @@ struct diag_ops stdout_diag = {
 	getchar, 
 	local_write, 
 	local_read, 
-	do_nothing}; 
+	(diag_init_t) do_nothing}; 

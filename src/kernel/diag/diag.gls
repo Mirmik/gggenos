@@ -1,10 +1,15 @@
 
 
+
+
+#Реализация diag интерфейса.
 module diag_impl
 {
 	cc_source = ["diag.c"];
 };
 
+
+#Заглушка. Нулевые реализации функций.
 module diag_stub
 {
 	cc_source = ["diag_stub.c"];
