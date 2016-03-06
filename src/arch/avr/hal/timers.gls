@@ -1,0 +1,5 @@
+
+module arduino_mega_timers
+{
+	cc_source = ["arduino_mega_timers.c"];
+};

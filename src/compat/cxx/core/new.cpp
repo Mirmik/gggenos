@@ -6,7 +6,7 @@
  */
 
 #include <new>
-#include <kernel/printk.h>
+//#include <kernel/printk.h>
 
 #if defined(__EXCEPTIONS) && __EXCEPTIONS==1
 #error Exceptions must be disabled

@@ -20,9 +20,9 @@ namespace std {
 	using ::rand;
 	using ::srand;
 	using ::calloc;
-	using ::g_free;
-	using ::g_malloc;
-	using ::g_realloc;
+	using ::free;
+	using ::malloc;
+	using ::realloc;
 	using ::abort;
 	using ::bsearch;
 	using ::qsort;

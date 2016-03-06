@@ -1,23 +1,17 @@
-/*
- * @file
- * @brief Basic math which is not included in <math.h>.
- *
- * @date 04.06.10
- * @author Eldar Abusalimov
- */
+//Некоторые математические функции.
 
 #ifndef UTIL_MATH_H_
 #define UTIL_MATH_H_
 
-/** @return the larger of @a a and @a b */
+//Возвращает наибольшее из двух вариантов.
 #define max(a, b) \
-	({                                             \
+	({                                         \
 		typeof(a) __max_a = (a);               \
 		typeof(b) __max_b = (b);               \
 		__max_a > __max_b ? __max_a : __max_b; \
 	})
 
-/** @return the smaller of @a a and @a b */
+//Возвращает наименьшее из двух вариантов.
 #define min(a, b) \
 	({                                         \
 		typeof(a) __min_a = (a);               \
@@ -25,7 +19,9 @@
 		__min_a < __min_b ? __min_a : __min_b; \
 	})
 
-/** @return A @a val limited to a boundary specified by @a lo and @a hi. */
+//Полочки. Вычисляет значение первого заданного аргумента, 
+//ограниченное диапазоном, определенным вторым и третьим 
+//заданными аргументами.
 #define clamp(val, lo, hi) \
 	({                                          \
 		typeof(val) __clamp_val = (val);        \
@@ -36,7 +32,7 @@
 		__clamp_val;                            \
 	})
 
-/** Suitable for checking an array index: [0, len). @return (lo <= val < hi) */
+//Проверяет, находится ли число в диапазоне [lo,hi).
 #define check_range(val, lo, hi) \
 	({                                          \
 		typeof(val) __check_val = (val);        \
@@ -46,7 +42,7 @@
 		__check_val < __check_hi;               \
 	})
 
-/** All inclusive version of #check_range(). @return (lo <= val <= hi) */
+//Проверяет, находится ли число в диапазоне [lo,hi].
 #define check_range_incl(val, lo, hi) \
 	({                                          \
 		typeof(val) __check_val = (val);        \
@@ -56,7 +52,7 @@
 		__check_val <= __check_hi;              \
 	})
 
-/** All exclusive version of #check_range(). @return (lo < val < hi) */
+//Проверяет, находится ли число в диапазоне (lo,hi).
 #define check_range_excl(val, lo, hi) \
 	({                                          \
 		typeof(val) __check_val = (val);        \

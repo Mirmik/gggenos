@@ -1,0 +1,13 @@
+
+
+module Serial0 
+{
+	cpp_source = ["Serial0.cpp"];
+	defines = ["SERIAL_TX_BUFFER_SIZE=64", "SERIAL_RX_BUFFER_SIZE=64"];
+};
+
+
+#module Serial1
+#{
+#	cpp_source = ["Serial1.cpp"];
+#};

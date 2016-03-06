@@ -1,0 +1,5 @@
+module autom_terminal {
+	
+	cpp_source = ["autom_terminal.cpp"];
+
+};

@@ -1,0 +1,5 @@
+module cxx
+{
+	include = ["include"];
+	cpp_source = ["core/new.cpp"];
+}

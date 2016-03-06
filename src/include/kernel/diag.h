@@ -18,13 +18,17 @@ struct diag_ops
 	int (*getc)();
 	int (*write)(void* buf, int n);
 	int (*read)(void* buf, int n);
+//	int (*available)();
+//	int (*flush)();
 	int (*init)();
 };
 
 typedef int(*diag_putc_t)(int);
 typedef int(*diag_getc_t)();
 typedef int(*diag_write_t)(void*, int);
-typedef int(*diag_read_t)(void*, int);
+typedef int(*diag_read_t)(void*, int);;
+//typedef int(*diag_available_t)();;
+//typedef int(*diag_flush_t)();
 typedef int(*diag_init_t)();
 
 extern struct diag_ops* current_diag;
@@ -34,6 +38,8 @@ int diag_putc(int c);
 int diag_getc();
 int diag_write(void* buf, int len);
 int diag_read(void* buf, int len);
+//int diag_available();
+//int diag_flush();
 int diag_init();
 
 int diag_write_stub(void* buf, int len);

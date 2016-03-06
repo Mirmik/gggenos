@@ -138,7 +138,7 @@
 		return (a & m) == m;
 	};
 	
-	#include "genos/gstl/utility.h"
+	#include "gstl/utility.h"
 	#include "genos/debug/debug_templates.h"
 	template<typename T>  
 	static inline uint8_t bits_amount (T a) 

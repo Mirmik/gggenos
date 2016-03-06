@@ -1,11 +1,11 @@
 #ifndef GENOS_LINUX_LIST_BASIC
 	#define GENOS_LINUX_LIST_BASIC
 	
-	#include "genos/datastruct/base_struct_def.h"
+	#include "util/member.h"
+	//#include "genos/datastruct/base_struct_def.h"
 	
 	#define LIST_POISON1 ((list_head*)-1)
 	#define LIST_POISON2 ((list_head*)-2)
-	
 	
 	
 	class list_head{			

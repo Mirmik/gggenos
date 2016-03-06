@@ -1,0 +1,8 @@
+
+
+module printf_impl 
+{
+	
+	cc_source = ["printf_impl.c"];
+
+}

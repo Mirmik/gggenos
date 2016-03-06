@@ -1,0 +1,6 @@
+
+
+module arduino_mega_gpio
+{
+	cc_source = ["arduino_gpio.c"];
+}

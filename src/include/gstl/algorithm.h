@@ -1,5 +1,5 @@
-#include <genos/gstl/utility.h>
-#include <genos/gstl/functional.h>
+#include <gstl/utility.h>
+#include <gstl/functional.h>
 
 #ifndef GENOS_HEADER_ALGORITHM
 	#define GENOS_HEADER_ALGORITHM 1

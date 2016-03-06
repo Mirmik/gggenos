@@ -31,4 +31,34 @@
 #define likely(x)	__builtin_expect(!!(x), 1)
 #define unlikely(x)	__builtin_expect(!!(x), 0)
 
+
+
+
+#ifdef __cplusplus
+ #define __BEGIN_NAMESPACE_STD namespace std {
+ #define __END_NAMESPACE_STD }
+#else
+#define __BEGIN_NAMESPACE_STD 
+#define __END_NAMESPACE_STD 
+#endif
+
+#undef EXTERN_C
+#ifdef __cplusplus
+# define EXTERN_C extern "C"
+#else
+# define EXTERN_C extern
+#endif
+
+#ifdef __cplusplus
+#define __if_cplusplus(...) __VA_ARGS__
+#define __if_not_cplusplus(...)
+#define __if_C_if_CXX(c, cxx) cxx
+#else
+#define __if_cplusplus(...)
+#define __if_not_cplusplus(...) __VA_ARGS__
+#define __if_C_if_CXX(c, cxx) c 
+#endif
+
+
+
 #endif /* COMPILER_H_ */

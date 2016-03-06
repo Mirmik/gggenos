@@ -1,9 +1,0 @@
-
-
-
-def build(ctx):
-	ctx(rule = ctx.env.CXX_OBJ, source= "manual_thread.cpp", target="manual_thread.o")
-	ctx.env.OBJS += ctx.path.relpath() + '/' + "manual_thread.o" + ' ' 
-
-	ctx(rule = ctx.env.CXX_OBJ, source= "main.cpp", target="main.o")
-	ctx.env.OBJS += ctx.path.relpath() + '/' + "main.o" + ' ' 

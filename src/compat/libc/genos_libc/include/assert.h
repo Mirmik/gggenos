@@ -5,7 +5,7 @@
 
 #include "util/location.h"
 #include "sys/cdefs.h"
-#include "sys/compiler.h"
+#include "compiler.h"
 
 #ifndef NDEBUG
 

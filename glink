@@ -19,6 +19,8 @@ if len(sys.argv) != 1:
 		subprocess.check_output("rm -rf build".split())
 	elif sys.argv[1] == "install":
 		subprocess.check_output(["sh", "./curprj/install.sh"])
+	elif sys.argv[1] == "terminal":
+		subprocess.check_output(["sh", "./curprj/terminal.sh"])
 	else:
 		print("Wrong param")
 		exit()

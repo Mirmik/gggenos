@@ -10,6 +10,8 @@ struct diag_ops diag_stub = {
 	(diag_getc_t) do_nothing,
 	(diag_write_t) do_nothing,
 	(diag_read_t) do_nothing,
+	//(diag_available_t) do_nothing,
+	//(diag_flush_t) do_nothing,
 	(diag_init_t) do_nothing
 };
 
@@ -22,6 +24,7 @@ int diag_putc(int c){
 };
 
 int diag_getc(){
+	assert(current_diag->getc != do_nothing);
 	return current_diag->getc();
 };
 
@@ -30,8 +33,19 @@ int diag_write(void* buf, int len){
 };
 
 int diag_read(void* buf, int len){
+	assert(current_diag->read != do_nothing);
 	return current_diag->read(buf, len);
 };
+
+//int diag_available(){
+//	assert(current_diag->available != do_nothing);
+//	return current_diag->available();
+//};
+
+//int diag_flush(){
+//	assert(current_diag->flush != do_nothing);
+//	return current_diag->flush();
+//};
 
 int diag_init(){
 	return current_diag->init();

@@ -2,11 +2,11 @@
 
 module main {
 	cpp_source = ["main.cpp"];
-	cc_source = [];
 
 	depends = ["main.gls"];
+	defines = ["GENOS=222"];
 
-	mdepends = ["arch"]
+	mdepends = ["libc", "Serial0"]
 };
 
 
@@ -14,10 +14,18 @@ application genos
 {
 	modules = 
 	[
-	["main", ""],
-	["arch", "arch_linux", ""],
+	["main", "-DLLL=12"],
+	["libc", "genos_libc", ""],
+	["cxx", ""],
+	["Serial0", ""],
+	["arch", "arch_avr", ""],
 	["diag", "diag_impl", ""],
 	["debug_print", "debug_print_diag", ""],
+	["taskSched", ""],
+	["autom_terminal", ""],
+	["arduino_mega_gpio", ""],
+	["arduino_mega_pwm", ""],
+	["arduino_mega_timers", ""],
 	];
 
 	target = "genos";

@@ -1,9 +1,4 @@
-
-
-
-
 #include "genos/datastruct/bits.h"
-#include "asm/genos/debug.h"
 #include "avr/io.h"
 #include "hal/arch.h"
 #include "kernel/diag.h"
@@ -13,10 +8,10 @@ extern struct diag_ops usart0_diag;
 
 void arch_init()
 {
-	bits_set(TCCR0B, _BV(CS01) | _BV(CS00));
+//	bits_set(TCCR0B, _BV(CS01) | _BV(CS00));
 	//set_clock_param(F_CPU, 256 * 64, 256);
 
-	bits_set(TIMSK0, _BV(TOIE0));
+//	bits_set(TIMSK0, _BV(TOIE0));
 	current_diag = &usart0_diag;
 }
 

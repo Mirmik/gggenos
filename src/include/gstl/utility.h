@@ -9,18 +9,18 @@
 //Некоторые шаблоны могут врать... Извините.
 //UNDER_CONSTRUCTED
 
-#include <genos/gstl/algorithm.h>
+#include <gstl/algorithm.h>
 
 namespace std{
-#include "genos/gstl/utility/prototype.hpp"
+#include "gstl/utility/prototype.hpp"
 
-#include "genos/gstl/utility/pair.hpp"
-#include "genos/gstl/utility/utility.hpp"
-#include "genos/gstl/utility/type_traits.hpp"
-#include "genos/gstl/utility/type_transform.hpp"
-#include "genos/gstl/utility/type_relation.hpp"
-#include "genos/gstl/utility/type_obj_magic.hpp"
-#include "genos/gstl/utility/move.hpp"
+#include "gstl/utility/pair.hpp"
+#include "gstl/utility/utility.hpp"
+#include "gstl/utility/type_traits.hpp"
+#include "gstl/utility/type_transform.hpp"
+#include "gstl/utility/type_relation.hpp"
+#include "gstl/utility/type_obj_magic.hpp"
+#include "gstl/utility/move.hpp"
 };
 
 template <typename T, T Ptr>

@@ -1,4 +1,4 @@
-#include "kernel/diag.h"
+#include "asm/diag.h"
 #include "stdio.h"
 #include "util/stub.h"
 

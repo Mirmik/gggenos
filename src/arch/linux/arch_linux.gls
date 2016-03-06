@@ -4,6 +4,6 @@ module arch_linux
 {
 	include = ["include"];
 
-	cc_source = ["asm/diag.c"];
+	cc_source = ["asm/diag.c", "asm/arch.c"];
 	target = "arch_linux.a";
 }

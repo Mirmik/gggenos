@@ -1,0 +1,14 @@
+
+module printk_genos{
+	
+	cc_source = ["genos_printk.c"];
+
+};
+
+
+
+module printk_printf_impl{
+	
+	cc_source = ["printk_printf_impl.c"];
+
+};

@@ -1,14 +1,6 @@
-/**
- * @file
- * @brief Necessary arch-dependent typedefs.
- *
- * @date 10.11.10
- * @author Nikolay Korotky
- */
-
-#ifndef X86_TYPES_H_
-#define X86_TYPES_H_
+#ifndef AVR_TYPES_H_
+#define AVR_TYPES_H_
 
 #include <asm-generic/types16.h>
 
-#endif /* X86_TYPES_H_ */
+#endif /* AVR_TYPES_H_ */

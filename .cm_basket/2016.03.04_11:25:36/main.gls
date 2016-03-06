@@ -1,0 +1,27 @@
+
+
+module main {
+	cpp_source = ["main.cpp", "main2.cpp"];
+	cc_source = ["main3.c"];
+
+	depends = ["main.gls"];
+	defines = ["GENOS=222"];
+
+	mdepends = ["libc"]
+};
+
+
+application genos 
+{
+	modules = 
+	[
+	["main", "-DLLL=12"],
+	["libc", "genos_libc", ""],
+	["arch", "arch_avr", ""],
+	["diag", "diag_impl", ""],
+	["debug_print", "debug_print_diag", ""],
+	];
+
+	target = "genos";
+};
+

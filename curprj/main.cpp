@@ -1,35 +1,33 @@
+#include "hal/arch.h"
 
-
-#include "genos/debug/debug.h"
 #include "kernel/diag.h"
-#include "stddef.h"
-#include "stdio.h"
-#include "util/stub.h"
+#include "genos/debug/debug.h"
+#include "genos/schedproc/taskSched.h"
+#include "stdlib.h"
 
-//#include "kernel/diag.h"
+#include "genos/terminal/automTerminal.h"
+#include "asm/Serial.h"
+#include "hal/gpio.h"
+#include "asm/hal/timers.h"
 
-//extern "C" void debug_putchar(char c);
-//void debug_putchar(char c) {putchar(c);};
+#include "avr/io.h"
 
+automTerminal aTerm(Serial0, Serial0);
 
-diag_ops sss = {
-	putchar, 
-	(diag_getc_t) do_nothing, 
-	diag_write_stub, 
-	(diag_read_t) do_nothing, 
-	(diag_init_t) do_nothing
-};
+void task(){aTerm.exec();};
 
 int main(){
-	current_diag = &sss;
-//	diag_write((void*)"Mirmik", 6);
+arch_init();
+diag_init();
 
+gpio_mode_out(13);
+//gpio_hi(13);
 
+Serial0.begin(9600);
+arch_deatomic();
 
-	debug_print("Here you are\n");
+taskSched.add(task);
 
-	debug_delay(20000000);
+while(1) taskSched.schedule();
 
-	debug_print("Mirmik\n");
-	debug_print_test();
-}
+};

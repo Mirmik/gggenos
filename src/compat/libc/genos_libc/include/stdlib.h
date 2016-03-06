@@ -17,7 +17,7 @@
 #include <defines/size_t.h>
 #include <defines/wchar_t.h>
 #include <defines/null.h>
-#include <sys/compiler.h>
+#include <compiler.h>
 
 /* In addition, the following symbolic names and macros shall be defined as in
  * <sys/wait.h> , for use in decoding the return value from system():
@@ -93,13 +93,13 @@ __BEGIN_DECLS
  void *calloc(size_t nmemb, size_t size);
  
 
- #define malloc(size) g_malloc(size) 
- #define free(ptr) g_free(ptr) 
- #define realloc(a,b) g_realloc(a,b)
+// #define malloc(size) g_malloc(size) 
+// #define free(ptr) g_free(ptr) 
+// #define realloc(a,b) g_realloc(a,b)
 
- void *g_malloc(size_t size);
- void g_free(void *ptr);
- void *g_realloc(void *ptr, size_t size);
+ void *malloc(size_t size);
+ void free(void *ptr);
+ void *realloc(void *ptr, size_t size);
  
 
 

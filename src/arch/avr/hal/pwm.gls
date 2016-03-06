@@ -1,0 +1,5 @@
+
+module arduino_mega_pwm
+{
+	cc_source = ["pwm.c"];
+};

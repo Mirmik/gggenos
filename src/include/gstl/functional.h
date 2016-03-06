@@ -19,7 +19,7 @@
 #ifndef __STD_HEADER_FUNCTIONAL
 #define __STD_HEADER_FUNCTIONAL 1
 
-#include <genos/gstl/basic_definitions.h>
+//#include <gstl/basic_definitions.h>
 
 #pragma GCC visibility push(default)
 
