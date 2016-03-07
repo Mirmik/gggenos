@@ -28,6 +28,10 @@
 	if (_var_generate(0) < a) ++_var_generate(0); else \
 	if (_var_generate(0) < b) if (++_var_generate(0))
 	
+		//Выполнить однократно.
+	#define do_once_on(b) \
+    do_iteration_between(b, b + 1)
+
 	//Выполнять после only_once, do_iteration, do_between_iteration
 	#define do_after else;else
 	

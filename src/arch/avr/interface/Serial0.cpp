@@ -188,7 +188,7 @@ int HardwareSerial::flush()
   // the hardware finished tranmission (TXC is set).
 }
 
-int HardwareSerial::write(char c)
+int HardwareSerial::putc(char c)
 {
   _written = true;
   // If the buffer and the data register is empty, just write the byte

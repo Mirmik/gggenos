@@ -30,11 +30,9 @@
 #define SERIAL_7O2 0x3C
 #define SERIAL_8O2 0x3E
 
-#include "genos/datastruct/ring_buffer.h"
-#include "genos/iostream/writer.h"
-#include "genos/iostream/reader.h"
+#include "genos/io/stream.h"
 
-class HardwareSerial : public Writer<char>, public Reader<char>
+class HardwareSerial : public stream
 {
   public:
     volatile uint8_t * const _ubrrh;
@@ -68,8 +66,7 @@ class HardwareSerial : public Writer<char>, public Reader<char>
     int peek(void);
     int read(void);
     int flush(void);
-    int write(char t);
-    int write(char* c, int n) {for (int i=0;i<n;i++) write(*c++);};    
+    int putc(char t);
     
     inline void _rx_complete_irq(void);
     void _tx_udr_empty_irq(void);

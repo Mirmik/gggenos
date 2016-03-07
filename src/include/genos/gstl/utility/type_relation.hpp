@@ -49,6 +49,22 @@ template<> 					struct is_integral<unsigned long> 		: true_type { };
 template<> 					struct is_integral<long long> 			: true_type { };
 template<> 					struct is_integral<unsigned long long> 	: true_type { };
 
+//is_signed
+template <class T>      struct is_signed            : false_type { };
+template<>          struct is_signed<bool>        : false_type { };
+template<>          struct is_signed<char>        : true_type { };
+template<>          struct is_signed<unsigned char>     : false_type { };
+template<>          struct is_signed<signed char>     : true_type { };
+template<>          struct is_signed<wchar_t>       : true_type { };
+template<>          struct is_signed<short>         : true_type { };
+template<>          struct is_signed<unsigned short>    : false_type { };
+template<>          struct is_signed<int>         : true_type { };
+template<>          struct is_signed<unsigned int>    : false_type { };
+template<>          struct is_signed<long>        : true_type { };
+template<>          struct is_signed<unsigned long>     : false_type { };
+template<>          struct is_signed<long long>       : true_type { };
+template<>          struct is_signed<unsigned long long>  : false_type { };
+
 
 // is_floating_point 
 template <class T> 			struct is_floating_point 				: false_type { };
@@ -56,8 +72,9 @@ template<> 					struct is_floating_point<float> 		: true_type { };
 template<> 					struct is_floating_point<double> 		: true_type { };
 template<> 					struct is_floating_point<long double> 	: true_type { };
 
-template<class T>			struct is_arithmetic : gstd::bool_constant<                                              gstd::is_integral<T>::value ||
-                                              gstd::is_floating_point<T>::value> {};
+template<class T>			struct is_arithmetic : gstd::bool_constant<
+                          gstd::is_integral<T>::value ||
+                                 gstd::is_floating_point<T>::value> {};
 
 template< class T >
 struct is_void : gstd::is_same<void, typename gstd::remove_cv<T>::type> {};

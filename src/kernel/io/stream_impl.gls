@@ -1,0 +1,4 @@
+module stream_impl
+{
+	cpp_source = ["stream_impl.cpp"];
+};

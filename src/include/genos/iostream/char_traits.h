@@ -20,7 +20,7 @@
 			
 			
 			
-			size_t length(T* c);
+			size_t length(const T* c);
 			
 		};
 		

@@ -22,6 +22,7 @@ application genos
 	["time_service", ""],
 	["arch", "arch_avr", ""],
 	["diag", "diag_impl", ""],
+	["stream_impl", ""],
 	["Serial0", ""],
 	["debug_print", "debug_print_diag", ""],
 	["sched", ""],

@@ -45,16 +45,16 @@
 			size_t print(bool b);
 			
 			//Вывод строки с учетом механизма width.
-			size_t print_field(char* c, size_t len);
+			size_t print_field(const char* c, size_t len);
 			
 			//Базовый вывод.
-			size_t write(T c)			{return o->write(c);};
-			size_t write(T* c, size_t n){return o->write(c, n);};
+			size_t write(const T c)			{return o->write(c);};
+			size_t write(const T* c, size_t n){return o->write(c, n);};
 			void   flush()				{o->flush();};
 			
 			//Адаптации базового вывода.
-			size_t print(T c)			{return print_field(&c,1);};
-			size_t print(T* c)			{return print_field(c,char_traits<T>().length(c));};
+			size_t print(const T c)			{return print_field(&c,1);};
+			size_t print(const T* c)			{return print_field(c,char_traits<T>().length(c));};
 			
 			//Перенаправление входа на шаблонные функции.
 			size_t print(uint8_t n){return _print_number(n);};
@@ -163,7 +163,7 @@
 		
 		/////Реализация методов	
 		template<typename T, typename Traits>
-		size_t basic_ostream<T,Traits>::print_field(char* c, size_t len)
+		size_t basic_ostream<T,Traits>::print_field(const char* c, size_t len)
 		{			
 			size_t count=0;
 			int len_fill = (this->_width) - len;

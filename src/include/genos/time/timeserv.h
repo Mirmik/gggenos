@@ -6,7 +6,7 @@
 	#include "genos/time/basic_timer.h"
 	#include "genos/datastruct/bits.h"
 	#include "genos/datastruct/list.h"
-	#include "genos/atomic.h"
+	#include "hal/arch.h"
 	
 	
 	#ifdef DEBUG_MODE
@@ -15,9 +15,9 @@
 	
 	
 	#ifdef PROCESS_MODE
-	#include "genos/schedproc/process_base.h"
+	#include "genos/schedproc/schedee_base.h"
 	#include "genos/schedproc/scheduler_base.h"
-	#include "genos/syscontext/syscontext.h"
+	//#include "genos/syscontext/syscontext.h"
 	#endif 
 	
 	
@@ -27,8 +27,6 @@
 	using tmrserv_d = cdelegate<T1,T2...>;
 	#endif 
 	
-	namespace genos {
-		
 		
 		namespace tmr{
 			//Типы таймера
@@ -89,7 +87,7 @@
 		#ifdef PROCESS_MODE
 		//Создание таймера, реализующего ожидание процесса.
 		timer* timer_create_proc_wait
-		(process_base* proc, scheduler_base* sched, time_t t, uint8_t strategy);
+		(schedee_base* proc, scheduler_base* sched, time_t t, uint8_t strategy);
 		///////////////////////////////////////////////////////////////////////////////
 		#endif
 		
@@ -152,11 +150,11 @@
 		
 		
 		////////////TODO///////////////
-		//#include "Arduino.h"
+		#include "genos/time/sysclock.h"
 		//typedef int32_t signed_time_t;
 		static inline long//auto 
 		get_time () {
-		//return millis();
+		return millis();
 		}; 
 		/////////////////////////////////
 		
@@ -164,8 +162,8 @@
 		timer* msleep_subst(timer* t, long int  a);
 		timer* msleep_subst_bias(timer* t, long int a);
 		timer* msleep_autom(long int a); 
+		timer* msleep_autom_bias(timer* t, long int a);
 		
-	};
 	
 	
 	

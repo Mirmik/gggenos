@@ -3,13 +3,13 @@
 	
 	#include "genos/defs.h"	
 	
-	#include "genos/types.h"
+	#include "sys/types.h"
 	#include "genos/datastruct/list.h"
 	#include "genos/gstl/hassign.h"
 	//#include "genos/debug/debug.h"
-	#include "genos/atomic.h"
+	#include "hal/arch.h"
 	#include "genos/gstl/utility.h"
-	#include "genos/syscontext/syscontext.h"
+	//#include "genos/syscontext/syscontext.h"
 	
 	
 	#ifdef DELEGATE_WT
@@ -19,7 +19,7 @@
 	#endif
 	
 	#ifdef PROCESS_MODE
-		#include "genos/schedproc/process_base.h"
+		#include "genos/schedproc/schedee_base.h"
 		#include "genos/schedproc/scheduler_base.h"
 	#endif
 	
@@ -67,26 +67,26 @@
 	template<typename T1, typename T2>
 	void wait_create(T1* flag, T2&& d, uint8_t _trait)
 	{
-		ATOMIC(temp);
+		arch_atomic_temp(temp);
 		wait* wt = new wait;
 		wt->trait = _trait;
 		hassign(wt->info_task, d);
 		hassign(wt->info_cond, flag);
 		list_add(&wt->wt_list, &wait_list);
-		DEATOMIC(temp);
+		arch_deatomic_temp(temp);
 	};
 	
 	#ifdef PROCESS_MODE
 		template<typename T1>
-		void wait_create_procwait(process_base* _proc, scheduler_base* _sched, T1* flag, uint8_t _trait)
+		void wait_create_procwait(schedee_base* _proc, scheduler_base* _sched, T1* flag, uint8_t _trait)
 		{
-			ATOMIC(temp);
+			arch_atomic_temp(temp);
 			wait* wt = new wait;
 			wt->trait = _trait | wt::PROC_WAIT;
-			hassign(wt->info_task, std::make_pair(_proc, _sched));
+			hassign(wt->info_task, gstd::make_pair(_proc, _sched));
 			hassign(wt->info_cond, flag);
 			list_add(&wt->wt_list, &wait_list);
-			DEATOMIC(temp);
+			arch_deatomic_temp(temp);
 		};	
 	#endif
 	
@@ -95,8 +95,8 @@
 	void wait_subst(uint8_t* flag);
 	
 	#ifdef IOSTREAM_MODE
-	void wait_autom(genos::Reader<char>* flag);
-	void wait_subst(genos::Reader<char>* flag);
+	void wait_autom(Reader<char>* flag);
+	void wait_subst(Reader<char>* flag);
 	#endif
 	
 	

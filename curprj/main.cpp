@@ -1,74 +1,38 @@
 #include "hal/arch.h"
-
 #include "kernel/diag.h"
 #include "genos/debug/debug.h"
-//#include "genos/schedproc/taskSched.h"
-#include "stdlib.h"
-
-#include "genos/terminal/automTerminal.h"
-//#include "asm/Serial.h"
 #include "hal/gpio.h"
-#include "asm/hal/timers.h"
-
 #include "genos/time/sysclock.h"
-#include "genos/gstl/container/vector.h"
-
-#include "genos/sigslot/delegate2.h"
 #include "genos/time/timeserv.h"
-
+#include "genos/wait/waitserv.h"
 #include "genos/schedproc/automSched.h"
-//#include "genos/gstl/container/map.h"
 
-automScheduler automSched;
+#include "genos/io/stream.h"
 
-//automTerminal aTerm(Serial0, Serial0);
-
-void task()
-{
-	debug_print("kkk");
-
-};
-
-
-void task2()
-{
-	debug_print("aaa");
-};
-
-gstd::vector<int> vi;
+#include "asm/Serial.h"
+#include "genos/debug/iteration_counter.h"
+int a=2, b=3;
 
 int main(){
 arch_init();
 diag_init();
 
-debug_print("here");
-
 arch_deatomic();
 
-debug_print("here2");
+delay(1000);
 
-gpio_mode_out(13);
-gpio_hi(13);
+Serial0.printhexln(0XABCDEF);
+Serial0.println(123);
 
-gpio_mode_out(30);
-gpio_hi(30);
+Serial0.printptr(&a);
 
-cdelegate<void> d = makedfunc(&task);
-automSched.registry(d);
+Serial0.printptr(&b);
+Serial0.printdump(&a,100);
 
-d = makedfunc(&task2);
-automSched.registry(d);
-
-gpio_mode_out(31);
-gpio_hi(31);
-
-debug_delay(20000);
-
-vi.push_back(3);
-vi.push_back(4);
-
-debug_printhex_uint32(vi[0]);
-
-while (1) {automSched.schedule();};
+while(1) {
+	delay(500);
+	gpio_mode_out(13);
+	gpio_change(13);
+};
 
 };

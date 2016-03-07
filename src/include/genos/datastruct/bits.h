@@ -10,8 +10,8 @@
 	template<typename T1, typename T2> 
 	static inline T1 bits_inv (const T2& a) {return ~a;};
 	
-	template<typename T1, typename T2, typename T3>
-	static inline T1 bits_and (const T2& a, const T3& b) {return a & b;};
+	template<typename T2, typename T3>
+	static inline T2 bits_and (const T2& a, const T3& b) {return a & b;};
 	
 	template<typename T1, typename T2, typename T3>
 	static inline T1 bits_or  (const T2& a, const T3& b) {return a | b;};
@@ -46,8 +46,8 @@
 	
 	
 	//***Маскированные операции.
-	template<typename T1, typename T2, typename T3>
-	static inline T1 bits_mask (const T2& a, const T3& m) 
+	template<typename T2, typename T3>
+	static inline T2 bits_mask (const T2& a, const T3& m) 
 	{
 		return a & m;
 	};

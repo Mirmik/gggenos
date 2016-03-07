@@ -1,0 +1,7 @@
+
+module iostream
+{
+	
+	cpp_source = ["num_put.cpp", "ostream.cpp", "ios.cpp"];
+
+};

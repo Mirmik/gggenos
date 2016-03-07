@@ -1,5 +1,5 @@
 
 module sched
 {
-	cpp_source = ["schedproc.cpp", "scheduler_base.cpp"];
+	cpp_source = ["schedproc.cpp", "scheduler_base.cpp", "timeserv.cpp", "waitserv.cpp"];
 };
