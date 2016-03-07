@@ -15,8 +15,6 @@
 		command_t(const char* name, void(*func)(int,char**)) : _func(func), _name(name) {};
 	};
 	
-
-	
 	class command_list{
 		
 		list_head list;

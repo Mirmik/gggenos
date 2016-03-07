@@ -107,6 +107,8 @@ private:
 static int sys_open(stream*& _strm, const char*) {};
 static int sys_close(stream*& _strm) {};
 
+////////////
+
 class direct_stream : public stream
 {
 private:
@@ -121,6 +123,7 @@ public:
 	int open(const char* c) {return sys_open(_strm, c);};
 	int close() {return sys_close(_strm);};
 	stream* direct() {return _strm;};
+	void direct(stream* _s) {_strm = _s;};
 };  
 
 #endif

@@ -94,9 +94,11 @@
 	void wait_autom(uint8_t* flag);
 	void wait_subst(uint8_t* flag);
 	
+	#include "genos/io/stream.h"
 	#ifdef IOSTREAM_MODE
-	void wait_autom(Reader<char>* flag);
-	void wait_subst(Reader<char>* flag);
+	//void wait_autom(Reader<char>* flag);
+	//void wait_subst(Reader<char>* flag);
+	void wait_autom(stream* strm);
 	#endif
 	
 	

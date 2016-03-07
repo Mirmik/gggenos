@@ -1,36 +1,71 @@
 #include "hal/arch.h"
-
 #include "kernel/diag.h"
+#include "genos/decoration.h"
 #include "genos/debug/debug.h"
-#include "genos/schedproc/taskSched.h"
-#include "stdlib.h"
-
-#include "genos/terminal/automTerminal.h"
-//#include "asm/Serial.h"
 #include "hal/gpio.h"
-#include "asm/hal/timers.h"
+#include "genos/time/sysclock.h"
+#include "genos/time/timeserv.h"
+#include "genos/wait/waitserv.h"
+#include "genos/schedproc/automSched.h"
+#include "genos/io/stream.h"
+#include "asm/Serial.h"
+#include "genos/debug/iteration_counter.h"
 
-//automTerminal aTerm(Serial0, Serial0);
+#include "syscontext/syscontext.h"
+#include "genos/terminal/autom_terminal.h"
+#include "genos/terminal/command_list.h"
 
-void task(){debug_print("kekek");};
+syscontext scntxt;
+automTerminal automTerm;
+automScheduler automSched;
+
+command_list cmdlist;
+
+void emergency_stop()
+{
+	debug_print("EMERGENCY_STOP\n");
+};
+
+timer tmr1;
+void blinker()
+{
+	gpio_change(13);
+	msleep_autom_bias(&tmr1, 1000);
+};
+
+void setup();
+void loop();
 
 int main(){
-arch_init();
-diag_init();
-
-debug_delay(20000);
-
-taskSched.add(task);
-timer1_source(timerSourceCK);
-
-gpio_mode_out(13);
-gpio_hi(13);
-
-debug_printhex_uint8(DDRB);dln;
-debug_printhex_uint8(PORTB);dln;
-
-dpr_hex(WGM00);
-
-
-//while(1) taskSched.schedule();
+	setup();
+	arch_deatomic();
+	delay(500);
+	while(1) loop();
 };
+
+void setup(){
+	arch_init();
+	diag_init();
+
+	machine_name = "aiop2";
+
+	current_syscontext(&scntxt);
+	scntxt.__stdout.direct(&Serial0);	
+	scntxt.__stdin.direct(&Serial0);
+
+	gpio_mode_out(13);
+	gpio_mode_out(31);
+
+	cdelegate<void> d = makedfunc(&blinker);
+	automSched.registry(d);
+
+	cdelegate<void> d2 = makedelegate(&automTerm, &automTerminal::exec);
+	automSched.registry(d2);
+};
+
+void loop(){
+	timerserv_check();
+	waitserv_check();
+	automSched.schedule();
+};
+

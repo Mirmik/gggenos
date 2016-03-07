@@ -36,6 +36,8 @@ void _NORETURN arch_halt(void);
 
 void _NORETURN arch_shutdown(arch_shutdown_mode_t mode);
 
+void emergency_stop();
+
 __END_DECLS
 
 
@@ -44,7 +46,6 @@ __END_DECLS
 
 #define arch_atomic() __arch_atomic()
 #define arch_deatomic() __arch_deatomic()
-
 
 
 #endif /* HAL_ARCH_H_ */

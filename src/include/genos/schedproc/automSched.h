@@ -75,20 +75,20 @@
 			process_init(proc);
 		};*/
 		
-		
-		
-		void registry(const delegate<void>& d)
+		process_autom* registry(const delegate<void>& d)
 		{
 			process_autom* proc = new process_autom;			
 			proc->dlg = d;
 			schedee_init(proc);
+			return proc;
 		};
 		
-		void registry(delegate<void>&& d)
+		process_autom* registry(delegate<void>&& d)
 		{
 			process_autom* proc = new process_autom;			
 			proc->dlg = d;
 			schedee_init(proc);
+			return proc;
 		};
 		
 		

@@ -1,0 +1,6 @@
+
+
+module genos_decoration
+{
+	cpp_source = ["decoration.cpp"];
+};

@@ -34,6 +34,7 @@ void arch_idle()
 
 void arch_halt()
 {
+	emergency_stop();
 	cli();
 	while(1);
 }

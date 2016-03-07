@@ -16,7 +16,7 @@ bool wait_check(wait* wt){
 		
 		#ifdef IOSTREAM_MODE
 			case wt::INPUT_STREAM:
-			return (htreat<Reader<char>*>(wt->info_cond)->available() != 0);		
+			return (htreat<stream*>(wt->info_cond)->available() != 0);		
 			break;
 		#endif
 		
@@ -90,7 +90,7 @@ void waitserv_check()
 		arch_deatomic_temp(temp);
 	};
 	#ifdef IOSTREAM_MODE
-		void wait_autom(Reader<char>* flag){
+		/*void wait_autom(Reader<char>* flag){
 			arch_atomic_temp(temp);
 			scheduler()->schedee_set_wait(current_schedee()); 
 			wait_create_procwait(current_schedee(), scheduler(), flag, wt::INPUT_STREAM);
@@ -102,6 +102,14 @@ void waitserv_check()
 			scheduler()->schedee_set_wait(current_schedee()); 
 			wait_create_procwait(current_schedee(), scheduler(), flag, wt::INPUT_STREAM);
 			scheduler()->schedule();
+			arch_deatomic_temp(temp);
+		};*/
+
+		void wait_autom(stream* strm)
+		{
+			arch_atomic_temp(temp);
+			scheduler()->schedee_set_wait(current_schedee()); 
+			wait_create_procwait(current_schedee(), scheduler(), strm, wt::INPUT_STREAM);
 			arch_deatomic_temp(temp);
 		};
 	#endif

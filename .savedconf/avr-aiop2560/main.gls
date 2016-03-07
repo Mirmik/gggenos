@@ -6,7 +6,9 @@ module main {
 	depends = ["main.gls"];
 	defines = ["GENOS=222"];
 
-	mdepends = ["libc", "Serial0"]
+	mdepends = ["libc", 
+	"Serial0"
+	]
 };
 
 
@@ -17,11 +19,16 @@ application genos
 	["main", "-DLLL=12"],
 	["libc", "genos_libc", ""],
 	["cxx", ""],
+	["genos_decoration", ""],
+	["time_service", ""],
 	["arch", "arch_avr", ""],
 	["diag", "diag_impl", ""],
+	["stream_impl", ""],
 	["Serial0", ""],
+	["autom_terminal", ""],
+	["syscontext", ""],
 	["debug_print", "debug_print_diag", ""],
-	["taskSched", ""],
+	["sched", ""],
 	["arduino_mega_gpio", ""],
 	["arduino_mega_pwm", ""],
 	["arduino_mega_timers", ""],

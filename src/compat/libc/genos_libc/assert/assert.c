@@ -14,6 +14,6 @@ void __assert_handler(struct __assertion_point point)
 	debug_print("\n\rexpr: ");	
 	debug_print(point.expression); 
 	debug_print("\n\r");	
-	debug_halt();
+	arch_halt();
 #endif
 };

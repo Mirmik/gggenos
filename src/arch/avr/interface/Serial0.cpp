@@ -156,7 +156,7 @@ int HardwareSerial::peek(void)
   }
 }
 
-int HardwareSerial::read(void)
+int HardwareSerial::getc(void)
 {
   // if the head isn't ahead of the tail, we don't have any characters
   if (_rx_buffer_head == _rx_buffer_tail) {

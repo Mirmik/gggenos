@@ -64,7 +64,7 @@ class HardwareSerial : public stream
     
     int available(void);
     int peek(void);
-    int read(void);
+    int getc(void);
     int flush(void);
     int putc(char t);
     

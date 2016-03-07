@@ -1,14 +1,13 @@
 #ifndef  GENOS_SYSCONTEXT_H
 #define GENOS_SYSCONTEXT_H
 	
-#include "genos/iostream/writer.h"
-#include "genos/iostream/reader.h"
+#include "genos/io/stream.h"
 
 	//Структура переменных и объектов окружения.
 	struct syscontext
 	{
-		Writer<char> __stdout;
-		Reader<char> __stdin;
+		direct_stream __stdout;
+		direct_stream __stdin;
 	};
 	
 	//"Мягкая" блокировка вытеснения.
@@ -16,9 +15,10 @@
 	//нет смысла её копировать, ибо она как раз копирование запрещает.
 	//extern bool __subst;
 	
-	extern syscontext* current_syscontext ;
+	syscontext* current_syscontext();
+	void current_syscontext(syscontext*);
 	
-	#define stdout 	current_syscontext.stdout
-	#define stdin 	current_syscontext.stdin
+	#define stdout 	(current_syscontext()->__stdout)
+	#define stdin 	(current_syscontext()->__stdin)
 	
 #endif
