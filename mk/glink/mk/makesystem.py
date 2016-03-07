@@ -101,7 +101,10 @@ class Module:
 
 		mlist = []
 		dlist = self.depends_list_construct(mlist)
-		inclstr = "-I" + self.glb_include + " "
+		
+		inclstr = ""
+		for g in self.glb_include:
+			inclstr += "-I" + g + " "
 		defstr = ""
 
 		incllst = []

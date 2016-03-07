@@ -13,4 +13,14 @@
 # define __END_DECLS /* empty */
 #endif
 
+
+#ifdef __cplusplus
+ #define __BEGIN_NAMESPACE_STD namespace std {
+ #define __END_NAMESPACE_STD }
+#else
+#define __BEGIN_NAMESPACE_STD 
+#define __END_NAMESPACE_STD 
+#endif
+
+
 #endif /* SYS_CDEFS_H_ */

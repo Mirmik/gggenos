@@ -1,0 +1,26 @@
+
+
+module main {
+	cpp_source = ["main.cpp"];
+	cc_source = [];
+
+	depends = ["main.gls"];
+
+	mdepends = ["arch" , "diag_writer"]
+};
+
+
+application genos 
+{
+	modules = 
+	[
+	["main", ""],
+	["arch", "arch_linux", ""],
+	["diag", "diag_impl", ""],
+	["diag_writer", ""],
+	["debug_print", "debug_print_diag", ""],
+	];
+
+	target = "genos";
+};
+

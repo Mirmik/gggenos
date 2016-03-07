@@ -8,11 +8,11 @@
 #include <sys/cdefs.h>
 
 #if __cplusplus
-#include "gstl/utility.h"
+#include <genos/gstl/utility.h>
 #endif
 
 #if __cplusplus
-#define decltypeof(a) typename std::remove_reference<decltype(a)>::type
+#define decltypeof(a) typename gstd::remove_reference<decltype(a)>::type
 #else
 #define decltypeof(a) typeof(a)
 #endif

@@ -32,16 +32,6 @@
 #define unlikely(x)	__builtin_expect(!!(x), 0)
 
 
-
-
-#ifdef __cplusplus
- #define __BEGIN_NAMESPACE_STD namespace std {
- #define __END_NAMESPACE_STD }
-#else
-#define __BEGIN_NAMESPACE_STD 
-#define __END_NAMESPACE_STD 
-#endif
-
 #undef EXTERN_C
 #ifdef __cplusplus
 # define EXTERN_C extern "C"
