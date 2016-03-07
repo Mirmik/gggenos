@@ -3,7 +3,7 @@
 	
 	#include "sys/types.h"
 	
-	namespace genos{
+	namespace gstd{
 		
 		
 		template <typename T>

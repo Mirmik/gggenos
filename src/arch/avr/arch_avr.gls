@@ -5,6 +5,6 @@ module arch_avr
 	include = ["include"];
 	depends = ["arch_avr.gls"];
 
-	cc_source = ["asm/diag.c", "asm/arch.c"];
+	cc_source = ["asm/diag.c", "asm/arch.c", "asm/isr_impl.c"];
 	target = "arch_avr.a";
 }

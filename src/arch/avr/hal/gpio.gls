@@ -1,6 +1,12 @@
 
 
+module arduino_uno_gpio
+{
+	cc_source = ["arduino328p_gpio.c"];
+};
+
+
 module arduino_mega_gpio
 {
-	cc_source = ["arduino_gpio.c"];
-}
+	cc_source = ["arduino2560_gpio.c"];
+};

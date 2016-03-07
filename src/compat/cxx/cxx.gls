@@ -1,5 +1,5 @@
 module cxx
 {
 	include = ["include"];
-	cpp_source = ["core/new.cpp"];
+	cpp_source = ["core/new.cpp", "core/cxa_virtual.cpp"];
 }

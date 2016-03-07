@@ -14,7 +14,7 @@
 	
 	#include "genos/sigslot/horrible_cast.h"
 //	#include "genos/platform/delegate.h"	
-	#include "gstl/utility.h"		
+	#include "genos/gstl/utility.h"		
 	#include "genos/debug/debug.h"		
 	
 	class AbstractDelegate{};
@@ -103,7 +103,7 @@
 			//Вы можете использовать макрос method для создания пары.
 			//Пример rtdelegate<void, int> d(method(a, A::func));
 			//template <typename T1, typename T2>
-			rtdelegate(std::pair<obj_t , mtd_t>&& pr)
+			rtdelegate(gstd::pair<obj_t , mtd_t>&& pr)
 			{
 				object = pr.first;
 				method = pr.second;
@@ -115,7 +115,7 @@
 			//@2 мануальное задание указателя на метод класса. 
 			//Пример rtdelegate<void, int> d(method(a, 0x00010002)); 
 			//(Смотри стандартную реализацию виртуальных функций)
-			rtdelegate(std::pair<void* , delegate_mtd_t> pr) 
+			rtdelegate(gstd::pair<void* , delegate_mtd_t> pr) 
 			{
 				object = reinterpret_cast <obj_t> (pr.first);
 				method = horrible_cast<mtd_t, delegate_mtd_t>(pr.second);
@@ -165,7 +165,7 @@
 		};	
 		
 		//Макрос для создания пары объект - метод.
-		//#define method(obj, mtd) std::make_pair(&obj, &mtd)
+		//#define method(obj, mtd) gstd::make_pair(&obj, &mtd)
 		
 		
 	
@@ -182,7 +182,7 @@
 		};
 		
 		
-	//	#define delegate_method(obj, mtd) std::make_pair(reinterpret_cast<AbstractDelegate*>(obj),\
+	//	#define delegate_method(obj, mtd) gstd::make_pair(reinterpret_cast<AbstractDelegate*>(obj),\
 		horrible_cast<typename change_basic<AbstractDelegate, decltype(mtd)>::type, decltype(mtd)>(mtd));
 		
 	//	#define set_delegate_method(d, obj, mtd) d = delegate_method(obj, mtd)

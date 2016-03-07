@@ -4,7 +4,7 @@
 	#include <genos/debug/debug.h>
 	#include <genos/datastruct/list.h>
 //	#include <genos/subst/subst.h>
-	#include <genos/schedproc/process_base.h>
+	#include <genos/schedproc/schedee_base.h>
 	
 	//#include "genos/subst/thread_constructor.h"
 	
@@ -16,33 +16,33 @@
 	static constexpr uint8_t BLOCK_MASK	=	0x0F;
 	
 	
-	process_base* current_process();
-	void current_process(process_base*);
+	schedee_base* current_schedee();
+	void current_schedee(schedee_base*);
 	
 	class scheduler_base;
 		
 	scheduler_base* scheduler();
 	void scheduler(scheduler_base* _sched);
 	
-	///Џланировщик. Ѓазовый класс.
+	///РЏР»Р°РЅРёСЂРѕРІС‰РёРє. РѓР°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ.
 	class scheduler_base
 	{public:
-		uint8_t sched_flags;					//ђесурсы планировщика
+		uint8_t sched_flags;					//С’РµСЃСѓСЂСЃС‹ РїР»Р°РЅРёСЂРѕРІС‰РёРєР°
 		
 				
-		void block();					//‚нешнЯЯ блокировка планирования
+		void block();					//вЂљРЅРµС€РЅРЇРЇ Р±Р»РѕРєРёСЂРѕРІРєР° РїР»Р°РЅРёСЂРѕРІР°РЅРёСЏ
 		void unblock();				
 		
-		//Њетоды:
-		bool ready();					//‚озвращает готовность к планированию.
-										//Џланировщик не готов, если установлен 
-										//Ћдин из битов в BLOCK_MASK либо 
-										//не обнулена переменная process_operation
+		//РЉРµС‚РѕРґС‹:
+		bool ready();					//вЂљРѕР·РІСЂР°С‰Р°РµС‚ РіРѕС‚РѕРІРЅРѕСЃС‚СЊ Рє РїР»Р°РЅРёСЂРѕРІР°РЅРёСЋ.
+										//РЏР»Р°РЅРёСЂРѕРІС‰РёРє РЅРµ РіРѕС‚РѕРІ, РµСЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅ 
+										//Р‹РґРёРЅ РёР· Р±РёС‚РѕРІ РІ BLOCK_MASK Р»РёР±Рѕ 
+										//РЅРµ РѕР±РЅСѓР»РµРЅР° РїРµСЂРµРјРµРЅРЅР°СЏ process_operation
 		
-		virtual void process_set_running(process_base* proc)=0;
-		virtual void process_set_wait(process_base* proc)=0;
-		virtual void process_set_zombie(process_base* proc)=0;
-		virtual void process_set_stop(process_base* proc)=0;
+		virtual void schedee_set_running(schedee_base* proc)=0;
+		virtual void schedee_set_wait(schedee_base* proc)=0;
+		virtual void schedee_set_zombie(schedee_base* proc)=0;
+		virtual void schedee_set_stop(schedee_base* proc)=0;
 		
 		//TODO
 		//virtual void change_process_state(process_base* process,uint8_t state){};
@@ -50,9 +50,9 @@
 			//void process_executed(process_base* proc);
 			//void process_unexecuted(process_base* proc);
 		
-			void process_unbind(process_base* proc);
+			void schedee_unbind(schedee_base* proc);
 		
-		//Ћбобщенный интерфейсы для работы внешних сервисов, типа waiter
+		//Р‹Р±РѕР±С‰РµРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃС‹ РґР»СЏ СЂР°Р±РѕС‚С‹ РІРЅРµС€РЅРёС… СЃРµСЂРІРёСЃРѕРІ, С‚РёРїР° waiter
 		virtual void schedule()=0;
 		
 		scheduler_base() : sched_flags(NO_INIT) {if (scheduler()==nullptr) scheduler(this);};
@@ -62,16 +62,16 @@
 	
 	
 	
-	///Планировщик вытесняющего планирования. Базовый класс.
+	///РџР»Р°РЅРёСЂРѕРІС‰РёРє РІС‹С‚РµСЃРЅСЏСЋС‰РµРіРѕ РїР»Р°РЅРёСЂРѕРІР°РЅРёСЏ. Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ.
 	class subst_scheduler_base : public scheduler_base
 	{public:
-		//ђесурсы:	
+		//С’РµСЃСѓСЂСЃС‹:	
 		
-		//“тилиты:
-		void block_sched();				//‚нутреннЯЯ блокировка планированиЯ
+		//вЂњС‚РёР»РёС‚С‹:
+		void block_sched();				//вЂљРЅСѓС‚СЂРµРЅРЅРЇРЇ Р±Р»РѕРєРёСЂРѕРІРєР° РїР»Р°РЅРёСЂРѕРІР°РЅРёРЇ
 		void unblock_sched();			
 		
-		//Љонструктор
+		//Р‰РѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 		subst_scheduler_base() {bits_set(sched_flags, USER_BLOCK);}; 
 	};	
 	

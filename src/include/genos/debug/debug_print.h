@@ -40,6 +40,12 @@ void debug_putchar(char c);
  void debug_printhex_uint8 (uint8_t b);
  void debug_printhex_uint64(uint64_t a);
  void debug_printhex_uint32(uint32_t a);
+
+ #define debug_printhex_int4(a) debug_printhex_uint4(a)
+ #define debug_printhex_int8(a) debug_printhex_uint8(a)
+ #define debug_printhex_int16(a) debug_printhex_uint16(a) 
+ #define debug_printhex_int32(a) debug_printhex_uint32(a)
+
  void debug_printhex_ptr(void* a);
  void debug_printhex_uint16(uint16_t a);
  void debug_printbin_uint4 (uint8_t b);

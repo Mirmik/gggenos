@@ -138,14 +138,14 @@
 		return (a & m) == m;
 	};
 	
-	#include "gstl/utility.h"
+	#include "genos/gstl/utility.h"
 	#include "genos/debug/debug_templates.h"
 	template<typename T>  
 	static inline uint8_t bits_amount (T a) 
 	{
-		typename  std::make_unsigned<T>::type b = (typename std::make_unsigned<T>::type)(a);
+		typename  gstd::make_unsigned<T>::type b = (typename gstd::make_unsigned<T>::type)(a);
 
-		debug_print_type<typename std::make_unsigned<T>::type>();
+		debug_print_type<typename gstd::make_unsigned<T>::type>();
 
 		uint8_t i = 0;
 		while(b != 0) {if (b & 1) i++; b >>= 1;};
@@ -155,9 +155,12 @@
 	#else
 
 
-	#define bits_set(a, b) {a |= b;}
+	#define bits_set(a, b) {a |= (b);}
+	#define bits_clr(a, b) {a &= ~(b);}
+	#define bits_rev(a) {a = ~(a);}
 
 
+	#define bits_mask_rev(a, b) {a ^= (b);}
 
 
 

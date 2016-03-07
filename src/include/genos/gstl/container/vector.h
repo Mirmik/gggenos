@@ -4,18 +4,21 @@
 	
 	#include <genos/gstl/utility.h>
 	#include "genos/gstl/allocator.h"
-	
+	#include "string.h"
+	#include "new.h"
+
 	namespace gstd {
 		
 		template
 		<
 		class valtype, 
-		class traits_type = genos::elem_traits<valtype>
+		class traits_type = gstd::elem_traits<valtype>
 		>
 		class linear_strategy
 		{
+		public:
 			typedef typename traits_type::size_type size_type;
-			size_type strategy(size_type need)
+			size_type operator()(size_type need)
 			{
 				size_type t = 1;
 				while(t < need) t+=1;
@@ -26,12 +29,13 @@
 		template
 		<
 		class valtype, 
-		class traits_type = genos::elem_traits<valtype>
+		class traits_type = gstd::elem_traits<valtype>
 		>
 		class double_strategy
 		{
+		public:
 			typedef typename traits_type::size_type size_type;
-			size_type strategy(size_type need)
+			size_type operator()(size_type need)
 			{
 				size_type t = 1;
 				while(t < need) t<<=1;
@@ -41,7 +45,7 @@
 
 		template <
 		class valtype, 
-		class traits_type = genos::elem_traits<valtype>,
+		class traits_type = gstd::elem_traits<valtype>,
 		class Strategy = linear_strategy<valtype>,
 		class Allocator = gstd::allocator<valtype>
 		>
@@ -65,6 +69,7 @@
 			public:
 			void resize(size_type n)
 			{
+				Strategy strategy;
 				if (n <= _capacity) return;
 				size_type new_size = strategy(n);
 				valtype* new_data = alloc.allocate(new_size);
