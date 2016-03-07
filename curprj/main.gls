@@ -21,6 +21,7 @@ application genos
 	["cxx", ""],
 	["genos_decoration", ""],
 	["time_service", ""],
+	["command_list", ""],
 	["arch", "arch_avr", ""],
 	["diag", "diag_impl", ""],
 	["stream_impl", ""],

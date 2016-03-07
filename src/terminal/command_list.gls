@@ -1,0 +1,5 @@
+
+module command_list
+{
+	cpp_source = ["command_list.cpp"];
+}

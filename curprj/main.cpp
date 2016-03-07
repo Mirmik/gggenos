@@ -19,8 +19,6 @@ syscontext scntxt;
 automTerminal automTerm;
 automScheduler automSched;
 
-command_list cmdlist;
-
 void emergency_stop()
 {
 	debug_print("EMERGENCY_STOP\n");
@@ -43,6 +41,9 @@ int main(){
 	while(1) loop();
 };
 
+void task(int, char**) 
+{stdout.print("allgood");};
+
 void setup(){
 	arch_init();
 	diag_init();
@@ -61,6 +62,8 @@ void setup(){
 
 	cdelegate<void> d2 = makedelegate(&automTerm, &automTerminal::exec);
 	automSched.registry(d2);
+
+	central_cmdlist.add("task", &task);
 };
 
 void loop(){

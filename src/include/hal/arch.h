@@ -19,18 +19,14 @@ typedef enum {
 	ARCH_SHUTDOWN_MODE_ABORT,
 } arch_shutdown_mode_t;
 
-/**
- * Performs basic machine-dependent initialization.
- *
- * @note Implementation have to setup such low-level features as e.g. cache.
- */
 
 __BEGIN_DECLS
 
+unsigned int arch_systimer_state(void);
+
 void arch_init(void);
 
-unsigned int arch_systimer_state(void);
-//void arch_idle(void);
+void arch_idle(void);
 
 void _NORETURN arch_halt(void);
 

@@ -11,7 +11,5 @@
 	
 	#define SYSCONTEXT_IOSTREAM
 	
-	#define GENOS_VERSION "0.8.1"	
-	
 	
 #endif

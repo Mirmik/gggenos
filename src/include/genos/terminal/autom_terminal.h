@@ -9,8 +9,9 @@
 	
 	class automTerminal
 	{public:
-		uint8_t state;	
-		char oldchar;
+		uint8_t state = 0;	
+		char oldchar = '\0';
+		bool scanmode = false;
 		Readline rl;
 
 		void endl_event();

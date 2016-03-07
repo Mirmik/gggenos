@@ -12,7 +12,6 @@ static void print_banner(stream* strm)
 	strm->println("( __  ___  ___ (   |(___ ");
 	strm->println("|   )|___)|   )|   )    )");
 	strm->println("|__/ |__  |  / |__/  __/ ");
-
 };
 
 static void print_about(stream* strm)
@@ -23,8 +22,5 @@ static void print_about(stream* strm)
 };
 
 extern const char* machine_name;
-
- 
-
 
 #endif
