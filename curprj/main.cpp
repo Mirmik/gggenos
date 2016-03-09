@@ -1,74 +1,36 @@
-#include "hal/arch.h"
-#include "kernel/diag.h"
-#include "genos/decoration.h"
 #include "genos/debug/debug.h"
-#include "hal/gpio.h"
-#include "genos/time/sysclock.h"
-#include "genos/time/timeserv.h"
-#include "genos/wait/waitserv.h"
-#include "genos/schedproc/automSched.h"
-#include "genos/io/stream.h"
-#include "asm/Serial.h"
-#include "genos/debug/iteration_counter.h"
+#include "kernel/diag.h"
 
-#include "syscontext/syscontext.h"
-#include "genos/terminal/autom_terminal.h"
+#include "hal/arch.h"
+
+#include "utilxx/functype.h"
 #include "genos/terminal/command_list.h"
 
-syscontext scntxt;
-automTerminal automTerm;
-automScheduler automSched;
-
-void emergency_stop()
+void task(int, char**) 
 {
-	debug_print("EMERGENCY_STOP\n");
+	debug_print("task");
 };
 
-timer tmr1;
-void blinker()
-{
-	gpio_change(13);
-	msleep_autom_bias(&tmr1, 1000);
-};
-
-void setup();
-void loop();
+func_t<void,int,char**> fptr;
 
 int main(){
-	setup();
-	arch_deatomic();
-	delay(500);
-	while(1) loop();
-};
+arch_init();
+diag_init();
 
-void task(int, char**) 
-{stdout.print("allgood");};
+central_cmdlist.add("task", task);
 
-void setup(){
-	arch_init();
-	diag_init();
 
-	machine_name = "aiop2";
+central_cmdlist.find("task", fptr);
 
-	current_syscontext(&scntxt);
-	scntxt.__stdout.direct(&Serial0);	
-	scntxt.__stdin.direct(&Serial0);
+char m[10];
+strcpy(m, "task 0");
 
-	gpio_mode_out(13);
-	gpio_mode_out(31);
+argvc_t argvc;
+split_argv(m, argvc);
 
-	cdelegate<void> d = makedfunc(&blinker);
-	automSched.registry(d);
+debug_print(argvc.argv[0]);dln;
+debug_print(argvc.argv[1]);dln;
 
-	cdelegate<void> d2 = makedelegate(&automTerm, &automTerminal::exec);
-	automSched.registry(d2);
 
-	central_cmdlist.add("task", &task);
-};
 
-void loop(){
-	timerserv_check();
-	waitserv_check();
-	automSched.schedule();
-};
-
+}

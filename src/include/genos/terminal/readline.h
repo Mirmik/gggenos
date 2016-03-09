@@ -11,12 +11,29 @@ private:
 	char cmdline[READLINE_SIZE];
 	char* cursor;								
 public:
-	void init() {cursor = cmdline;};
+	
+	void init() 
+	{
+		cursor = cmdline;
+	};
+	
 	int putc(char c) {
 		*cursor++=c;
-		assert (cursor - cmdline < READLINE_SIZE) ;
+		if (cursor - cmdline >= READLINE_SIZE) return -1;
+		return 1;
 	};
-	char* get_line(){*cursor = '\0'; return cmdline;};
+	
+	int backspace()
+	{
+		if (cursor == cmdline) return 0;
+		--cursor;
+		return 1;
+	};
+
+	char* get_line()
+	{
+		*cursor = '\0'; return cmdline;
+	};
 
 	Readline() {init();};
 };

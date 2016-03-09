@@ -21,7 +21,7 @@ var AR = "ar";
 var CFLAGS = "";
 var CXXFLAGS = "-std=gnu++11";
 
-var global_include = "src/include";
+var global_include = ["src/include"];
 var global_mdepends = ["arch"];
 };
 

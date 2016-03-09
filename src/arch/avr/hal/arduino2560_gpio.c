@@ -2,20 +2,20 @@
 #include "inttypes.h"
 #include "avr/io.h"
 
-struct regs_trait_t {
+struct gpio_regs {
 	volatile uint8_t* port;
 	volatile uint8_t* pin;
 	volatile uint8_t* ddr;
 };
 
-static struct regs_trait_t A = 
+static struct gpio_regs A = 
 {
 	&PORTA,
 	&PINA,
 	&DDRA
 };
 
-static struct regs_trait_t B = 
+static struct gpio_regs B = 
 {
 	&PORTB,
 	&PINB,
@@ -23,21 +23,21 @@ static struct regs_trait_t B =
 };
 
 
-static struct regs_trait_t C = 
+static struct gpio_regs C = 
 {	
 	&PORTC,
 	&PINC,
 	&DDRC
 };
 
-static struct regs_trait_t D = 
+static struct gpio_regs D = 
 {
 	&PORTD,
 	&PIND,
 	&DDRD
 };
 
-static struct regs_trait_t E = 
+static struct gpio_regs E = 
 {
 	&PORTE,
 	&PINE,
@@ -45,7 +45,7 @@ static struct regs_trait_t E =
 };
 
 
-static struct regs_trait_t F = 
+static struct gpio_regs F = 
 {
 	&PORTF,
 	&PINF,
@@ -53,7 +53,7 @@ static struct regs_trait_t F =
 };
 
 
-static struct regs_trait_t G = 
+static struct gpio_regs G = 
 {
 	&PORTG,
 	&PING,
@@ -61,28 +61,28 @@ static struct regs_trait_t G =
 };
 
 
-static struct regs_trait_t H = 
+static struct gpio_regs H = 
 {
 	&PORTH,
 	&PINH,
 	&DDRH
 };
 
-static struct regs_trait_t J = 
+static struct gpio_regs J = 
 {
 	&PORTJ,
 	&PINJ,
 	&DDRJ
 };
 
-static struct regs_trait_t K = 
+static struct gpio_regs K = 
 {
 	&PORTK,
 	&PINK,
 	&DDRK
 };
 
-static struct regs_trait_t L = 
+static struct gpio_regs L = 
 {
 	&PORTL,
 	&PINL,
@@ -91,7 +91,7 @@ static struct regs_trait_t L =
 
 struct gpio_t
 {
-	struct regs_trait_t * regs;
+	struct gpio_regs * regs;
 	uint8_t offset;
 };
 
@@ -99,18 +99,18 @@ struct gpio_t gpio_table[] =
 {
 	{&E, 0}, //0 //RX0
 	{&E, 1}, //1 //TX0	
-	{&E, 4}, //2 
-	{&E, 5}, //3
-	{&G, 5}, //4
-	{&E, 3}, //5
-	{&H, 3}, //6
-	{&H, 4}, //7
-	{&H, 5}, //8
-	{&H, 6}, //9
-	{&B, 4}, //10
-	{&B, 5}, //11
-	{&B, 6}, //12
-	{&B, 7}, //13		//RED_LED
+	{&E, 4}, //2 	//OC3B
+	{&E, 5}, //3	//OC3C
+	{&G, 5}, //4	//OC0B
+	{&E, 3}, //5	//OC3A
+	{&H, 3}, //6	//OC4A
+	{&H, 4}, //7	//OC4B
+	{&H, 5}, //8	//OC4C
+	{&H, 6}, //9	//OC2B
+	{&B, 4}, //10	//OC2A
+	{&B, 5}, //11	//OC1A
+	{&B, 6}, //12	//OC1B
+	{&B, 7}, //13	//0C0A / OC1C //RED_LED
 	{&J, 1}, //14 //TX3
 	{&J, 0}, //15 //RX3
 	{&H, 1}, //16 //TX2
@@ -141,9 +141,9 @@ struct gpio_t gpio_table[] =
 	{&G, 0}, //41 		
 	{&L, 7}, //42
 	{&L, 6}, //43
-	{&L, 5}, //44
-	{&L, 4}, //45
-	{&L, 3}, //46
+	{&L, 5}, //44	//OC5C
+	{&L, 4}, //45	//OC5B
+	{&L, 3}, //46	//OC5A
 	{&L, 2}, //47
 	{&L, 1}, //48
 	{&L, 0}, //49

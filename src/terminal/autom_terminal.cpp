@@ -2,6 +2,15 @@
 #include "genos/terminal/autom_terminal.h"
 #include "genos/decoration.h"
 #include "genos/defs.h"
+
+void automTerminal::reset_event() 
+{
+	stdout.println("automTerminal reset_event");
+	rl.init();
+	state = 0;
+};
+
+
 void automTerminal::endl_event() 
 {
 	state = 1;
@@ -33,6 +42,14 @@ void automTerminal::endl_event()
 		success = true;
 		goto _exit;
 	};
+
+	if (!strcmp(str, "terminal_reset"))
+	{
+		reset_event();
+		success = true;
+		goto _exit;
+	};
+
 
 	void(*f)(int, char**);
 	if (!central_cmdlist.find(str, f))
@@ -72,11 +89,11 @@ void  automTerminal::exec()
 		{
 			char c = static_cast<char>(stdin.getc()); 
 		
-			//if (scanmode) 
-			//{
-			//	stdout.printhexln(c);
-			//	goto _exit;
-			//};
+			if (scanmode) 
+			{
+				stdout.printhexln(c);
+				goto _exit;
+			};
 
 			/*if (
 				!(
@@ -90,15 +107,25 @@ void  automTerminal::exec()
 			if ((oldchar=='\n' && c=='\r') || (oldchar=='\r' && c=='\n')) return;
 			switch(c)
 			{
+				case '\b': 
+					rl.backspace(); stdout.putc('\b'); break;
 				case '\r': 
-				case '\n': stdout.print("\r\n"); endl_event(); return; break;
-				default: rl.putc(c); stdout.putc(c); break;							
+				case '\n': 
+					stdout.print("\r\n"); endl_event(); return;
+				default: 
+					stdout.putc(c); 
+					if (rl.putc(c) < 0) {
+						stdout.print("Readline Error.");
+						reset_event(); return;
+					}; 
+				break;							
 			};
 				
 			//_exit:		
 			oldchar=c;
 		};
 			
+		_exit:
 		wait_autom(&stdin);
 		break;				
 	};

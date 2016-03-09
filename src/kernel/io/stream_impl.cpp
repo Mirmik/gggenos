@@ -64,6 +64,8 @@ int stream::printhex(int64_t i)
 #include "genos/debug/debug_print.h"
 int stream::print(int8_t num, uint8_t base)
 {
+
+	print("int8");
 	int ret = 0;
 	uint8_t rest;
 	char str[9];
@@ -85,11 +87,14 @@ int stream::print(int8_t num, uint8_t base)
 
 int stream::print(int16_t num, uint8_t base)
 {
+//	print("int16");
 	int ret = 0;
 	uint8_t rest;
 	char str[17];
 	char* ptr = str + 16;
 	*ptr = '\0';
+
+	if (num == 0) return putc('0');
 
 	if (num < 0) {ret += putc('-'); num = -num;};
 
@@ -112,6 +117,8 @@ int stream::print(int32_t num, uint8_t base)
 	char str[33];
 	char* ptr = str + 32;
 	*ptr = '\0';
+
+	if (num == 0) return putc('0');
 
 	if (num < 0) {ret += putc('-'); num = -num;};
 

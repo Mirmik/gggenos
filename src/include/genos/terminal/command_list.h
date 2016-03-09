@@ -2,10 +2,56 @@
 
 #ifndef COMMAND_LIST_H
 	#define COMMAND_LIST_H
-	
+
+	#include "util/stub.h"	
 	#include <genos/datastruct/list.h>
 	#include <string.h>
+
+	typedef void(*executed_t)(int,char**);
 	
+	struct argvc_t {
+		char ** argv;
+		int argc;
+	};	
+
+	static void split_argv(char* c, argvc_t a)
+	{
+		int state = 0;
+		char* ptr = c;
+		a.argc=0;
+
+		while(*ptr != 0)
+		{
+			switch(state)
+			{
+				case 0: 
+					switch(*ptr)
+					{
+						case ' ': 
+							break;
+						default: 
+							state = 1; 
+							a.argv[a.argc] = ptr; 
+							a.argc++; 
+							break;
+					}
+					break;
+				case 1:
+					switch(*ptr)
+					{ 
+						case ' ': 
+							state = 0;
+							*ptr = '\0';
+							break;
+						default:
+							break;
+					};
+					break;
+			};
+		++ptr;
+		};
+	};
+
 	class command_t{
 		public:
 		void(*_func)(int,char**);
@@ -28,14 +74,15 @@
 			list_add(&cmd->lst, &list);
 		};	
 
-		int find(const char* str, void(*&f)(int,char**)) 
+		int find(const char* str, void(*&out_f)(int,char**)) 
 		{
+			out_f = (executed_t) do_nothing;
 			command_t* elem;
 			list_for_each_entry(elem, &list, lst)
 			{
 				if (!strcmp(elem->_name, str)) 
 				{
-					f = elem->_func;
+					out_f = elem->_func;
 					return 0;
 				};
 			};

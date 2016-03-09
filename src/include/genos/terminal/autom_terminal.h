@@ -14,6 +14,7 @@
 		bool scanmode = false;
 		Readline rl;
 
+		void reset_event();
 		void endl_event();
 		void exec();
 	};	

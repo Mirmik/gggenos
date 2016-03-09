@@ -49,9 +49,11 @@ public:
 	int print(int32_t i, uint8_t base = 10);
 	int print(int64_t i, uint8_t base = 10);
 
-	int print(uint8_t i, uint8_t base = 10);
-	int print(uint16_t i, uint8_t base = 10);
-	int print(uint32_t i, uint8_t base = 10);
+	int print(uint8_t i) { print("IOP");
+		return print(i, 10);};
+	//int print(uint8_t i, uint8_t base = 10);
+	//int print(uint16_t i, uint8_t base = 10);
+	//int print(uint32_t i, uint8_t base = 10);
 	int print(uint64_t i, uint8_t base = 10);
 
 	int printhex(int8_t i);
@@ -83,6 +85,11 @@ public:
 		ret += print(var, base);
 		ret += print(STREAM_ENDL);
 		return ret;
+	};
+
+	int println()
+	{
+		return print(STREAM_ENDL);
 	};
 
 	template<typename T>

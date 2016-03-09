@@ -2,6 +2,7 @@
 	#define GENOS_LINUX_LIST_BASIC
 	
 	#include "util/member.h"
+	#include "defines/decltypeof.h" 
 	//#include "genos/datastruct/base_struct_def.h"
 	
 	#define LIST_POISON1 ((list_head*)-1)
@@ -441,7 +442,7 @@
 	*/
 	//Расчитывает следующую структуру.
 	#define list_next_entry(pos, member) \
-	list_entry((pos)->member.next, typeof(*(pos)), member)
+	list_entry((pos)->member.next, decltypeof(*(pos)), member)
 	
 	/**
 		* list_prev_entry - get the prev element in list
@@ -450,7 +451,7 @@
 	*/
 	//Расчитывает предыдущую структуру.
 	#define list_prev_entry(pos, member) \
-	list_entry((pos)->member.prev, typeof(*(pos)), member)
+	list_entry((pos)->member.prev, decltypeof(*(pos)), member)
 	
 	/**
 		* list_for_each	-	iterate over a list
@@ -505,7 +506,7 @@
 	*/
 	//Цикл, выполняющийся по всем структурам списка.
 	#define list_for_each_entry(pos, head, member)				\
-	for (pos = list_first_entry(head, typeof(*pos), member);	\
+	for (pos = list_first_entry(head, decltypeof(*pos), member);	\
 	&pos->member != (head);					\
 	pos = list_next_entry(pos, member))
 	
@@ -518,7 +519,7 @@
 	//Цикл, выполняющийся по всем структурам списка, движущийся в
 	//обратном направлении.
 	#define list_for_each_entry_reverse(pos, head, member)			\
-	for (pos = list_last_entry(head, typeof(*pos), member);		\
+	for (pos = list_last_entry(head, decltypeof(*pos), member);		\
 	&pos->member != (head); 					\
 	pos = list_prev_entry(pos, member))
 	
@@ -532,7 +533,7 @@
 	*/
 	//Подготавливает pos для использования в качестве курсора  list_for_each_entry_continue
 	#define list_prepare_entry(pos, head, member) \
-	((pos) ? : list_entry(head, typeof(*pos), member))
+	((pos) ? : list_entry(head, decltypeof(*pos), member))
 	
 	/**
 		* list_for_each_entry_continue - continue iteration over list of given type
@@ -587,7 +588,7 @@
 	*/
 	//Стоек к удалению.
 	#define list_for_each_entry_safe(pos, n, head, member)			\
-	for (pos = list_first_entry(head, typeof(*pos), member),	\
+	for (pos = list_first_entry(head, decltypeof(*pos), member),	\
 	n = list_next_entry(pos, member);			\
 	&pos->member != (head); 					\
 	pos = n, n = list_next_entry(n, member))
@@ -635,7 +636,7 @@
 		* of list entry.
 	*/
 	#define list_for_each_entry_safe_reverse(pos, n, head, member)		\
-	for (pos = list_last_entry(head, typeof(*pos), member),		\
+	for (pos = list_last_entry(head, decltypeof(*pos), member),		\
 	n = list_prev_entry(pos, member);			\
 	&pos->member != (head); 					\
 	pos = n, n = list_prev_entry(n, member))

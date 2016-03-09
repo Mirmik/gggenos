@@ -1,7 +1,9 @@
 
 #include "hal/gpio.h"
 #include "inttypes.h"
+#include "util/bits.h"
 #include "avr/io.h"
+#include "assert.h"
 
 struct regs_trait_t {
 	volatile uint8_t* port;
@@ -37,6 +39,7 @@ struct gpio_t
 	uint8_t offset;
 };
 
+#define GPIO_TOTAL 14
 
 struct gpio_t gpio_table[] =
 {
@@ -63,11 +66,36 @@ struct gpio_t gpio_table[] =
 
 #include "genos/debug/debug.h"
 
-void gpio_mode_out(int gpio_number) {RDDR |= 1 << ROFFSET;};
-void gpio_mode_in(int gpio_number) {RDDR &= ~(1 << ROFFSET);};
-void gpio_mode_mode(int gpio_number) {debug_panic("gpio_stub");};
+void gpio_mode_out(int gpio_number) 
+{
+	assert(gpio_number < GPIO_TOTAL);
+	RDDR |= 1 << ROFFSET;
+};
 
-void gpio_hi(int gpio_number) {RPORT |= 1 << ROFFSET;};
-void gpio_lo(int gpio_number) {RPORT &= ~(1 << ROFFSET);};
-void gpio_change(int gpio_number) {debug_panic("gpio_stub");};
-void gpio_level(int gpio_number, uint8_t level) {debug_panic("gpio_stub");};
+void gpio_mode_in(int gpio_number) 
+{
+	assert(gpio_number < GPIO_TOTAL);
+	RDDR &= ~(1 << ROFFSET);
+};
+
+void gpio_hi(int gpio_number) 
+{
+	assert(gpio_number < GPIO_TOTAL);
+	RPORT |= 1 << ROFFSET;
+};
+
+void gpio_lo(int gpio_number) 
+{
+	assert(gpio_number < GPIO_TOTAL);
+	RPORT &= ~(1 << ROFFSET);
+};
+
+void gpio_change(int gpio_number) 
+{
+	assert(gpio_number < GPIO_TOTAL);
+	bits_mask_rev(RPORT, (1 << ROFFSET));
+};
+void gpio_level(int gpio_number, uint8_t level) {
+	assert(gpio_number < GPIO_TOTAL);
+	debug_panic("gpio_stub");
+};
