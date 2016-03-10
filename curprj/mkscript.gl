@@ -14,23 +14,22 @@ var mdepends = [];
 var filename = __filename__();
 var relpath = __relpath__();
 var dirpath = __dirpath__();
-
-var CC = "gcc";
-var CPP = "g++";
-var AR = "ar";
-var CFLAGS = "";
-var CXXFLAGS = "-std=gnu++11";
-
-var global_include = ["src/include"];
-var global_mdepends = ["arch"];
+var CC = "avr-gcc";
+var CPP = "avr-g++";
+var AR = "avr-ar";
+var CFLAGS = "-std=gnu99  -mmcu=atmega2560 -DF_CPU=16000000 -fdata-sections -ffunction-sections -Wl,--gc-sections -O3";
+var CXXFLAGS = "-mmcu=atmega2560 -DF_CPU=16000000  -DSERIAL_BUFFER_SIZE=64 -std=gnu++11 -fdata-sections -ffunction-sections -Wl,--gc-sections -O3";
+var LDFLAGS = CXXFLAGS + " -nostdinc";
+var global_include = ["src/include", "curprj"];
+var global_mdepends = ["libc", "cxx"];
 };
 
 fn init_application() downleveled 
 {
 var modules = [];
 var target = name;
-var LDFLAGS = "";
-var LD = "g++";
+var LDFLAGS = "-mmcu=atmega2560 -DF_CPU=16000000  -std=c++11 -fdata-sections -ffunction-sections -Wl,--gc-sections -O3";
+var LD = "avr-g++";
 };
 
 

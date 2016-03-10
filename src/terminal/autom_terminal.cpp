@@ -2,6 +2,7 @@
 #include "genos/terminal/autom_terminal.h"
 #include "genos/decoration.h"
 #include "genos/defs.h"
+#include "stdlib.h"
 
 void automTerminal::reset_event() 
 {
@@ -16,6 +17,9 @@ void automTerminal::endl_event()
 	state = 1;
 	bool success = false;	
 	char* str = rl.get_line();
+
+	if (!strcmp(str, "")) goto _exit;
+
 	if (!strcmp(str, "about"))
 	{
 		print_about(&stdout);
@@ -50,11 +54,13 @@ void automTerminal::endl_event()
 		goto _exit;
 	};
 
+	argvc_t a;
+	split_argv(str, a);	
 
-	void(*f)(int, char**);
-	if (!central_cmdlist.find(str, f))
+	executed_t f;
+	if (!central_cmdlist.find(a.argv[0], f))
 	{
-		((void(*)())f)();
+		f(a.argc, a.argv);
 		success = true;
 		goto _exit;
 	};
@@ -91,6 +97,7 @@ void  automTerminal::exec()
 		
 			if (scanmode) 
 			{
+				stdout.print("F");
 				stdout.printhexln(c);
 				goto _exit;
 			};

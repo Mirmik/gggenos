@@ -58,7 +58,9 @@ timer_ops* tms[TOTAL_TIMERS] =
 
 void timer_info(int argc, char** argv)
 {
-	if (argc != 1)
+	//debug_printdec_uint32(argc);
+
+	if (argc != 2)
 	{
 		stdout.println("Wrong param count");
 		return;

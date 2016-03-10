@@ -8,13 +8,13 @@
 	#include <string.h>
 
 	typedef void(*executed_t)(int,char**);
-	
+
 	struct argvc_t {
-		char ** argv;
 		int argc;
+		char * argv[10];
 	};	
 
-	static void split_argv(char* c, argvc_t a)
+	static void split_argv(char* c, argvc_t& a)
 	{
 		int state = 0;
 		char* ptr = c;
@@ -32,7 +32,7 @@
 						default: 
 							state = 1; 
 							a.argv[a.argc] = ptr; 
-							a.argc++; 
+							a.argc++;
 							break;
 					}
 					break;
@@ -88,6 +88,15 @@
 			};
 			return -1;
 		};	
+
+		int try_execute(char* c, executed_t& outf)
+		{
+			argvc_t a;
+			split_argv(c, a);
+			if (a.argc == 0) return -1;
+			if (find(a.argv[0], outf)) return -2;
+			return 0;
+		};
 
 	};
 	
