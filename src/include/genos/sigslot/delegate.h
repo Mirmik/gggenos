@@ -17,7 +17,7 @@
 	#include "genos/gstl/utility.h"		
 	#include "genos/debug/debug.h"		
 	
-	class AbstractDelegate{};
+	class AbstractDelegate {};
 			
 		//Делегат. Шаблонный класс. 
 		//Параметры шаблона задают сигнатуру делегируемой функции. 
@@ -29,7 +29,11 @@
 			
 			static constexpr uint8_t METHOD =0x01;
 			static constexpr uint8_t FUNCTION =0x02;
-			static constexpr uint8_t EXTFUNCTION =0x03;
+
+			//Возможный вариант рассмотрения метода,
+			//как функции, параметром которой предшествует указатель.
+			//Сомнительная переносимость.
+			//static constexpr uint8_t EXTFUNCTION =0x03;
 			
 			using obj_t 		= AbstractDelegate*;			
 			using mtd_t 		= R (AbstractDelegate::*)(Args ...);
@@ -50,12 +54,15 @@
 			//Конструктор пустого делегата.		
 			rtdelegate() : object(0), method(0) {};
 			
+
+			//Конструктор копирования
 			rtdelegate(const rtdelegate& d)
 			{
 				object = d.object;
 				method = d.method;
 			};
 			
+			//Конструктор перемещения
 			rtdelegate(rtdelegate&& d)
 			{
 				object = d.object;
@@ -171,7 +178,7 @@
 	
 	
 	
-	template<typename T, typename B>
+		template<typename T, typename B>
 		class change_basic{};
 		
 		

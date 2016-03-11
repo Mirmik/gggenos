@@ -1,0 +1,4 @@
+module usart_2560 
+{
+	cc_source = ["usart_2560.c", "usart.c"];
+};
