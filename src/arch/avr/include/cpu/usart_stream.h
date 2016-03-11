@@ -4,6 +4,8 @@
 #include "usart_control_struct.h"
 #include "genos/io/stream.h"
 
+#define 
+
 class AvrUsartStream : public stream
 {
 	usart_regs* _usart;

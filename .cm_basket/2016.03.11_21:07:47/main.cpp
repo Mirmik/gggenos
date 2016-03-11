@@ -8,7 +8,7 @@
 #include "genos/wait/waitserv.h"
 #include "genos/schedproc/automSched.h"
 #include "genos/io/stream.h"
-//#include "asm/Serial.h"
+#include "asm/Serial.h"
 #include "genos/debug/iteration_counter.h"
 
 #include "syscontext/syscontext.h"
@@ -16,8 +16,6 @@
 #include "genos/terminal/command_list.h"
 
 #include "cpu/timers.h"
-
-#include "cpu/usart_control_struct.h"
 
 syscontext scntxt;
 automTerminal automTerm;
@@ -47,7 +45,7 @@ void emergency_stop()
 timer tmr_blinker;
 void blinker()
 {
-	gpio_change(13);
+	gpio_change(31);
 	msleep_autom_bias(&tmr_blinker, 1000);
 };
 
@@ -138,8 +136,8 @@ void setup(){
 	machine_name = "aiop2";
 
 	current_syscontext(&scntxt);
-//	scntxt.__stdout.direct(&Serial0);	
-//	scntxt.__stdin.direct(&Serial0);
+	scntxt.__stdout.direct(&Serial0);	
+	scntxt.__stdin.direct(&Serial0);
 
 	gpio_mode_out(13);
 	gpio_mode_out(12);
@@ -163,15 +161,11 @@ void setup(){
 	debug_delay(20000);
 
 	arch_deatomic();
-	usart_baudrate_set(&usart0, 9600);
-	//usart_parity_set(&usart0, usartParityEven);
 };
 
 void loop(){
-//	timerserv_check();
-//	waitserv_check();
-//	automSched.schedule();
-
-	*usart0.udr = 'd';
+	timerserv_check();
+	waitserv_check();
+	automSched.schedule();
 };
 
