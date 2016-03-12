@@ -1,4 +1,4 @@
-module autom_terminal {
+module automTerminal {
 	
 	cpp_source = ["autom_terminal.cpp"];
 

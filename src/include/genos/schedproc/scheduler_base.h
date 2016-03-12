@@ -1,67 +1,56 @@
 #ifndef GENOS_SCHEDULER_BASE
-	#define GENOS_SCHEDULER_BASE
+#define GENOS_SCHEDULER_BASE
 	
-	#include <genos/debug/debug.h>
-	#include <genos/datastruct/list.h>
-//	#include <genos/subst/subst.h>
-	#include <genos/schedproc/schedee_base.h>
-	
-	//#include "genos/subst/thread_constructor.h"
-	
-	
-	
-	static constexpr uint8_t USER_BLOCK	=	0x01;
-	static constexpr uint8_t SCHED_BLOCK=	0x02;
-	static constexpr uint8_t NO_INIT	=	0x04;
-	static constexpr uint8_t BLOCK_MASK	=	0x0F;
-	
-	
-	schedee_base* current_schedee();
-	void current_schedee(schedee_base*);
-	
-	class scheduler_base;
+#include <genos/datastruct/list.h>
+#include <genos/schedproc/schedee_base.h>
+#include "util/bits.h"
+#include "inttypes.h"
+#include "genos/debug/debug.h"
 		
-	scheduler_base* scheduler();
-	void scheduler(scheduler_base* _sched);
+static constexpr uint8_t USER_BLOCK			=	0x01;
+static constexpr uint8_t SCHED_BLOCK		=	0x02;
+static constexpr uint8_t NO_INIT			=	0x04;
+static constexpr uint8_t PROCESS_OPERATION 	=	0x08;
+static constexpr uint8_t BLOCK_MASK			=	0x0F;
 	
-	///Џланировщик. Ѓазовый класс.
-	class scheduler_base
-	{public:
-		uint8_t sched_flags;					//ђесурсы планировщика
+//Текущая единица планирования.
+schedee* current_schedee();
+void current_schedee(schedee*);
+	
+class scheduler;
 		
+scheduler* current_scheduler();
+void current_scheduler(scheduler* _sched);
+	
+///Планировщик. Базовый класс.
+class scheduler
+{public:
+	uint8_t sched_flags;					//Ресурсы планировщика
+			
+	//Методы:
+	void block() { sched_flags |= USER_BLOCK; };	//Внешняя блокировка планирования
+	void unblock() { sched_flags &= ~USER_BLOCK; };
 				
-		void block();					//‚нешнЯЯ блокировка планирования
-		void unblock();				
-		
-		//Њетоды:
-		bool ready();					//‚озвращает готовность к планированию.
-										//Џланировщик не готов, если установлен 
-										//Ћдин из битов в BLOCK_MASK либо 
-										//не обнулена переменная process_operation
-		
-		virtual void schedee_set_running(schedee_base* proc)=0;
-		virtual void schedee_set_wait(schedee_base* proc)=0;
-		virtual void schedee_set_zombie(schedee_base* proc)=0;
-		virtual void schedee_set_stop(schedee_base* proc)=0;
-		
-		//TODO
-		//virtual void change_process_state(process_base* process,uint8_t state){};
+	bool ready() { return bits_mask(sched_flags, BLOCK_MASK) ? false : true; };	
+									//Возвращает готовность к планированию.
+									//Планировщик не готов, если установлен 
+									//Один из битов в BLOCK_MASK либо 
+									
+	virtual void schedee_set_running(schedee* proc)=0;
+	virtual void schedee_set_wait(schedee* proc)=0;
+	virtual void schedee_set_zombie(schedee* proc)=0;
+	virtual void schedee_set_stop(schedee* proc)=0;
 	
-			//void process_executed(process_base* proc);
-			//void process_unexecuted(process_base* proc);
-		
-			void schedee_unbind(schedee_base* proc);
-		
-		//Ћбобщенный интерфейсы для работы внешних сервисов, типа waiter
-		virtual void schedule()=0;
-		
-		scheduler_base() : sched_flags(NO_INIT) {if (scheduler()==nullptr) scheduler(this);};
-		};
+	virtual void schedule()=0;
 	
+	scheduler() : sched_flags(NO_INIT) {
+		assert(current_scheduler()==nullptr);
+		current_scheduler(this);
+	};
+};
 	
-	
-	
-	
+
+	/*
 	///Планировщик вытесняющего планирования. Базовый класс.
 	class subst_scheduler_base : public scheduler_base
 	{public:
@@ -74,7 +63,7 @@
 		//Љонструктор
 		subst_scheduler_base() {bits_set(sched_flags, USER_BLOCK);}; 
 	};	
-	
+	*/
 	
 	
 #endif

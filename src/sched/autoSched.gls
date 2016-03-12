@@ -1,0 +1,3 @@
+module automSched {
+	cpp_source = ["automSched.cpp"];
+};

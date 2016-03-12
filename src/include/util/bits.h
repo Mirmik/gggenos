@@ -4,11 +4,19 @@
 	#include "defines/decltypeof.h"
 	#include "util/macro.h"
 
-	#define bits_set(a, b) {a |= (b);}
-	#define bits_clr(a, b) {a &= ~(b);}
-	#define bits_rev(a) {a = ~(a);}
+	
 
-	#define bits_mask_rev(a, b) {a ^= (b);}
+	#define bits_bit_set(a, num) ({a |= 1 << num;})
+	#define bits_bit_clr(a, num) ({a &= ~(1 << num);})
+
+	#define bits_bit_is_set(a, num) ({a & (1 << num);})
+	#define bits_bit_is_clr(a, num) ({!(a & (1 << num));})
+
+	#define bits_set(a, b) ({a |= (b);})
+	#define bits_clr(a, b) ({a &= ~(b);})
+	#define bits_rev(a) ({a = ~(a);})
+
+	#define bits_mask_rev(a, b) ({a ^= (b);})
 	
 	#define bits_mask(src, mask)			\
 	({										\

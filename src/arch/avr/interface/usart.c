@@ -38,3 +38,54 @@ void usart_databits_set(struct usart_regs* usart, enum usartDataBitsMode mode)
 	bits_mask_assign_bias(*usart->ucsr_c, mode, 0b011, 1);
 	bits_mask_assign(*usart->ucsr_b, mode, 0b100);
 };
+
+
+uint8_t usart_udr_is_empty(struct usart_regs* usart)
+{
+	return bits_bit_is_set(*usart->ucsr_a, UDRE0);
+};
+
+void usart_udr_empty_isr_enable(struct usart_regs* usart)
+{
+	bits_bit_set(*usart->ucsr_b, UDRIE0);
+};
+void usart_udr_empty_isr_disable(struct usart_regs* usart)
+{
+	bits_bit_clr(*usart->ucsr_b, UDRIE0);
+};
+void usart_rx_isr_enable(struct usart_regs* usart)
+{
+	bits_bit_set(*usart->ucsr_b, RXCIE0);
+};
+void usart_rx_isr_disable(struct usart_regs* usart)
+{
+	bits_bit_clr(*usart->ucsr_b, RXCIE0);
+};
+void usart_tx_end_isr_enable(struct usart_regs* usart)
+{
+	bits_bit_set(*usart->ucsr_b, TXCIE0);
+};
+void usart_tx_end_isr_disable(struct usart_regs* usart)
+{
+	bits_bit_clr(*usart->ucsr_b, TXCIE0);
+};
+
+
+void usart_rx_enable(struct usart_regs* usart)
+{
+	bits_bit_set(*usart->ucsr_b, RXEN0);
+};
+void usart_rx_disable(struct usart_regs* usart)
+{
+	bits_bit_clr(*usart->ucsr_b, RXEN0);
+};
+
+
+void usart_tx_enable(struct usart_regs* usart)
+{
+	bits_bit_set(*usart->ucsr_b, TXEN0);
+};
+void usart_tx_disable(struct usart_regs* usart)
+{
+	bits_bit_clr(*usart->ucsr_b, TXEN0);
+};

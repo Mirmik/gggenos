@@ -8,12 +8,12 @@
 	#include "inttypes.h"
 	//Базовый класс таймера. 
 	
-		class basic_timer
+		class BasicTimer
 		{public:
 			time_t s;
 			time_t i;
-			basic_timer(): s(0), i(0) {};
-			basic_timer(time_t _s, time_t _i): s(_s), i(_i) {};
+			BasicTimer(): s(0), i(0) {};
+			BasicTimer(time_t _s, time_t _i): s(_s), i(_i) {};
 			
 			uint8_t check(const time_t& n) {if (n - s >= i) return 1; else return 0;};
 			void set(const time_t _s, const time_t _i) {s=_s; i=_i;};

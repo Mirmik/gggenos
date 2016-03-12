@@ -4,6 +4,8 @@
 #include "kernel/diag.h"
 #include "genos/time/sysclock.h"
 
+#include "cpu/usart_control_struct.h"
+
 extern struct diag_ops usart0_diag;
 
 ISR(TIMER0_OVF_vect) 

@@ -1,102 +1,67 @@
 #ifndef GENOS_AUTOM_SCHED
-	#define GENOS_AUTOM_SCHED
+#define GENOS_AUTOM_SCHED
 	
-	//#include <genos/stack/dynamic_stack.h>
-	#include <genos/datastruct/list.h>
+#include <genos/datastruct/list.h>
+#include "genos/schedproc/scheduler_base.h"
+#include "genos/schedproc/schedee_base.h"
+#include "genos/sigslot/delegate.h"
+#include "util/stub.h"	
 	
-	#include "genos/schedproc/scheduler_base.h"
-	#include "genos/schedproc/schedee_base.h"
-	#include "genos/sigslot/delegate2.h"
-	#include "genos/schedproc/state_lists.h"
-	
-	class automScheduler : public scheduler_base
+	class automScheduler : public scheduler
 	{
-		template<typename R, typename ... V>
-		using delegate = cdelegate<R,V...>;
 		
+		static constexpr uint8_t RUN = 0x01;
+		static constexpr uint8_t WAIT = 0x02;
+		static constexpr uint8_t STATEMASK = 0x0F;		
+		static constexpr uint8_t EXECUTE = 0x80;
+
 		//Структура, содержащая информацию о процессе.
-		class process_autom : public schedee_sts_list, public schedee_base
+		struct process_autom : public schedee
 		{		
-			public:
+			list_head lst;
 			delegate<void> dlg;
-		};
-			
-		//Ресурсы:
-		uint8_t proc_is_unbind;
-		state_lists<process_autom> stlst; 
-		
-		public:
+			uint8_t status;
+		};		
+	
+	public:
 	
 		list_head running_list;
 		list_head waiting_list;
 	
 		//Методы:
-		void init(){bits_clr(sched_flags, NO_INIT);};					
+		void init();				
 		
+		void schedule();		
+		void schedee_set_running(schedee* sch);
+		void schedee_set_wait(schedee* sch);
+		void schedee_set_zombie(schedee* sch);
+		void schedee_set_stop(schedee* sch);
+		void schedee_init(process_autom* proc);
 		
-		void proc_go_wait()
-		{
-			proc_is_unbind = 1;
-		};
-	
-		void schedule(){	//вызов планировщика 
-			process_autom* proc;
-			
-			if(list_empty(&stlst.running_list)) return; 
-			proc = 
-			list_entry(stlst.running_list.next, process_autom, sts_list);
-			list_move_tail(&proc->sts_list, &stlst.running_list);
-			current_schedee(proc);			
-			proc->dlg();
-			
-			return;
-		};
-		
-		
-		
-		void schedee_set_running(schedee_base* proc){stlst.schedee_set_running((process_autom*)proc);};
-		void schedee_set_wait(schedee_base* proc){stlst.schedee_set_wait((process_autom*)proc);};
-		void schedee_set_zombie(schedee_base* proc){stlst.schedee_set_zombie((process_autom*)proc);};
-		void schedee_set_stop(schedee_base* proc){stlst.schedee_set_stop((process_autom*)proc);};
-		
-		
-		
-		void schedee_init(process_autom* proc)
-		{
-			stlst.schedee_set_running(proc);
-		};
-		
-		
-		
-		/*void registry(void(*_fnc)(void))
-		{
-			process_autom* proc = new process_autom;
-			proc->dlg.set( _fnc );
-			process_init(proc);
-		};*/
-		
-		process_autom* registry(const delegate<void>& d)
-		{
-			process_autom* proc = new process_autom;			
-			proc->dlg = d;
-			schedee_init(proc);
-			return proc;
-		};
-		
-		process_autom* registry(delegate<void>&& d)
-		{
-			process_autom* proc = new process_autom;			
-			proc->dlg = d;
-			schedee_init(proc);
-			return proc;
-		};
-		
+		process_autom* registry(void(*f)());
+		process_autom* registry(const delegate<void>& d);
+		process_autom* registry(delegate<void>&& d);
+
 		
 		//Утилиты:
 		//void proc_delete(process* proc);//Уничтожить процесс. (Активный процесс уничтожать запрещено.)
 		
 		//Конструктор
-		automScheduler() : proc_is_unbind(0) {init();};
+		automScheduler();
+
+
+
+		template<typename T>
+		process_autom* registry(T* a, void (T::*ptr)())
+		{
+			delegate<void> d(a, ptr);
+			process_autom* proc = new process_autom;			
+			proc->dlg = d;
+			schedee_init(proc);
+			return proc;
+		};
+
+
 		};
 	
 	

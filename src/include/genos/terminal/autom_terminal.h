@@ -3,7 +3,7 @@
 #define AUTOM_TERMINAL_H
 	
 	#include <syscontext/syscontext.h>
-	#include <genos/wait/waitserv.h>
+	#include <genos/kernel/waitserver.h>
 	#include <genos/terminal/readline.h>
 	#include <genos/terminal/command_list.h>
 	

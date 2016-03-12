@@ -94,7 +94,7 @@ void  automTerminal::exec()
 		while (stdin.available()) 
 		{
 			char c = static_cast<char>(stdin.getc()); 
-		
+			
 			if (scanmode) 
 			{
 				stdout.print("F");

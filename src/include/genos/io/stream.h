@@ -49,8 +49,8 @@ public:
 	int print(int32_t i, uint8_t base = 10);
 	int print(int64_t i, uint8_t base = 10);
 
-	int print(uint8_t i) { print("IOP");
-		return print(i, 10);};
+	//int print(uint8_t i) { print("IOP");
+	//	return print(i, 10);};
 	//int print(uint8_t i, uint8_t base = 10);
 	//int print(uint16_t i, uint8_t base = 10);
 	//int print(uint32_t i, uint8_t base = 10);

@@ -3,3 +3,9 @@ module sched
 {
 	cpp_source = ["schedproc.cpp", "scheduler_base.cpp", "timeserv.cpp", "waitserv.cpp"];
 };
+
+
+module sched_little
+{
+	cpp_source = ["schedproc.cpp"];
+};

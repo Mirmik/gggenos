@@ -58,18 +58,18 @@ struct usart_regs usart3 =
 	do_nothing
 };
 
-ISR(USART0_RX_vect){usart0.rx_headler(*usart0.udr);};
-ISR(USART0_TX_vect){usart0.tx_headler();};
-ISR(USART0_UDRE_vect){usart0.udre_headler();};
+ISR(USART0_RX_vect){usart0.rx_headler(usart0.data);};
+ISR(USART0_TX_vect){usart0.tx_headler(usart0.data);};
+ISR(USART0_UDRE_vect){usart0.udre_headler(usart0.data);};
 
-ISR(USART1_RX_vect){usart1.rx_headler(*usart1.udr);};
-ISR(USART1_TX_vect){usart1.tx_headler();};
-ISR(USART1_UDRE_vect){usart1.udre_headler();};
+ISR(USART1_RX_vect){usart1.rx_headler(usart1.data);};
+ISR(USART1_TX_vect){usart1.tx_headler(usart1.data);};
+ISR(USART1_UDRE_vect){usart1.udre_headler(usart1.data);};
 
-ISR(USART2_RX_vect){usart2.rx_headler(*usart2.udr);};
-ISR(USART2_TX_vect){usart2.tx_headler();};
-ISR(USART2_UDRE_vect){usart2.udre_headler();};
+ISR(USART2_RX_vect){usart2.rx_headler(usart2.data);};
+ISR(USART2_TX_vect){usart2.tx_headler(usart2.data);};
+ISR(USART2_UDRE_vect){usart2.udre_headler(usart2.data);};
 
-ISR(USART3_RX_vect){usart3.rx_headler(*usart3.udr);};
-ISR(USART3_TX_vect){usart3.tx_headler();};
-ISR(USART3_UDRE_vect){usart3.udre_headler();};
+ISR(USART3_RX_vect){usart3.rx_headler(usart3.data);};
+ISR(USART3_TX_vect){usart3.tx_headler(usart3.data);};
+ISR(USART3_UDRE_vect){usart3.udre_headler(usart3.data);};

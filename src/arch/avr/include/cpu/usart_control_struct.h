@@ -17,10 +17,11 @@ struct usart_regs {
 	volatile uint8_t* ucsr_b;
 	volatile uint8_t* ucsr_c;
 	volatile uint8_t* udr;
-	void (*rx_headler)(char c);
-	void (*tx_headler)();
-	void (*udre_headler)();
-	void (*change_direction)(enum usartDirection);
+	void* data;
+	void (*rx_headler)(void* data);
+	void (*tx_headler)(void* data);
+	void (*udre_headler)(void* data);
+	void (*change_direction)(void* data, enum usartDirection);
 };
 
 extern struct usart_regs usart0;
@@ -64,6 +65,22 @@ void usart_stopbits_get(struct usart_regs* usart, enum usartStopBitsMode);
 
 void usart_databits_set(struct usart_regs* usart, enum usartDataBitsMode);
 void usart_databits_get(struct usart_regs* usart, enum usartDataBitsMode);
+
+uint8_t usart_udr_is_empty(struct usart_regs* usart);
+
+
+void usart_rx_enable(struct usart_regs* usart);
+void usart_rx_disable(struct usart_regs* usart);
+
+void usart_tx_enable(struct usart_regs* usart);
+void usart_tx_disable(struct usart_regs* usart);
+
+void usart_udr_empty_isr_enable(struct usart_regs* usart);
+void usart_udr_empty_isr_disable(struct usart_regs* usart);
+void usart_rx_isr_enable(struct usart_regs* usart);
+void usart_rx_isr_disable(struct usart_regs* usart);
+void usart_tx_end_isr_enable(struct usart_regs* usart);
+void usart_tx_end_isr_disable(struct usart_regs* usart);
 
 __END_DECLS
 

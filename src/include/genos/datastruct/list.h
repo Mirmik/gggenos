@@ -122,8 +122,7 @@
 	static inline void list_del(struct list_head *entry)
 	{
 		__list_del(entry->prev, entry->next);
-		entry->next = LIST_POISON1;
-		entry->prev = LIST_POISON2;
+		INIT_LIST_HEAD(entry);
 	}
 	
 	
@@ -151,18 +150,7 @@
 		list_replace(old, _new);
 		INIT_LIST_HEAD(old);
 	}
-	
-	/**
-		* list_del_init - deletes entry from list and reinitialize it.
-		* @entry: the element to delete from the list.
-	*/
-	//Удаляет entry и реинициализирует его.
-	static inline void list_del_init(struct list_head *entry)
-	{
-		__list_del_entry(entry);
-		INIT_LIST_HEAD(entry);
-	}
-	
+		
 	/**
 		* list_move - delete from one list and add as another's head
 		* @list: the entry to move

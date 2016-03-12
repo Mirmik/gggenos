@@ -2,13 +2,10 @@
 #include "genos/debug/debug.h"
 #include "genos/schedproc/scheduler_base.h"
 #include <genos/datastruct/list.h>
-#include "genos/datastruct/bits.h"
+//#include "genos/datastruct/bits.h"
 //#include "genos/syscontext/syscontext.h"
 
 
-bool scheduler_base::ready(){
-	return (bits_mask_internal_or(sched_flags, BLOCK_MASK))  ? false : true; 
-};
 
 /*
 void subst_scheduler_base::block_sched()
@@ -21,16 +18,6 @@ void subst_scheduler_base::unblock_sched()
 	sched_flags &= ~SCHED_BLOCK;
 };
 */
-
-void scheduler_base::block()
-{
-	sched_flags |= USER_BLOCK;
-};
-
-void scheduler_base::unblock()
-{
-	sched_flags &= ~USER_BLOCK;
-};
 
 /*
 void thread_constructor::construct_thread(size_t size_of_stack) 			

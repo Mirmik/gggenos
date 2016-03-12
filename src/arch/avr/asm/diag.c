@@ -5,7 +5,7 @@
 
 		#define SERIAL_8N1 0x06
 		#include <avr/io.h>
-		static void usart0_diag_init()
+		static int usart0_diag_init()
 		{
 			
 			UCSR0A = 0;
@@ -24,13 +24,12 @@
 			
 			UCSR0B|= _BV(RXEN0);
 			UCSR0B|= _BV(TXEN0);
-			UCSR0B|= _BV(RXCIE0);
-			UCSR0B&= ~_BV(UDRIE0);
+			//UCSR0B|= _BV(RXCIE0);
+			//UCSR0B&= ~_BV(UDRIE0);
 		};
 		
-		void usart0_diag_putchar(char c)
+		int usart0_diag_putchar(int c)
 		{
-			static uint8_t debug_print_inited = 0;		
 			arch_atomic_temp(temp);
 			while ((UCSR0A & (1 << UDRE0)) == 0) {};  UDR0=c; 
 			arch_deatomic_temp(temp);

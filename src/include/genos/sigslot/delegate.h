@@ -13,7 +13,6 @@
 	#define GENOS_DELEGATE_H
 	
 	#include "genos/sigslot/horrible_cast.h"
-//	#include "genos/platform/delegate.h"	
 	#include "genos/gstl/utility.h"		
 	#include "genos/debug/debug.h"		
 	
@@ -24,7 +23,7 @@
 		//@1 тип возвращаемый тип.
 		//@2 - ... Типы параметров. Доступно неограниченное количество параметров.
 		template<typename R ,typename ... Args>	
-		class rtdelegate
+		class delegate
 		{public:
 			
 			static constexpr uint8_t METHOD =0x01;
@@ -39,6 +38,7 @@
 			using mtd_t 		= R (AbstractDelegate::*)(Args ...);
 			using fnc_t 		= R (*)(Args ...);
 			using extfnc_t	 	= R (*)(void* ,Args ...);
+			using absmemb_t		= gstd::pair<obj_t , mtd_t>;
 			
 			obj_t object;
 			
@@ -52,52 +52,42 @@
 			};
 			
 			//Конструктор пустого делегата.		
-			rtdelegate() : object(0), method(0) {};
+			delegate() : object(0), method(0) {};
 			
 
 			//Конструктор копирования
-			rtdelegate(const rtdelegate& d)
+			delegate(const delegate& d)
 			{
 				object = d.object;
 				method = d.method;
 			};
 			
 			//Конструктор перемещения
-			rtdelegate(rtdelegate&& d)
+			delegate(delegate&& d)
 			{
 				object = d.object;
 				method = d.method;
 			};
 			
-			rtdelegate& operator=(const rtdelegate& d) 
-			{
-				object = d.object;
-				method = d.method;
-				return *this;
-			};
-			
-			rtdelegate& operator=(rtdelegate&& d) 
+			delegate& operator=(const delegate& d) 
 			{
 				object = d.object;
 				method = d.method;
 				return *this;
 			};
 			
-			//Конструктор. Делегат метода класса. Ручная инициализация 
-			//@1 указатель на объект, метод которого вызывается.
-			//@2 указатель на метод.
-			//Пример rtdelegate<void, int> d(&a, &A::func);
-			template <typename T1, typename T2>
-			rtdelegate(T1* ptr_obj, R(T2::*mtd)(Args ...))
+			delegate& operator=(delegate&& d) 
 			{
-				object = reinterpret_cast <obj_t> (ptr_obj);
-				method = horrible_cast<mtd_t, R(T2::*)(Args ...)>(mtd);
-			};	
-			
+				object = d.object;
+				method = d.method;
+				return *this;
+			};
+
+
 			//Конструктор. Делегат метода класса. Ручная инициализация 
 			//@1 указатель на объект, метод которого вызывается.
 			//@2 указатель на метод.
-			//Пример rtdelegate<void, int> d(&a, &A::func);
+			//Пример delegate<void, int> d(&a, &A::func);
 			template <typename T1, typename T2>
 			void set(T1* ptr_obj, R(T2::*mtd)(Args ...))
 			{
@@ -105,46 +95,72 @@
 				method = horrible_cast<mtd_t, R(T2::*)(Args ...)>(mtd);
 			};
 			
-			//Конструктор. Делегат метода класса. Для использования в delegate_method
-			//@1 пара, состоящая из объекта и указателя на метод.
-			//Вы можете использовать макрос method для создания пары.
-			//Пример rtdelegate<void, int> d(method(a, A::func));
-			//template <typename T1, typename T2>
-			rtdelegate(gstd::pair<obj_t , mtd_t>&& pr)
+			void set(fnc_t func)
+			{
+				object = 0;
+				attributes = 0;
+				function = func;
+			};
+			
+			void set(const absmemb_t& pr)
 			{
 				object = pr.first;
 				method = pr.second;
 			};	
+
+			//Конструктор. Делегат функции.
+			//@1 указатель на функцию.
+			delegate(fnc_t func) : attributes(0), object(0)
+			{
+				function = func;
+			};	
+
+			//Конструктор. Делегат метода класса. Ручная инициализация 
+			//@1 указатель на объект, метод которого вызывается.
+			//@2 указатель на метод.
+			//Пример delegate<void, int> d(&a, &A::func);
+			template <typename T1, typename T2>
+			delegate(T1* ptr_obj, R(T2::*mtd)(Args ...))
+			{
+				set(ptr_obj, mtd);
+			};	
 			
+			//Конструктор. Делегат метода класса. Для использования в delegate_method
+			//@1 пара, состоящая из объекта и указателя на метод.
+			//Вы можете использовать макрос method для создания пары.
+			//Пример delegate<void, int> d(method(a, A::func));
+			//template <typename T1, typename T2>
+			delegate(absmemb_t&& pr)
+			{
+				set(pr);
+			};	
+
+
+			delegate& operator=(fnc_t func) 
+			{
+				set(func);	
+				return *this;
+			};
+
+			delegate& operator=(const absmemb_t& pr) 
+			{
+				set(pr);	
+				return *this;
+			};
+
 			//Осторожно, черная магия!!!
 			//Конструктор. Делегат метода класса.
 			//@1 указатель на объект, метод которого вызывается.
 			//@2 мануальное задание указателя на метод класса. 
-			//Пример rtdelegate<void, int> d(method(a, 0x00010002)); 
+			//Пример delegate<void, int> d(method(a, 0x00010002)); 
 			//(Смотри стандартную реализацию виртуальных функций)
-			rtdelegate(gstd::pair<void* , delegate_mtd_t> pr) 
+			/*delegate(gstd::pair<void* , delegate_mtd_t> pr) 
 			{
 				object = reinterpret_cast <obj_t> (pr.first);
 				method = horrible_cast<mtd_t, delegate_mtd_t>(pr.second);
-			};			
+			};	*/		
 			
 			
-			
-			
-			//Конструктор. Делегат функции.
-			//@1 указатель на функцию.
-			rtdelegate(fnc_t func) : attributes(0), object(0)
-			{
-				function = func;
-			};	
-			
-			rtdelegate& operator=(fnc_t func) 
-			{
-				object = 0;
-				attributes = 0;
-				function = func;	
-				return *this;
-			};
 			
 			
 			//Вызов делегата. В зависимости от типа делегата вызывается одна
@@ -167,12 +183,12 @@
 			};
 			
 			//Сравнение делегатов.
-			bool operator==(rtdelegate<R ,Args ... > b)
+			bool operator==(delegate<R ,Args ... > b)
 			{return (method==b.method && function==b.function && object==b.object) ? true : false;};
 		};	
 		
 		//Макрос для создания пары объект - метод.
-		//#define method(obj, mtd) gstd::make_pair(&obj, &mtd)
+		//#define d_member(obj, mtd) gstd::make_pair(&obj, &mtd)
 		
 		
 	
@@ -189,7 +205,7 @@
 		};
 		
 		
-	//	#define delegate_method(obj, mtd) gstd::make_pair(reinterpret_cast<AbstractDelegate*>(obj),\
+		#define delegate_mtd(obj, mtd) gstd::make_pair(reinterpret_cast<AbstractDelegate*>(obj), \
 		horrible_cast<typename change_basic<AbstractDelegate, decltype(mtd)>::type, decltype(mtd)>(mtd));
 		
 	//	#define set_delegate_method(d, obj, mtd) d = delegate_method(obj, mtd)
