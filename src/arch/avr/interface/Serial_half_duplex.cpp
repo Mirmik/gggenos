@@ -4,10 +4,11 @@
 #include "util/ring.h"
 #include "defines/decltypeof.h"
 #include "avr/io.h"
-
+#include "hal/gpio.h"
 #include "string.h"
 
 Serial_HD_simple::Serial_HD_simple() {};
+
 
 void Serial_HD_simple::break_end(void*)
 {
@@ -18,20 +19,39 @@ void Serial_HD_simple::break_end(void*)
   usart_tx_end_isr_disable(usart);
 
   *flag = -1;
-  stdout.print("RS_485_BreakEnd");
+  //stdout.print("RS_485_BreakEnd");
 };
 
 void hd_rx_irq(void* data)
 {
-  	
+  	Serial_HD_simple* serial = reinterpret_cast<Serial_HD_simple*>(data);
+    usart_regs* usart = serial->usart;
+
+     if (bits_bit_is_clr(*usart->ucsr_a, UPE0)) 
+     {
+      unsigned char c = *usart->udr;
+      *serial->answer_ptr++ = c;
+      serial->answer_len++;
+      if (c == serial->answer_term) serial->end_session();
+    } 
+      else 
+      {
+       debug_print("Parrity_error");
+       // Parity error, read byte but discard it
+       *usart->udr;
+      };
 };
 
 void Serial_HD_simple::input_mode()
 {
   waitserver.delegate_on_simple_timer(BreakEndDelegate, (void*)0, &watchDog, 100);
+
   usart_tx_disable(usart);
   usart_udr_empty_isr_disable(usart);
   usart_tx_end_isr_disable(usart);
+
+  gpio_lo(changedir_pin);
+
   usart_rx_enable(usart);
   usart_rx_isr_enable(usart);
 };
@@ -56,12 +76,22 @@ void hd_tx_irq(void* data)
 
 void Serial_HD_simple::end_session()
 {
+  waitserver.unwait(&watchDog);
+  usart_rx_disable(usart);
+  usart_tx_disable(usart);
+  usart_udr_empty_isr_disable(usart);
+  usart_rx_isr_disable(usart);
+  usart_tx_end_isr_disable(usart);
+  *flag = 1;
 
 };
 
 void Serial_HD_simple::start_session()
 {
   if (message_len == 0) return;
+
+  gpio_hi(changedir_pin);
+
   usart_tx_enable(usart);
   usart_udr_empty_isr_enable(usart);
   usart_tx_end_isr_enable(usart);
@@ -77,6 +107,9 @@ void Serial_HD_simple::configure_session(char* _message, int len, char _answer_t
   answer_len = 0;
   answer_ptr = answer;
   message_ptr = message;  
+
+  gpio_mode_out(changedir_pin);
+
   usart_rx_disable(usart);
   usart_tx_disable(usart);
   usart_udr_empty_isr_disable(usart);

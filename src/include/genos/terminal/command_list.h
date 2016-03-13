@@ -5,6 +5,7 @@
 
 	#include "util/stub.h"	
 	#include <genos/datastruct/list.h>
+	#include "genos/sigslot/delegate.h"
 	#include <string.h>
 	#include <genos/io/stream.h>
 
@@ -55,11 +56,11 @@
 
 	class command_t{
 		public:
-		void(*_func)(int,char**);
+		delegate<void, int, char**> _d;
 		const char* _name;
 		list_head lst;
 		public:
-		command_t(const char* name, void(*func)(int,char**)) : _func(func), _name(name) {};
+		command_t(const char* name, delegate<void, int, char**> d) : _d(d), _name(name) {};
 	};
 	
 	class command_list{
@@ -69,39 +70,64 @@
 		public:
 		command_list() : list() {};
 		
-		void add(const char* str, void(*f)(int,char**)) 
+		void add(const char* str, delegate<void, int, char**> d) 
 		{
-			command_t* cmd = new command_t(str, f); 
+			command_t* cmd = new command_t(str, d); 
 			list_add(&cmd->lst, &list);
 		};	
+
+		void add(const char* str, void(*f)(int,char**)) 
+		{
+			delegate<void, int, char**>d = f;
+			command_t* cmd = new command_t(str, d); 
+			list_add(&cmd->lst, &list);
+		};	
+
 
 		void add(const char* str, void(*f)()) 
 		{
-			command_t* cmd = new command_t(str, (void(*)(int,char**))f); 
+			delegate<void, int, char**>d = (void(*)(int,char**)) f;
+			command_t* cmd = new command_t(str, d); 
 			list_add(&cmd->lst, &list);
-		};	
+		};
 
-		int find(const char* str, void(*&out_f)(int,char**)) 
+		template<typename T>
+		void add(const char* str, T* a, void (T::*ptr)(int, char**))
 		{
-			out_f = (executed_t) do_nothing;
+			delegate<void, int, char**>d = delegate<void, int, char**>(a, ptr);
+			command_t* cmd = new command_t(str, d); 
+			list_add(&cmd->lst, &list);
+		};
+
+		template<typename T>
+		void add(const char* str, T* a, void (T::*ptr)())
+		{
+			delegate<void, int, char**>d = delegate<void, int, char**>(a, (void (T::*)(int, char**))ptr);
+			command_t* cmd = new command_t(str, d); 
+			list_add(&cmd->lst, &list);
+		};
+
+		int find(const char* str,  delegate<void, int, char**> &outd) 
+		{
+			outd = (executed_t) do_nothing;
 			command_t* elem;
 			list_for_each_entry(elem, &list, lst)
 			{
 				if (!strcmp(elem->_name, str)) 
 				{
-					out_f = elem->_func;
+					outd = elem->_d;
 					return 0;
 				};
 			};
 			return -1;
 		};	
 
-		int try_execute(char* c, executed_t& outf)
+		int try_execute(char* c, delegate<void, int, char**> &outd)
 		{
 			argvc_t a;
 			split_argv(c, a);
 			if (a.argc == 0) return -1;
-			if (find(a.argv[0], outf)) return -2;
+			if (find(a.argv[0], outd)) return -2;
 			return 0;
 		};
 

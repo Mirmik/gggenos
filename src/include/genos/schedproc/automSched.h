@@ -36,6 +36,7 @@
 		void schedee_set_wait(schedee* sch);
 		void schedee_set_zombie(schedee* sch);
 		void schedee_set_stop(schedee* sch);
+		void schedee_exit(schedee* sch);
 		void schedee_init(process_autom* proc);
 		
 		process_autom* registry(void(*f)());
@@ -62,8 +63,6 @@
 		};
 
 
-		};
-	
-	
-	
+		};	
+
 #endif				

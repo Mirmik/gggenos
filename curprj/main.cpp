@@ -16,6 +16,7 @@
 #include "cpu/memory_info.h"
 
 #include "configuration.h"
+#include "stdlib.h"
 
 HardwareSerial Serial0;
 Serial_HD_simple SerialHD1;
@@ -37,18 +38,23 @@ uint8_t rs485flag = 0;
 				SerialHD1.configure_session("HelloWorld", 5, '0', &rs485flag);
 				SerialHD1.start_session();
 				//stdout.print("fasdfasf");
-				//wait_autom(&rs485flag);
+				wait_autom(&rs485flag);
 				state = 2;
 				break;
 			case 2:
-				//stdout.print("allgood");
-				//state = 2;
+				stdout.printhexln(rs485flag);
+				stdout.printhexln(SerialHD1.answer_len);
+				state = 3;
+				exit_autom();
 				break;
 			case 3:
-
+				stdout.print("!!!!!!");
 				break;
 		};
 	};
+
+	void reinit() {state = 0;};
+
 } rs485;
 
 void emergency_stop()
@@ -56,13 +62,31 @@ void emergency_stop()
 	debug_print("EMERGENCY_STOP\n");
 };
 
-
-void blinker()
+class Blinker{
+	int state = 0;
+	int period = 100;
+public:
+	void input(int i, char** c)
 	{
-		gpio_change(13);
-		msleep_autom(1000);
-		//stdout.println(millis());
+		if (i!=2) stdout.println("Need 1 param");
+		period = atoi(c[1]);
 	};
+
+	void blinker()
+	{
+		switch(state)
+		{
+		case 0:
+			central_cmdlist.add("blinker", this, &Blinker::input);
+			state = 1;
+			break;
+		case 1:
+			gpio_change(13);
+			msleep_autom(period);
+			break;
+		};
+	};
+} blink;
 
 automScheduler automSched;
 automTerminal automTerm;
@@ -92,6 +116,8 @@ uint8_t flag_usart1;
 
 void start()
 {
+	rs485.reinit();
+	automSched.registry(&rs485, &RS485_Controller::exec);
 };
 
 void setup(){
@@ -111,7 +137,7 @@ void setup(){
 	usart_parity_set(&usart0, conf.usart1_parity);
 	usart_stopbits_set(&usart0, conf.usart1_stopbits);
 	usart_databits_set(&usart0, conf.usart1_databits);
-	
+
 	usart_udr_empty_isr_disable(&usart0);
 	usart_rx_isr_enable(&usart0);
 	
@@ -139,9 +165,8 @@ void setup(){
 	gpio_mode_out(13);
 	gpio_hi(13);
 
-	automSched.registry(blinker);
+	automSched.registry(&blink, &Blinker::blinker);
 	automSched.registry(&automTerm, &automTerminal::exec);
-	automSched.registry(&rs485, &RS485_Controller::exec);
 	//debug_delay(20000);
 };
 

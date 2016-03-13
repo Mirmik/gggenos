@@ -48,6 +48,14 @@
 			error_stub();
 		};
 		
+
+		void automScheduler::schedee_exit(schedee* sch)
+		{
+			automScheduler::process_autom* proc = reinterpret_cast<automScheduler::process_autom*>(sch);
+			list_del(&proc->lst);
+			delete proc;
+		};
+
 		void automScheduler::schedee_init(automScheduler::process_autom* proc)
 		{
 			schedee_set_running(proc);

@@ -71,6 +71,9 @@ public:
 	void check_waiters();
 	void check_timers();
 
+	void unwait(Waiter* w);
+	void unwait(TimWaiter* t);
+
 	//utility:
 	void exec_on_u8flag(void(*f)(), uint8_t* flag);
 	void method_on_u8flag(void(*f)(), uint8_t* flag);

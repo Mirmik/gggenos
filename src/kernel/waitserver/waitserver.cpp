@@ -132,6 +132,11 @@ void WaitServer::check()
 	check_timers();	
 };
 
+void WaitServer::unwait(TimWaiter* t)
+{
+	postprocessing_timer(t);
+};
+
 bool check_u8_flag(void* ptr)
 {
 	return *static_cast<uint8_t*>(ptr);

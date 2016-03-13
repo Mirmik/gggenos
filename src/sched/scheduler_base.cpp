@@ -44,7 +44,10 @@ void thread_constructor::destroy_thread()
 };
 */
 
-
+void exit_autom()
+{
+	current_scheduler()->schedee_exit(current_schedee());
+};
 
 
 

@@ -40,6 +40,7 @@ class scheduler
 	virtual void schedee_set_wait(schedee* proc)=0;
 	virtual void schedee_set_zombie(schedee* proc)=0;
 	virtual void schedee_set_stop(schedee* proc)=0;
+	virtual void schedee_exit(schedee* proc)=0;
 	
 	virtual void schedule()=0;
 	
@@ -65,5 +66,7 @@ class scheduler
 	};	
 	*/
 	
-	
+void exit_autom();
+
+
 #endif
