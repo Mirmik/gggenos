@@ -177,6 +177,15 @@ TimWaiter* WaitServer::schedee_on_simple_timer(schedee* sch, time_t interval)
 	return t;		
 };
 
+TimWaiter* WaitServer::delegate_on_simple_timer(delegate<void, void*> d, void* data, TimWaiter* timer, time_t interval)
+{
+	timer->_action = d;
+	timer->_action_data = data;
+	timer->_trait = 0;
+	timer->_timer.set(millis(), interval);
+	timwaiter_put_to_list(timer); 
+	return timer;		
+};
 
 Waiter* WaitServer::schedee_on_stream_available(schedee* sch, stream* strm)
 {
@@ -199,6 +208,23 @@ TimWaiter* WaitServer::schedee_on_bias_timer(schedee* sch, TimWaiter* timer, tim
 	timwaiter_put_to_list(timer); 
 	return timer;		
 };
+
+void WaitServer::schedee_on_u8flag(schedee* sch, uint8_t* flag)
+{
+	delegate<void, void*> a = schedee_run;
+	void* ad = reinterpret_cast<void*>(sch);
+	delegate<bool, void*> c = check_u8_flag;
+	void* cd = static_cast<void*>(flag);
+	uint8_t tr = Waiter_AUTOMATIC_CREATED;
+	Waiter* w = new Waiter(a, ad, c, cd, tr);
+	waiter_put_to_list(w); 		
+};
+
+Waiter* wait_autom(uint8_t* flag)
+{
+	current_scheduler()->schedee_set_wait(current_schedee()); 
+	waitserver.schedee_on_u8flag(current_schedee(), flag); 
+}
 
 Waiter* wait_autom(stream* strm)
 {

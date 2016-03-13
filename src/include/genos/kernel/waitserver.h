@@ -73,8 +73,14 @@ public:
 
 	//utility:
 	void exec_on_u8flag(void(*f)(), uint8_t* flag);
+	void method_on_u8flag(void(*f)(), uint8_t* flag);
+
+	void schedee_on_u8flag(schedee* sch, uint8_t* flag);
 	TimWaiter* schedee_on_simple_timer(schedee* sch, time_t interval);
+	TimWaiter* schedee_on_simple_timer(schedee* sch, TimWaiter* timer, time_t interval);
 	TimWaiter* schedee_on_bias_timer(schedee* sch, TimWaiter* timer, time_t interval);
+
+	TimWaiter* delegate_on_simple_timer(delegate<void, void*>, void* data, TimWaiter* timer, time_t interval);
 
 	Waiter* schedee_on_stream_available(schedee* sch, stream* strm);
 
@@ -86,6 +92,7 @@ bool check_stream(void* ptr);
 
 extern WaitServer waitserver;
 
+Waiter* wait_autom(uint8_t* flag);
 Waiter* wait_autom(stream* strm);
 TimWaiter* msleep_autom(long int a);
 TimWaiter* msleep_autom_bias(TimWaiter* timer, long int a);

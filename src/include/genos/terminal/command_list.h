@@ -6,6 +6,7 @@
 	#include "util/stub.h"	
 	#include <genos/datastruct/list.h>
 	#include <string.h>
+	#include <genos/io/stream.h>
 
 	typedef void(*executed_t)(int,char**);
 
@@ -74,6 +75,12 @@
 			list_add(&cmd->lst, &list);
 		};	
 
+		void add(const char* str, void(*f)()) 
+		{
+			command_t* cmd = new command_t(str, (void(*)(int,char**))f); 
+			list_add(&cmd->lst, &list);
+		};	
+
 		int find(const char* str, void(*&out_f)(int,char**)) 
 		{
 			out_f = (executed_t) do_nothing;
@@ -96,6 +103,15 @@
 			if (a.argc == 0) return -1;
 			if (find(a.argv[0], outf)) return -2;
 			return 0;
+		};
+
+		int print_list(stream& strm)
+		{
+			command_t* elem;
+			list_for_each_entry(elem, &list, lst)
+			{
+				strm.println(elem->_name);
+			};
 		};
 
 	};

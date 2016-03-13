@@ -1,0 +1,4 @@
+module memory_info
+{
+	cpp_source = ["memory_info.cpp"];
+}

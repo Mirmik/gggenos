@@ -1,7 +1,7 @@
 
 
 module main {
-	cpp_source = ["main.cpp"];
+	cpp_source = ["main.cpp", "configuration.cpp"];
 
 	depends = ["main.gls"];
 	defines = ["GENOS=222"];
@@ -20,17 +20,21 @@ application genos
 	["arch", "arch_avr", ""],
 	["diag", "diag_impl", ""],
 	["Serial",  ""],
+	["Serial_half_duplex",  ""],
 	["usart_2560", ""],
 	["debug_print", "debug_print_diag", ""],
 	["time_service", ""],
 	["kernel_waitserver", ""],
 	["sched_little", ""],
 	["arduino_mega_gpio", ""],
+	["arduino_mega_timers", ""],
+	["arduino_uno_timers_info", ""],
 	["automSched", ""],
 	["automTerminal", ""],
 	["stream_impl", ""],
+	["memory_info", ""],
 	["syscontext" , ""],
-	["genos_decoration" , ""],
+	["genos_decoration_radioline" , ""],
 	["command_list" , ""],
 	];
 

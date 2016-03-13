@@ -4,3 +4,9 @@ module genos_decoration
 {
 	cpp_source = ["decoration.cpp"];
 };
+
+
+module genos_decoration_radioline
+{
+	cpp_source = ["decoration_radioline.cpp"];
+};

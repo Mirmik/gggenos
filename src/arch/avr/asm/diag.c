@@ -9,7 +9,7 @@
 		{
 			
 			UCSR0A = 0;
-			uint16_t baud_setting = (F_CPU / 8 / 9600 - 1) / 2;
+			uint16_t baud_setting = (F_CPU / 8 / 115200 - 1) / 2;
 			
 			// assign the baud_setting, a.k.a. ubrr (USART Baud Rate Register)
 			UBRR0H = baud_setting >> 8;
@@ -31,7 +31,10 @@
 		int usart0_diag_putchar(int c)
 		{
 			arch_atomic_temp(temp);
-			while ((UCSR0A & (1 << UDRE0)) == 0) {};  UDR0=c; 
+			UCSR0A |= 1<<TXC0;
+			while ((UCSR0A & (1 << UDRE0)) == 0) {};  
+			UDR0=c; 
+			while ((UCSR0A & (1 << TXC0)) == 0) {}; 
 			arch_deatomic_temp(temp);
 		};
 

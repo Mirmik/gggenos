@@ -4,11 +4,11 @@
 #include "sys/cdefs.h"
 #include "inttypes.h"
 
-enum usartDirection
-{
-	usartDirectionInput,
-	usartDirectionOutput
-};
+//enum usartDirection
+//{
+//	usartDirectionInput,
+//	usartDirectionOutput
+//};
 
 struct usart_regs {
 	volatile uint8_t* ubrr_h;
@@ -21,7 +21,7 @@ struct usart_regs {
 	void (*rx_headler)(void* data);
 	void (*tx_headler)(void* data);
 	void (*udre_headler)(void* data);
-	void (*change_direction)(void* data, enum usartDirection);
+	//void (*change_direction)(void* data, enum usartDirection);
 };
 
 extern struct usart_regs usart0;

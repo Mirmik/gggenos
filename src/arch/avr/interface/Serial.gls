@@ -3,6 +3,12 @@
 module Serial
 {
 	cpp_source = ["Serial.cpp"];
-	defines = ["SERIAL_TX_BUFFER_SIZE=64", "SERIAL_RX_BUFFER_SIZE=64"];
+	defines = ["SERIAL_TX_BUFFER_SIZE=64", "SERIAL_RX_BUFFER_SIZE=512"];
+};
+
+
+module Serial_half_duplex
+{
+	cpp_source = ["Serial_half_duplex.cpp"];
 };
 

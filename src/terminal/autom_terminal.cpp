@@ -27,6 +27,12 @@ void automTerminal::endl_event()
 		goto _exit;
 	};
 
+	if (!strcmp(str, "banner"))
+	{
+		print_banner(&stdout);
+		success = true;
+		goto _exit;
+	};
 
 	if (!strcmp(str, "scanmode"))
 	{
@@ -39,9 +45,10 @@ void automTerminal::endl_event()
 	if (!strcmp(str, "help"))
 	{
 		stdout.println("CommandServer commands:");
-		stdout.println("TODO");
+		central_cmdlist.print_list(stdout);
 		stdout.println("Terminal inline commands:");
 		stdout.println("about");
+		stdout.println("banner");
 		stdout.println("help");
 		success = true;
 		goto _exit;
