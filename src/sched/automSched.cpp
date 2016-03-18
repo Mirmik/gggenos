@@ -1,5 +1,5 @@
 
-	
+#include "syscontext/syscontext.h"
 #include "genos/schedproc/automSched.h"
 	
 	
@@ -16,6 +16,7 @@
 			list_move_tail(&proc->lst, &running_list);
 		
 			current_schedee(proc);		
+			//stdout.printhex((uint16_t)proc);
 
 			bits_set(proc->status, EXECUTE);	
 			proc->dlg();

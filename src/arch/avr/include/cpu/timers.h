@@ -85,6 +85,20 @@
 	uint8_t timer1_comB_get();		
 	uint8_t timer1_comC_get();
 
+	void timer3_source_set(enum timerSource src);
+	void timer3_wgm_set(enum timer16Wgm src);
+	void timer3_comA_set(enum timerCom);	
+	void timer3_comB_set(enum timerCom);		
+	void timer3_comC_set(enum timerCom);
+
+	uint8_t timer3_source_get();
+	int timer3_divider_get();
+	uint8_t timer3_wgm_get();
+	uint8_t timer3_comA_get();	
+	uint8_t timer3_comB_get();		
+	uint8_t timer3_comC_get();
+
+
 	int32_t timer_get_freq(int i);
 
 	__END_DECLS

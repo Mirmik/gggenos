@@ -18,8 +18,9 @@ void Serial_HD_simple::break_end(void*)
   usart_rx_isr_disable(usart);
   usart_tx_end_isr_disable(usart);
 
-  *flag = -1;
-  //stdout.print("RS_485_BreakEnd");
+  flag = -1;
+  stdout.printhex(flag);
+  stdout.print("RS_485_BreakEnd");
 };
 
 void hd_rx_irq(void* data)
@@ -32,7 +33,13 @@ void hd_rx_irq(void* data)
       unsigned char c = *usart->udr;
       *serial->answer_ptr++ = c;
       serial->answer_len++;
-      if (c == serial->answer_term) serial->end_session();
+      if (serial->answer_len >= 50) serial->end_session();
+      if (c == serial->answer_term || serial->mode == 1)
+      {serial->count++; serial->mode = 1;} 
+      if (serial->count == 3) 
+      {
+        serial->end_session();
+      };
     } 
       else 
       {
@@ -50,10 +57,11 @@ void Serial_HD_simple::input_mode()
   usart_udr_empty_isr_disable(usart);
   usart_tx_end_isr_disable(usart);
 
-  gpio_lo(changedir_pin);
-
   usart_rx_enable(usart);
   usart_rx_isr_enable(usart);
+  gpio_lo(changedir_pin);
+
+
 };
  
 
@@ -82,7 +90,17 @@ void Serial_HD_simple::end_session()
   usart_udr_empty_isr_disable(usart);
   usart_rx_isr_disable(usart);
   usart_tx_end_isr_disable(usart);
-  *flag = 1;
+  *answer_ptr = 0;
+        
+  char v = *usart->udr;
+  char* ptr = answer;
+  uint8_t i = 0;
+  while(*ptr++ == 0) i++;
+  memmove(answer, ptr, answer_len - i);
+
+  if (answer_len >= 50) {flag = -3; return;}; 
+
+  flag = 1;
 
 };
 
@@ -91,22 +109,24 @@ void Serial_HD_simple::start_session()
   if (message_len == 0) return;
 
   gpio_hi(changedir_pin);
-
+  flag = 0;  
   usart_tx_enable(usart);
   usart_udr_empty_isr_enable(usart);
   usart_tx_end_isr_enable(usart);
 };
 
-void Serial_HD_simple::configure_session(char* _message, int len, char _answer_term, uint8_t* _flag)
+void Serial_HD_simple::configure_session(char* _message, int len, char _answer_term)
 {
   memcpy(message, _message, len);
   message_len = len;
   answer_term = _answer_term;
-  flag = _flag;
-  *flag = 0;
+  flag = 0;
   answer_len = 0;
   answer_ptr = answer;
   message_ptr = message;  
+  mode = 0;
+  count = 0;
+  
 
   gpio_mode_out(changedir_pin);
 

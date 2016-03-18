@@ -216,6 +216,12 @@ void stream::printdump(void* address, size_t size)
 		print(STREAM_ENDL);
 	}
 
+	int stream::printdumpstr(void* data, int len)
+	{
+		uint8_t* c = (uint8_t*) data;
+		while(--len)
+			{printhex(*c++);};
+	};
 
 
 

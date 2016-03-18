@@ -49,6 +49,23 @@ timer_ops timer1(
 		timer1_divider_get
 		);
 
+timer_ops timer2(
+		(func_t<uint8_t>) do_nothing,
+		(func_t<uint8_t>) do_nothing,
+		(func_t<uint8_t>) do_nothing,
+		(func_t<uint8_t>) do_nothing,
+		(func_t<uint8_t>) do_nothing,
+		(func_t<int>) do_nothing
+		);
+
+timer_ops timer3(
+		timer3_source_get,
+		timer3_wgm_get,
+		timer3_comA_get,
+		timer3_comB_get,
+		(func_t<uint8_t>) do_nothing,
+		timer3_divider_get
+		);
 timer_ops* tms[TOTAL_TIMERS] = 
 {
 	&timer0,

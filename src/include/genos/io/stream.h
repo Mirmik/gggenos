@@ -66,6 +66,9 @@ public:
 	int printhex(uint32_t i);
 	int printhex(uint64_t i);
 
+	int printdumpstr(void* data, int len);
+
+
 	int print(float f);
 	int print(double d);
 

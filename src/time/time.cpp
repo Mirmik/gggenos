@@ -57,11 +57,18 @@ time_t millis()
 
 time_t micros()
 {
-	return mmtime + mmtime_inc_wide * arch_systimer_state();	
+	return mmtime + mmtime_inc_wide * arch_systimer_state() + _minutes * 60000000;	
 };
 
 void delay(unsigned int d)
 {
 	time_t start = millis();
 	while( millis() - start < d);
+};
+
+
+void udelay(unsigned int d)
+{
+	time_t start = micros();
+	while( micros() - start < d);
 };

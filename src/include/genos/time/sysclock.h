@@ -31,6 +31,8 @@ time_t minutes();
 
 
 void delay(unsigned int);
+void udelay(unsigned int);
+
 __END_DECLS
 
 #endif

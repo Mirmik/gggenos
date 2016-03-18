@@ -3,6 +3,7 @@
 #include "genos/time/sysclock.h"
 #include "utilxx/stub.h"
 
+#include "syscontext/syscontext.h"
 WaitServer waitserver;
 
 BasicWaiter::BasicWaiter() 	: 
@@ -83,6 +84,7 @@ void WaitServer::postprocessing_timer(TimWaiter* t)
 
 void WaitServer::postprocessing_waiter(Waiter* w)
 {
+	//stdout.println("HERE");
 	if (bits_mask(w->_trait, Waiter_NO_UNWAIT))
 		{
 			return;
@@ -139,6 +141,7 @@ void WaitServer::unwait(TimWaiter* t)
 
 bool check_u8_flag(void* ptr)
 {
+	//stdout.println(*static_cast<uint8_t*>(ptr));
 	return *static_cast<uint8_t*>(ptr);
 };
 
@@ -219,7 +222,7 @@ void WaitServer::schedee_on_u8flag(schedee* sch, uint8_t* flag)
 	delegate<void, void*> a = schedee_run;
 	void* ad = reinterpret_cast<void*>(sch);
 	delegate<bool, void*> c = check_u8_flag;
-	void* cd = static_cast<void*>(flag);
+	void* cd = reinterpret_cast<void*>(flag);
 	uint8_t tr = Waiter_AUTOMATIC_CREATED;
 	Waiter* w = new Waiter(a, ad, c, cd, tr);
 	waiter_put_to_list(w); 		

@@ -8,8 +8,11 @@
 
 extern struct diag_ops usart0_diag;
 
+extern volatile int64_t supertick;
+
 ISR(TIMER0_OVF_vect) 
 {
+	//supertick++;
 	sysclock_tick();
 };
 
