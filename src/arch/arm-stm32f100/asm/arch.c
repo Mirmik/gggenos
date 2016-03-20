@@ -30,3 +30,8 @@ void arch_shutdown(arch_shutdown_mode_t mode){
 
 	arch_halt();
 }
+
+void _exit()
+{
+	while(1);
+};

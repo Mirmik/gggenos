@@ -1,0 +1,5 @@
+
+module syscalls_minimal
+{
+	cc_source = ["stf_syscalls_minimal.c"];
+}

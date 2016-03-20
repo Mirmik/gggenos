@@ -1,3 +1,6 @@
-sudo avrdude -P/dev/ttyACM0 -cwiring -patmega2560 -b115200 -D -Uflash:w:./genos
+#sudo avrdude -P/dev/ttyACM0 -cwiring -patmega2560 -b115200 -D -Uflash:w:./genos
 
-sudo gtkterm -p /dev/ttyACM0 -s115200
+#sudo gtkterm -p /dev/ttyACM0 -s115200
+
+arm-none-eabi-objcopy -O binary genos genos.bin
+st-flash write genos.bin 0x8000000

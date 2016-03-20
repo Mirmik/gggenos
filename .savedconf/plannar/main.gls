@@ -1,7 +1,7 @@
 
 
 module main {
-	cpp_source = ["main.cpp", "configuration.cpp"];
+	cpp_source = ["main.cpp", "configuration.cpp", "mitsuprotocol.cpp"];
 
 	depends = ["main.gls"];
 	defines = ["GENOS=222"];

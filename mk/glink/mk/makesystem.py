@@ -23,6 +23,7 @@ class Module:
 		self.need_to_compile = False
 		self.name = pmod["name"].val
 		self.dirpath = pmod["dirpath"].val
+		self.s_source = pmod["s_source"].val
 		self.cc_source = pmod["cc_source"].val
 		self.cpp_source = pmod["cpp_source"].val
 		self.depends = pmod["depends"].val
@@ -38,6 +39,7 @@ class Module:
 		self.cpp_flags = pmod["CXXFLAGS"].val
 		self.cc_flags = pmod["CFLAGS"].val
 		self.glb_include = pmod["global_include"].val
+		self.pathed_s_source = [self.dirpath + '/' + s for s in self.s_source]
 		self.pathed_cc_source = [self.dirpath + '/' + s for s in self.cc_source]
 		self.pathed_cpp_source = [self.dirpath + '/' + s for s in self.cpp_source]
 		self.pathed_depends = [self.dirpath + '/' + s for s in self.depends]
@@ -45,6 +47,7 @@ class Module:
 		self.pathed_include = [self.dirpath + '/' + h for h in self.include]
 		self.pathed_target = "build/" + self.dirpath + '/' + self.target	
 		exist_list_test(self.pathed_headers)
+		exist_list_test(self.pathed_s_source)
 		exist_list_test(self.pathed_cc_source)
 		exist_list_test(self.pathed_cpp_source)
 		exist_list_test(self.pathed_depends)
@@ -59,7 +62,8 @@ class Module:
 		else:
 			self.target_date = None
 
-		deps =  (self.pathed_cc_source + 
+		deps =  (self.pathed_s_source +
+				self.pathed_cc_source + 
 				self.pathed_cpp_source + 
 				self.pathed_headers +
 				self.pathed_depends)
@@ -132,12 +136,25 @@ class Module:
 			subprocess.check_output(command.split())
 			otarget.append(ocpp)
 
+		#print(self.pathed_cc_source);
+		#exit();
+
 		for fcc in self.pathed_cc_source:
 			occ = "build/" + fcc[:-2] + ".o"
 			command = self.cc + " " + fcc + " -c -o " + occ + " " + self.cc_flags + " " + inclstr + " " + defstr + " " + optionsstr
 			print('\n' + command)
 			subprocess.check_output(command.split())
 			otarget.append(occ)
+
+		#print(self.pathed_s_source);
+		#exit();
+
+		for fss in self.pathed_s_source:
+			oss = "build/" + fss[:-2] + ".o"
+			command = self.cc + " " + fss + " -c -o " + oss + " " + self.cc_flags + " " + inclstr + " " + defstr + " " + optionsstr
+			print('\n' + command)
+			subprocess.check_output(command.split())
+			otarget.append(oss)
 
 		#print(self.name)
 		#print(self.ar)

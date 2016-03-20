@@ -9,6 +9,6 @@
 #ifndef X86_TYPES_H_
 #define X86_TYPES_H_
 
-#include <asm-generic/types16.h>
+#include <asm-generic/types32.h>
 
 #endif /* X86_TYPES_H_ */
