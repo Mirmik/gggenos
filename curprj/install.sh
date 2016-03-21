@@ -3,4 +3,5 @@
 #sudo gtkterm -p /dev/ttyACM0 -s115200
 
 arm-none-eabi-objcopy -O binary genos genos.bin
-st-flash write genos.bin 0x8000000
+sudo st-flash write genos.bin 0x8000000
+sudo gtkterm -p /dev/ttyUSB0 -s 38400

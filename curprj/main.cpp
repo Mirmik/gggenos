@@ -2,10 +2,13 @@
 #include "stm32f4xx_gpio.h" 
 #include "stm32f4xx_usart.h" 
 #include "stm32f4xx_rcc.h" 
+#include "stm32f4xx_tim.h" 
 #include "genos/debug/debug.h" 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+
 void emergency_stop()
 {
 };
@@ -95,6 +98,16 @@ while(*t)
 	}
 }
 
+uint64_t tick = 0;
+
+extern "C" void SysTick_Handler(); 
+void SysTick_Handler()
+{
+  tick++;
+};
+
+
+
 
 void setup(){
 
@@ -102,10 +115,13 @@ char c[64];
 
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
+SysTick_Config(84001);
+
 RCC_ClocksTypeDef RCC_ClocksStatus;
   /* GPIOD Periph clock enable */
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+  
   usart2_init(115200 * 1);
   //RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE); //for USART2, USART3, UART4 or UART5
 
@@ -124,10 +140,14 @@ RCC_ClocksTypeDef RCC_ClocksStatus;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-  //USART_SetPrescaler(USART2,8);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-  while (1)
-  {
+  RCC_MCO1Config(RCC_MCO1Source_PLLCLK, RCC_MCO1Div_1);
 
   	RCC_GetClocksFreq(&RCC_ClocksStatus);
   print(USART2, "uart testik\n\r"); 
@@ -148,32 +168,82 @@ sprintf(c,"SYSCLK_Frequency %u\n\r",RCC_ClocksStatus.SYSCLK_Frequency); print(US
 sprintf(c,"HCLK_Frequency %u\n\r",RCC_ClocksStatus.HCLK_Frequency); print(USART2,c);
 sprintf(c,"PCLK1_Frequency %u\n\r",RCC_ClocksStatus.PCLK1_Frequency); print(USART2,c);
 sprintf(c,"PCLK2_Frequency %u\n\r",RCC_ClocksStatus.PCLK2_Frequency); print(USART2,c);
+  
 
-while(1);
-    /* PD12 to be toggled */
-    GPIO_SetBits(GPIOD, GPIO_Pin_12);
-    delay_ms(200);
-   
-    /* PD13 to be toggled */
-    GPIO_SetBits(GPIOD, GPIO_Pin_13);
-   delay_ms(200); 
-    /* PD14 to be toggled */
-    GPIO_SetBits(GPIOD, GPIO_Pin_14);
-    delay_ms(200);
 
-    if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0)) GPIO_SetBits(GPIOD, GPIO_Pin_15);
 
-    /* PD15 to be toggled */
-    //GPIO_SetBits(GPIOD, GPIO_Pin_15);
-    //debug_delay(2000000);
-    
-    GPIO_ResetBits(GPIOD, GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14);
-    delay_ms(200);
-     }
 
+
+TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+TIM_ICInitTypeDef  TIM_ICInitStructure;
+TIM_OCInitTypeDef  TIM_OCInitStructure;
+//GPIO_InitTypeDef GPIO_InitStructure;
+
+//#define   ENCODER_TIM             TIM5
+//#define   MAX_COUNT               100
+GPIO_SetBits(GPIOD, GPIO_Pin_12);
+
+  int i=0;
+
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
+  GPIO_Init(GPIOA,&GPIO_InitStructure);
+
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM5);
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM5);
+
+  TIM_TimeBaseStructure.TIM_Prescaler = 0;
+  //TIM_TimeBaseStructure.TIM_Period = 50000;
+  TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
+  TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+  TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure);
+
+  TIM_OCStructInit(&TIM_OCInitStructure);
+  TIM_OCInitStructure.TIM_Pulse = 50000;
+  TIM_OC1Init(TIM5, &TIM_OCInitStructure);
+
+  TIM_ITConfig(TIM5, TIM_IT_CC1, ENABLE);
+
+  TIM_EncoderInterfaceConfig(TIM5, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
+//TIM_TIxExternalClockConfig(TIM5, TIM_TIxExternalCLK1Source_TI1, TIM_ICPolarity_Rising, 0);
+  TIM5->CNT = 0;
+  TIM_Cmd(TIM5, ENABLE);
+
+  NVIC_EnableIRQ(TIM5_IRQn);
 
 };
 
+uint64_t ittick=0;
+
+extern "C" void TIM5_IRQHandler();
+void TIM5_IRQHandler()
+{
+  //if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET)
+    //{
+     // ittick++;
+     // TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
+    //};
+
+    if (TIM_GetITStatus(TIM5, TIM_IT_CC1) != RESET)
+    {
+      print(USART2,(char*) "Z");
+    };
+  };
+
 void loop(){
+char c[64];
+
+  sprintf(c, "%u\n\r", TIM5->CNT);
+  print (USART2,c);    
+  //sprintf(c, "%u\n\r", ittick);
+    //print (USART2,c);    
+  Delay(1000);
 };
 
