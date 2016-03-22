@@ -6,7 +6,7 @@
  * @author Anton Bondarev
  */
 
-#include <assert.h>
+#include <util/assert.h>
 #include <kernel/diag.h>
 #include <stdarg.h>
 

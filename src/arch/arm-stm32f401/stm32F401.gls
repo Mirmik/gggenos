@@ -1,13 +1,21 @@
 
-var __cc_source = scantree_regex(__dirpath__(), "\.c$", "HIDE");
-var _cc_source = sublast_list(unvar(__cc_source), length(__dirpath__()) + 1);
 
 module arch_stm32f401
 {
-	include = ["include", "periph/inc", "march"];
-
+	include = ["include", "march", "periph/inc"];
 	s_source = ["asm/startup_stm32f401xx.s"];
-	cc_source = _cc_source;
-	target = "arch_stm32f401.a";
-}
+	cc_source = ["asm/arch.c", "asm/diag.c", "asm/system_stm32f4xx.c"];
+};
 
+
+module stm32f401_sysclock
+{
+	include = ["include", "march", "periph/inc"];
+	cpp_source = ["asm/systick.cpp"];
+};
+
+module stm32f401_procdelay
+{
+	include = ["include", "march", "periph/inc"];
+	cc_source = ["asm/delay.c"];
+};

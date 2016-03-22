@@ -43,15 +43,6 @@
 		process_autom* registry(const delegate<void>& d);
 		process_autom* registry(delegate<void>&& d);
 
-		
-		//Утилиты:
-		//void proc_delete(process* proc);//Уничтожить процесс. (Активный процесс уничтожать запрещено.)
-		
-		//Конструктор
-		automScheduler();
-
-
-
 		template<typename T>
 		process_autom* registry(T* a, void (T::*ptr)())
 		{
@@ -61,6 +52,15 @@
 			schedee_init(proc);
 			return proc;
 		};
+		
+		//Утилиты:
+		//void proc_delete(process* proc);//Уничтожить процесс. (Активный процесс уничтожать запрещено.)
+		
+		//Конструктор
+		automScheduler();
+
+
+
 
 
 		};	

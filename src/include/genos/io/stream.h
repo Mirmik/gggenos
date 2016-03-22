@@ -106,7 +106,7 @@ public:
 
 
 	int printptr(void* p)
-	{return printhex(reinterpret_cast<size_t>(p));};
+	{return printhex(reinterpret_cast<uint32_t>(p));};
 
 	void printdump(void* address, size_t size);
 

@@ -1,0 +1,4 @@
+module stm32f401_Serial
+{
+	cpp_source = ["Serial.cpp"];
+}

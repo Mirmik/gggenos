@@ -36,6 +36,7 @@ application genos
 	["syscontext" , ""],
 	["genos_decoration_radioline" , ""],
 	["command_list" , ""],
+	["kernel_waitserver", ""],
 	];
 
 	target = "genos";

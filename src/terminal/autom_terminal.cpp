@@ -1,4 +1,3 @@
-
 #include "genos/terminal/autom_terminal.h"
 #include "genos/decoration.h"
 #include "genos/defs.h"
@@ -106,7 +105,7 @@ void  automTerminal::exec()
 				if (scanmode) 
 				{
 					stdout.print("F");
-					stdout.printhexln(c);
+					stdout.printhexln((uint8_t)c);
 					goto _exit;
 				};
 

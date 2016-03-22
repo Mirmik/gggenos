@@ -1,11 +1,3 @@
-/**
- * @file
- * @brief Defines ARCH interface
- *
- * @date 25.11.09
- * @author Eldar Abusalimov
- */
-
 #ifndef HAL_ARCH_H_
 #define HAL_ARCH_H_
 

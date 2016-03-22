@@ -1,0 +1,4 @@
+module stm32f401_SerialHD
+{
+	cpp_source = ["SerialHD.cpp"];
+}

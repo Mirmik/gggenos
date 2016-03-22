@@ -9,7 +9,7 @@
 //Некоторые шаблоны могут врать... Извините.
 //UNDER_CONSTRUCTED
 
-#include <genos/gstl/algorithm.h>
+//#include <genos/gstl/algorithm.h>
 
 namespace gstd{
 #include "genos/gstl/utility/prototype.hpp"

@@ -1,0 +1,7 @@
+
+module genos_assert 
+{
+	
+	cc_source = ["assert.c"];
+
+}

@@ -42,20 +42,18 @@
   ******************************************************************************  
   */ 
 
-/** @addtogroup CMSIS
-  * @{
-  */
-
-/** @addtogroup stm32f4xx
-  * @{
-  */
     
 #ifndef __STM32F4xx_H
 #define __STM32F4xx_H
 
+#define HSE_VALUE 8000000
+
 #ifdef __cplusplus
  extern "C" {
 #endif /* __cplusplus */
+
+#include "util/assert.h"
+#define assert_param(x) assert(x);
   
 /** @addtogroup Library_configuration_section
   * @{
