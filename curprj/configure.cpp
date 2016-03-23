@@ -100,9 +100,9 @@ RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
   GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_USART6);
   GPIO_PinAFConfig(GPIOC, GPIO_PinSource7, GPIO_AF_USART6);
   USART_InitStructure.USART_BaudRate = baud;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+  USART_InitStructure.USART_WordLength = USART_WordLength_9b;
   USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
+  USART_InitStructure.USART_Parity = USART_Parity_Even;
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStructure.USART_Mode = USART_Mode_Rx |USART_Mode_Tx;
   USART_Init(USART6, &USART_InitStructure);
@@ -243,7 +243,7 @@ if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
     };
 
 
-  debug_panic("USART_DEBUG_PANIC");
+  debug_panic("USART_DEBUG_PANIC2");
 };
 
 extern "C" void USART6_IRQHandler();
@@ -258,19 +258,19 @@ void USART6_IRQHandler()
 
   if (USART_GetITStatus(USART6, USART_IT_TC) == SET)
     {
-
-        SerialHD6.irq_tc();
         gpio_port_set_pin(GPIOD, 15);
+        SerialHD6.irq_tc();
         return;
     };
 
-if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
+if (USART_GetITStatus(USART6, USART_IT_RXNE) == SET)
     {
+
         gpio_port_set_pin(GPIOD, 14);
-        //SerialHD6.irq_rxne();
+        SerialHD6.irq_rxne();
         return;
     };
 
-
-  //debug_panic("USART_DEBUG_PANIC");
+  debug_printhex_uint16(USART6->SR)   ; 
+  debug_panic("USART_DEBUG_PANIC6");
 };

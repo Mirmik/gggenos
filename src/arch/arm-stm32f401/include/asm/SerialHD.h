@@ -11,14 +11,24 @@ class HardwareSerialHD
   public:
     USART_TypeDef* usart;
 
-    //const delegate<void,void*> BreakEndDelegate = 
-    //delegate<void,void*>(this, &Serial_HD_simple::break_end);
+    const delegate<void,void*> BreakEndDelegate = 
+    delegate<void,void*>(this, &HardwareSerialHD::break_end);
+
+    delegate<void, void*> callback =
+    delegate<void, void*>(this, &HardwareSerialHD::print_answer);
+
+    void drop_callback();
+    void print_callback();
+
+    void* callback_data = 0;
 
     char message[64];
     char* message_ptr;
     int message_len;
     int mode = 0;
     int count = 0;
+
+    uint8_t rx_mode = 0;
 
     char answer[32];
     char* answer_ptr;
@@ -29,6 +39,7 @@ class HardwareSerialHD
     uint32_t changedir_pin;
 
     uint8_t flag;
+    uint8_t error_count;
 
     TimWaiter watchDog;
 
@@ -39,11 +50,20 @@ class HardwareSerialHD
     void input_mode();
     void configure_session(char* _message, int len, char _answer_term);
 
-    void start_session();
-    void end_session();
+    void print_answer(void*);
 
-    void irq_txe() volatile;
-    void irq_tc() volatile;
+    void start_session();
+    void restart_session();
+    void end_session(); 
+
+	void success_check_result();
+	void success_session();
+	void bad_session(int f);
+
+
+    void irq_txe();
+    void irq_tc();
+    void irq_rxne();
 }; 
 
 #endif 

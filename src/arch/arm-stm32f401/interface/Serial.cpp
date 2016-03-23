@@ -48,7 +48,7 @@ void HardwareSerial::irq_txe()
 
 void HardwareSerial::irq_rxne()
 {
-	if (usart->SR & (USART_FLAG_NE|USART_FLAG_FE|USART_FLAG_PE|USART_FLAG_ORE)) {debug_panic("USART_ERROR_1");};
+	if (usart->SR & (USART_FLAG_NE|USART_FLAG_FE|USART_FLAG_PE|USART_FLAG_ORE)) {char drop = usart->DR; return;};
 	if (ring_full(rx_head, rx_tail, SERIAL_RX_BUFFER_SIZE))	{debug_panic("USART_ERROR_2");};
 	ring_putc(rx_head, rx_tail, rx_buffer, SERIAL_RX_BUFFER_SIZE, usart->DR & 0xFF);
 };
