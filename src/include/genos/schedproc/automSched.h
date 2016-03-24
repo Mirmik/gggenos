@@ -1,7 +1,7 @@
 #ifndef GENOS_AUTOM_SCHED
 #define GENOS_AUTOM_SCHED
 	
-#include <genos/datastruct/list.h>
+#include <util/dlist.h>
 #include "genos/schedproc/scheduler_base.h"
 #include "genos/schedproc/schedee_base.h"
 #include "genos/sigslot/delegate.h"
@@ -18,15 +18,15 @@
 		//Структура, содержащая информацию о процессе.
 		struct process_autom : public schedee
 		{		
-			list_head lst;
+			dlist_head lst;
 			delegate<void> dlg;
 			uint8_t status;
 		};		
 	
 	public:
 	
-		list_head running_list;
-		list_head waiting_list;
+		dlist_head running_list;
+		dlist_head waiting_list;
 	
 		//Методы:
 		void init();				

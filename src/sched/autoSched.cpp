@@ -11,10 +11,10 @@
 
 			process_autom* proc;
 
-			if(list_empty(&running_list)) return; 
+			if(dlist_empty(&running_list)) return; 
 			proc = 
-			list_entry(running_list.next, process_autom, lst);
-			list_move_tail(&proc->lst, &running_list);
+			dlist_entry(running_list.next, process_autom, lst);
+			dlist_move_tail(&proc->lst, &running_list);
 		
 			current_schedee(proc);		
 
@@ -31,7 +31,7 @@
 			if (bits_mask(proc->status, RUN)) 
 			{
 				bits_mask_assign(proc->status, RUN, STATEMASK);
-				list_add_tail(&proc->lst, &running_list);
+				dlist_add_tail(&proc->lst, &running_list);
 			};
 		};
 		
@@ -39,7 +39,7 @@
 		{
 			process_autom* proc = static_cast<process_autom*>(sch);
 			bits_mask_assign(proc->status, WAIT, STATEMASK);
-			list_add_tail(&proc->lst, &waiting_list);
+			dlist_add_tail(&proc->lst, &waiting_list);
 		};
 		
 		void automScheduler::schedee_set_zombie(schedee* sch)

@@ -39,7 +39,6 @@ class HardwareSerialHD
     uint32_t changedir_pin;
 
     uint8_t flag;
-    uint8_t error_count;
 
     TimWaiter watchDog;
 
@@ -58,12 +57,51 @@ class HardwareSerialHD
 
 	void success_check_result();
 	void success_session();
-	void bad_session(int f);
+	void bad_session(uint8_t f);
 
 
     void irq_txe();
     void irq_tc();
     void irq_rxne();
 }; 
+
+
+#include "util/dlist.h"
+class SerialHDDriver
+{
+public:
+	volatile int error_count;
+	uint8_t max_error;
+	dlist_head list;
+
+	class Task
+	{
+	public:
+
+	dlist_head list;
+	char message[64];
+    int message_len;
+    char answer[32];
+    uint8_t answer_len;
+    uint8_t flag = 8;
+    delegate<void, void*> callback = (void(*)(void*))do_nothing;
+	};
+Task* task;
+
+void exec();
+void broken_session();
+void active(Task* _task) {_task->flag = 0;}
+
+int state = 0;
+
+};
+
+
+
+
+
+
+
+
 
 #endif 

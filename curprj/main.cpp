@@ -11,10 +11,27 @@
 #include "stm32f4xx_rcc.h"
 #include "asm/SerialHD.h"
 #include "util/ascii_codes.h"
+#include "stdlib.h"
 
 #include "genos/schedproc/automSched.h"
 #include "genos/terminal/autom_terminal.h"
 #include "genos/terminal/command_list.h"
+
+#define SPEED_DECREASE 1000
+#define ENCODER_RESOLUTION 50000
+#define PULSE_RESOLUTION 50000
+
+uint32_t acceleration = 150;
+uint8_t pulse_direction = 1;
+
+enum GlobalMode
+{
+	JOG = 0,
+	POSITIONING = 1,
+	PULSE = 2
+};
+
+GlobalMode global_mode = PULSE;
 
 
 automScheduler automSched;
@@ -33,6 +50,13 @@ void stop()
 
 	debug_panic("emergstp");
 };
+
+
+void print_mode()
+{
+	debug_printdec_uint32(global_mode);dln;
+};
+
 
 void setup();
 void loop();
@@ -72,7 +96,30 @@ A a;
 
 HardwareSerial Serial2;
 HardwareSerialHD SerialHD6;
+SerialHDDriver rsDriver;
+
 syscontext syscntxt;
+
+void hilohilo_byte_to_symbol(uint32_t num, char* symb)
+{
+	uint8_t lll = num & 0x0000000F;
+	uint8_t llh = (num & 0x000000F0) >> 4; 
+	uint8_t lhl = (num & 0x00000F00) >> 8;
+	uint8_t lhh = (num & 0x0000F000) >> 12; 
+	uint8_t hll = (num & 0x000F0000) >> 16;
+	uint8_t hlh = (num & 0x00F00000) >> 20; 
+	uint8_t hhl = (num & 0x0F000000) >> 24;
+	uint8_t hhh = (num & 0xF0000000) >> 28; 
+	
+	*(symb + 7) = byte_to_hexascii(lll);
+	*(symb + 6) = byte_to_hexascii(llh);
+	*(symb + 5) = byte_to_hexascii(lhl);
+	*(symb + 4) = byte_to_hexascii(lhh);
+	*(symb + 3) = byte_to_hexascii(hll);
+	*(symb + 2) = byte_to_hexascii(hlh);
+	*(symb + 1) = byte_to_hexascii(hhl);
+	*(symb)     = byte_to_hexascii(hhh);
+};
 
 
 void hilo_byte_to_symbol(uint16_t num, char* symb)
@@ -110,7 +157,7 @@ void checksum_declare(char* message_buf, char term)
 
 void print_encoder()
 {
-	stdout.println((uint64_t)TIM5->CNT);
+	stdout.println((int32_t)TIM5->CNT);
 };
 
 
@@ -226,77 +273,88 @@ public:
 class JOG_Operation
 {
 public:
+SerialHDDriver::Task task;
+	
 int state;
 char mes[50];
 int meslen;
 uint16_t speed = 255;
+bool direction = false;
 
 public:
+
+	void registry()
+	{
+		dlist_move_tail(&task.list, &rsDriver.list);
+		//task.callback = delegate<void, void*>(&SerialHD6, &HardwareSerialHD::print_answer);
+	};
+
 	void exec()
 	{
 		char temp[10];
 		switch(state)
 		{
+
+			case -1:
+			//stdout.print("step one:");
+
+			confmes4(task.message, "8B", "00", "0000");
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 0;
+			break;
+
+
 			case 0:
-			stdout.print("step one");
-			confmes4(mes, "8B", "00", "0001");
-			meslen = 14;
-			SerialHD6.configure_session(mes , meslen, 3);
-			SerialHD6.callback = delegate_mtd(&rsManual, &ManualRS::callback);
-			delay(20);
-			stdout.write(mes,meslen);
-			SerialHD6.start_session();
-			wait_autom(&SerialHD6.flag);
+			//stdout.print("step one:");
+
+			confmes4(task.message, "8B", "00", "0001");
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
 			state = 1;
 			break;
 
 			case 1:
-			stdout.print("step two");
-			hilo_byte_to_symbol(speed, temp);	
-			confmes4(mes, "A0", "10", temp);
-			//stdout.write(mes, 18);
+			//stdout.println(task.answer);
+			//stdout.print("step two:");
 			//while(1);
-			meslen = 14;
-			SerialHD6.configure_session(mes , meslen, 3);
-			SerialHD6.callback = delegate_mtd(&rsManual, &ManualRS::callback);
-			delay(20);
-			stdout.write(mes,meslen);
-			SerialHD6.start_session();
-			wait_autom(&SerialHD6.flag);
+			assert (speed <= SPEED_DECREASE);
+			hilo_byte_to_symbol(speed, temp);	
+			confmes4(task.message, "A0", "10", temp);
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
 			state = 2;
 			break;
 
 			case 2:
-			stdout.print("step three");
-			confmes8(mes, "A0", "11", "00000400");
-			meslen = 18;
-			SerialHD6.configure_session(mes , meslen, 3);
-			SerialHD6.callback = delegate_mtd(&rsManual, &ManualRS::callback);
-			stdout.write(mes,meslen);
-			delay(20);
-			SerialHD6.start_session();
-			wait_autom(&SerialHD6.flag);
+			hilohilo_byte_to_symbol(acceleration, temp);
+			confmes8(task.message, "A0", "11", temp);
+			task.message_len = 18;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
 			state = 3;
 			break;
 
 
 			case 3:
-			//stdout.print("step four");
-			confmes8(mes, "92", "00", "00000807");
-			meslen = 18;
-			//stdout.write(mes,meslen);
-			SerialHD6.configure_session(mes , meslen, 3);
-			//SerialHD6.callback = delegate_mtd(&rsManual, &ManualRS::callback);
-			SerialHD6.drop_callback();
-			SerialHD6.start_session();
-			wait_autom(&SerialHD6.flag);
+			//stdout.println(task.answer);
+			//stdout.print("step four:");
+			if (direction == true)
+			confmes8(task.message, "92", "00", "00000807");
+			else 
+			confmes8(task.message, "92", "00", "00001007"); 
+			task.message_len = 18;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
 			state = 4;
 			break;
 
 			case 4:
-			//while(1);
-			msleep_autom(20);
-			state = 3;
+			//stdout.println(task.answer);
+			exit_autom();
 			break;
 		};
 	};
@@ -305,17 +363,302 @@ public:
 
 
 
-void reg_jog(){
-	jog_operation.state = 0;
+
+
+
+class Position_Operation
+{
+public:
+SerialHDDriver::Task task;
+	
+int state;
+char mes[50];
+int meslen;
+uint32_t pos = 255;
+uint32_t speed = 255;
+bool direction = false;
+
+enum DIRMODE {FORWARD, BACKWARD} dir;
+enum COMMODE {ENCPULSE, COMPULSE} mode;
+
+public:
+
+	void registry()
+	{
+		dlist_move_tail(&task.list, &rsDriver.list);
+		//task.callback = delegate<void, void*>(&SerialHD6, &HardwareSerialHD::print_answer);
+	};
+
+	void exec()
+	{
+		char temp[20];
+		switch(state)
+		{
+
+			case -1:
+			stdout.println("step0");
+			confmes4(task.message, "8B", "00", "0000");
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 0;
+			break;
+
+
+			case 0:
+			stdout.println("step0");
+			confmes4(task.message, "8B", "00", "0002");
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 1;
+			break;
+
+
+			case 1:
+			stdout.println("step1");
+			hilo_byte_to_symbol(speed, temp);
+			confmes4(task.message, "A0", "10", temp);
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 2;
+			break;
+
+
+			case 2:
+			stdout.println("step2");	
+			//stdout.print("step three");
+			hilohilo_byte_to_symbol(acceleration, temp);
+			confmes8(task.message, "A0", "11", temp);
+			task.message_len = 18;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 3;
+			break;
+
+
+			case 3:
+			stdout.println("step3");
+			//stdout.print("step three");
+			hilohilo_byte_to_symbol(pos, temp);
+			confmes8(task.message, "A0", "20", temp);
+			debug_write(temp,8);
+			task.message_len = 18;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 4;
+			break;
+
+
+			case 4:
+			stdout.println("step5");
+			strcpy(temp, "0000");
+			if (mode == ENCPULSE) temp[1] = '1';
+			else temp[1] = '0';
+			if (dir == FORWARD) temp[3] = '1';
+			else temp[3] = '0';
+			confmes4(task.message, "A0", "21", temp);
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 5;
+			break;
+
+			case 5:
+			stdout.println("step4");
+			//stdout.print("step four");
+			//if (direction == true)
+			//confmes8(task.message, "92", "00", "00000807");
+			//else 
+			confmes8(task.message, "92", "00", "00000007"); 
+			task.message_len = 18;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 6;
+			break;
+
+			case 6:
+			stdout.println("step6");
+			confmes4(task.message, "A0", "40", "1EA5");
+			task.message_len = 14;
+			rsDriver.active(&task);
+			wait_autom(&task.flag);
+			state = 7;
+			break;
+
+			case 7:
+			exit_autom();
+			break;
+		};
+	};
+
+} position_operation;
+
+
+
+void pseudohome()
+{
+
+	sysexec("pos 100000 1");	
+};
+
+
+void reg_pos_enc(int n, char** c){
+	if (n != 3) {stdout.println("Err:NumP error");return;};
+	//if (n == 1) jog_operation.speed = 200;
+	//stdout.print(c[1]);
+	position_operation.pos = atoll(c[1]);
+
+	if (!strcmp(c[2], "0")) position_operation.dir = Position_Operation::FORWARD;
+	else if (!strcmp(c[2], "1")) position_operation.dir = Position_Operation::BACKWARD;
+	else {stdout.println("Err: wrong [2]");return;};
+
+	char temp[20];
+	hilohilo_byte_to_symbol(position_operation.pos, temp);
+
+	if (global_mode != POSITIONING)
+	{
+		global_mode = POSITIONING; 
+		position_operation.state = -1;
+	}
+	else
+	{
+		position_operation.state = -1;
+	};
+	position_operation.mode = Position_Operation::ENCPULSE;	
+	automSched.registry(&position_operation, &Position_Operation::exec);
+};
+
+
+void reg_pos_com(int n, char** c){
+	if (n != 3) {stdout.println("Err:NumP error");return;};
+	//if (n == 1) jog_operation.speed = 200;
+	//stdout.print(c[1]);
+	position_operation.pos = atoll(c[1]);
+
+	if (!strcmp(c[2], "0")) position_operation.dir = Position_Operation::FORWARD;
+	else if (!strcmp(c[2], "1")) position_operation.dir = Position_Operation::BACKWARD;
+	else {stdout.println("Err: wrong [2].");return;};
+
+	char temp[20];
+	hilohilo_byte_to_symbol(position_operation.pos, temp);
+
+	if (global_mode != POSITIONING)
+	{
+		global_mode = POSITIONING; 
+		position_operation.state = -1;
+	}
+	else
+	{
+		position_operation.state = -1;
+	};
+	position_operation.mode = Position_Operation::COMPULSE;
+	automSched.registry(&position_operation, &Position_Operation::exec);
+};
+
+
+void pos_speed(int n, char** c){
+	if (n != 2) {stdout.println("Err:NumP error");return;};
+
+	uint32_t speed = atol(c[1]);
+	if (speed > SPEED_DECREASE) {speed = SPEED_DECREASE; debug_print("speed decrease ");
+	debug_printdec_uint32(SPEED_DECREASE); dln;};
+	position_operation.speed = speed;	
+};
+
+
+void pos_acc(int n, char** c){
+	if (n != 2) {stdout.println("Err:NumP error");return;};
+	acceleration = atol(c[1]);	
+};
+
+void reg_jog(int n, char** c){
+	if (n != 2) {stdout.println("Err:NumP error");return;};
+	//if (n == 1) jog_operation.speed = 200;
+
+	uint32_t speed = atoi(c[1]);
+
+	if (speed > SPEED_DECREASE) {speed = SPEED_DECREASE; debug_print("speed decrease ");
+	debug_printdec_uint32(SPEED_DECREASE); dln;};
+
+	jog_operation.speed = speed;
+
+	if (global_mode != JOG)
+	{
+		debug_print("set jog\r\n");
+		global_mode = JOG; 
+		jog_operation.state = -1;
+	}
+	else
+	{
+		debug_print("not set jog\r\n");
+		jog_operation.state = 1;
+	};
 	automSched.registry(&jog_operation, &JOG_Operation::exec);
+};
+
+void reg_jog_direction(int n, char** c){
+	if ((n != 2 && n!=1)) {stdout.println("Err:NumP error");return;};
+	
+	if (n==1) {stdout.print((uint64_t)jog_operation.direction); return;};
+
+	if ((strcmp(c[1], "0")) && (strcmp(c[1], "1")))  {stdout.println("dirrwrong");return;};
+
+	
+	//return;
+	jog_operation.direction = atoi(c[1]);
+	if (global_mode == JOG)
+	{
+		jog_operation.state = 1;
+		automSched.registry(&jog_operation, &JOG_Operation::exec);
+	}
+	else
+	{
+		return;
+	};
+	
 };
 
 #include "stdlib.h"
 void restart_jog(int n, char** c){
-	if (n!=2) {stdout.println("Err:NumP error");return;};
+//	if (n!=2) {stdout.println("Err:NumP error");return;};
 	
-	jog_operation.state = 1;
-	jog_operation.speed = atoi(c[1]);
+//	jog_operation.state = 1;
+//	jog_operation.speed = atoi(c[1]);
+};
+
+extern int32_t impulse_count;
+void impulse(int n, char** c)
+{
+	if (n!=2) {stdout.println("NumpErr");};	
+	impulse_count = atol(c[1]);
+};
+
+void freq(int n, char** c)
+{
+	if (n!=2) {stdout.println("NumpErr");};	
+	assert( atol(c[1]) >200);
+	TIM4->ARR = atol(c[1]);
+};
+
+
+#define TIM4_TPS 8400000
+void pulse_speed(int n, char** c)
+{
+	float speed_rev_min;
+	float speed_rev_sec;
+	float pps;
+
+	if (n!=2) {stdout.println("NumpErr");};	
+	speed_rev_min = atol(c[1]);
+	speed_rev_sec = speed_rev_min / 60;
+	pps = speed_rev_sec * ENCODER_RESOLUTION;
+
+	int res = TIM4_TPS / pps * 4 * 2 * 311 / 200;
+	debug_printdec_uint32(res);
+
+	TIM4->ARR = res;
 };
 
 
@@ -341,6 +684,45 @@ char mes[20];
 	//delay(100);
 };
 
+class Updater
+{
+int state;
+public:
+	SerialHDDriver::Task task;
+	void exec()
+	{
+		char mes[40];
+		switch(state)
+		{
+			case 0:
+				dlist_move_tail(&task.list, &rsDriver.list);
+				//task.callback = delegate<void, void*>(&SerialHD6, &HardwareSerialHD::print_answer);
+				state = 1;
+			break;
+
+			case 1:
+				confmes(task.message, "01", "00");
+				task.message_len = 10;
+				wait_autom(&task.flag);
+				rsDriver.active(&task);
+				state = 1;
+			break;
+		};
+	};
+
+
+} updater;
+
+
+void updater_start()
+{
+	automSched.registry(&updater, &Updater::exec);
+};
+
+void rs485maxerror()
+{
+	stdout.print((uint64_t)rsDriver.max_error);	
+};
 
 void* operator new(size_t, void* ptr) {return ptr;};
 void global_constructor_stub()
@@ -353,7 +735,10 @@ void global_constructor_stub()
 	new(&SerialHD6) HardwareSerialHD;
 	new(&syscntxt) syscontext;
 	new(&central_cmdlist) command_list;
+	new(&rsDriver) SerialHDDriver;	
+	new(&updater) Updater;
 	new(&jog_operation) JOG_Operation;
+	new(&position_operation) Position_Operation;
 };
 
 
@@ -380,26 +765,53 @@ void setup(){
 	usart6_interrupt_enable();
 	usart2_rx_interrupt_enable();
 
-	
+	global_mode = PULSE;
+
 	central_cmdlist.add("testrs", test_task);	
 	central_cmdlist.add("rs", &rsManual, &ManualRS::sesconf);
 	central_cmdlist.add("rs8", &rsManual, &ManualRS::sesconf8);
 	central_cmdlist.add("rs4", &rsManual, &ManualRS::sesconf4);
 
 	central_cmdlist.add("encoder", print_encoder);
-	central_cmdlist.add("start", reg_jog);
-	central_cmdlist.add("restart", restart_jog);
+	central_cmdlist.add("jog", reg_jog);
+	central_cmdlist.add("jogdir", reg_jog_direction);
+	
+	central_cmdlist.add("pos", reg_pos_com);
+	central_cmdlist.add("encpos", reg_pos_enc);
+	central_cmdlist.add("mode", print_mode);
+	
+	central_cmdlist.add("posspeed", pos_speed);
+	central_cmdlist.add("posacc", pos_acc);
+	
+	central_cmdlist.add("impulse", impulse);
+	central_cmdlist.add("freq", freq);
+	central_cmdlist.add("speed", pulse_speed);
+		
 
-	central_cmdlist.add("stop", stop);
+	central_cmdlist.add("pseudohome", pseudohome);
+
+//	central_cmdlist.add("pulsemode", reg_pulsemode);
+	
+	central_cmdlist.add("rs485maxerror", rs485maxerror);
+//	central_cmdlist.add("restart", restart_jog);
+	jog_operation.registry();
+	position_operation.registry();
+
+//	central_cmdlist.add("stop", stop);
+	central_cmdlist.add("updater", updater_start);
+
 
 	automSched.registry(&a, &A::exec);
 	automSched.registry(&automTerm, &automTerminal::exec);
+	automSched.registry(&rsDriver, &SerialHDDriver::exec);
 };
+
+
 void loop()
 {
 	automSched.schedule();
 	waitserver.check();
-
+//	debug_printdec_int32(impulse_count);dln;
 /*	ptr = mes;
 	*ptr++ = 1;
 	*ptr++ = '2';

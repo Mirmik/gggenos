@@ -5,6 +5,7 @@
 #include "stm32f4xx_rcc.h" 
 #include "stm32f4xx_tim.h" 
 #include "misc.h" 
+#include "hal/gpio.h"
 
 
 void usart2_configure(uint32_t baud)
@@ -58,6 +59,15 @@ NVIC_InitTypeDef NVIC_InitStructure;
   NVIC_Init(&NVIC_InitStructure);
 };
 
+void usart2_interrupt_disable()
+{
+NVIC_InitTypeDef NVIC_InitStructure;
+  NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;
+  NVIC_Init(&NVIC_InitStructure);
+};
 
 
 
@@ -127,9 +137,48 @@ NVIC_InitTypeDef NVIC_InitStructure;
 };
 
 
+void usart6_interrupt_disable()
+{
+NVIC_InitTypeDef NVIC_InitStructure;
+  NVIC_InitStructure.NVIC_IRQChannel = USART6_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;
+  NVIC_Init(&NVIC_InitStructure);
+};
 
 
 
+void tim4_configure()
+{
+TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+TIM_ICInitTypeDef  TIM_ICInitStructure;
+TIM_OCInitTypeDef  TIM_OCInitStructure;
+
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+
+  TIM_TimeBaseStructure.TIM_Prescaler = 10-1;
+  //TIM_TimeBaseStructure.TIM_Period = 50000;
+  TIM_TimeBaseStructure.TIM_Period = 16000;
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+  TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+
+  //TIM_OCStructInit(&TIM_OCInitStructure);
+  //TIM_OCInitStructure.TIM_Pulse = 50000;
+  //TIM_OC1Init(TIM5, &TIM_OCInitStructure);
+
+  //SET ARPE/ Чтоб обновлялся после того, как досчитает.
+  //TIM4->CR1 |= (1 << 7); 
+
+  TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+
+  //TIM_EncoderInterfaceConfig(TIM5, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
+//TIM_TIxExternalClockConfig(TIM5, TIM_TIxExternalCLK1Source_TI1, TIM_ICPolarity_Rising, 0);
+  TIM4->CNT = 0;
+  TIM_Cmd(TIM4, ENABLE);
+  NVIC_EnableIRQ(TIM4_IRQn);
+};
 
 
 
@@ -210,21 +259,104 @@ GPIO_InitTypeDef  GPIO_InitStructure;
 
 };
 
+void motor_pins_configure()
+{
+GPIO_InitTypeDef  GPIO_InitStructure;
+
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_2| GPIO_Pin_4| GPIO_Pin_6;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOD, &GPIO_InitStructure);
+
+  gpio_port_set_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_6);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_4);
+
+};
+
 
 void project_configure()
 {
   usart6_configure(115200);
-  usart2_configure(115200);
+  usart2_configure(9600);
 	tim5_configure();
-	leds_configure();
+	tim4_configure();
+  motor_pins_configure();
+  leds_configure();
 };
 
-#include "hal/gpio.h"
 #include "genos/debug/debug.h"
 #include "asm/Serial.h"
 #include "asm/SerialHD.h"
 extern HardwareSerial Serial2;
 extern HardwareSerialHD SerialHD6;
+
+
+
+void state0()
+{
+  gpio_port_set_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_6);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_4);
+};
+
+void state1()
+{
+  gpio_port_set_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_6);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_4);
+};
+
+void state2()
+{
+  
+  gpio_port_set_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_4);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_6);
+};
+
+void state3()
+{
+  gpio_port_set_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_4);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_6);
+};
+
+uint8_t pulse_state;
+extern uint8_t pulse_direction;
+
+int32_t impulse_count = 0;
+
+extern "C" void TIM4_IRQHandler();
+void TIM4_IRQHandler()
+{
+  
+  if(TIM4->SR & 0x1) //Прерывание по переполнению
+    {
+      if (impulse_count <= 0) {goto _exit;};
+
+      //do_once {debug_print("TimInterrupt");};      
+      pulse_state = (pulse_state + pulse_direction) & 0x3;
+      switch(pulse_state)
+      {
+        case 0: state0(); break;
+        case 1: state1(); break;
+        case 2: state2(); break;
+        case 3: state3(); break;
+      };
+      impulse_count--;
+      
+      _exit:
+      TIM4->SR &= ~0x1;    
+      return; 
+    };
+
+  dln;
+  debug_printhex_uint32(TIM4->CR1);dln;
+  debug_printhex_uint32(TIM4->SR);dln;
+  debug_panic("TIM4INTERRUPT");
+};
+
+
+
 
 extern "C" void USART2_IRQHandler();
 void USART2_IRQHandler()

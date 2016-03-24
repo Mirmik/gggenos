@@ -1,55 +1,50 @@
-#ifndef GENOS_LINUX_DLIST_BASIC
-	#define GENOS_LINUX_DLIST_BASIC
+#ifndef GENOS_LINUX_dlist_BASIC
+	#define GENOS_LINUX_dlist_BASIC
 	
 	#include "util/member.h"
+	#include "defines/decltypeof.h" 
+	//#include "genos/datastruct/base_struct_def.h"
 	
-	#define DLIST_POISON1 ((struct dlist_head*)-1)
-	#define DLIST_POISON2 ((struct dlist_head*)-2)
+	#define dlist_POISON1 ((dlist_head*)-1)
+	#define dlist_POISON2 ((dlist_head*)-2)
 	
 	
-	
-	struct dlist_head{		
-		struct dlist_head* next;
-		struct dlist_head* prev;
+	class dlist_head{			
+		public:
+		dlist_head* next;
+		dlist_head* prev;
 		
-		__if_cplusplus(
-			dlist_head() : next(this), prev(this) {};
-		)
-		__if_cplusplus(
-			dlist_head(dlist_head* _next, dlist_head* _prev) : 
-			next(_next), prev(_prev) {};
-		) 
+		dlist_head() : next(this), prev(this) {};
+		dlist_head(dlist_head* _next, dlist_head* _prev) : next(_next), prev(_prev) {}; 
 	};
 	
-	static inline struct dlist_head * INIT_DLIST_HEAD(struct dlist_head *list)
+	static inline void INIT_dlist_HEAD(struct dlist_head *dlist)
 	{
-		list->next = list;
-		list->prev = list;
-		return list;
+		dlist->next = dlist;
+		dlist->prev = dlist;
 	}
 	
-	#define DLIST_HEAD_INIT(name) { &(name), &(name) }
+	#define dlist_HEAD_INIT(name) { &(name), &(name) }
 	
-	#define DLIST_HEAD(name) \
-	struct dlist_head name = DLIST_HEAD_INIT(name)
-
-	#define dlist_init(list) INIT_DLIST_HEAD(list)
-	#define dlist_head_init(list) INIT_DLIST_HEAD(list)
+	#define dlist_HEAD(name) \
+	struct dlist_head name = dlist_HEAD_INIT(name)
 	
 	/*
-		* Simple doubly linked list implementation.
+		* Simple doubly linked dlist implementation.
 		*
 		* Some of the internal functions ("__xxx") are useful when
-		* manipulating whole lists rather than single entries, as
+		* manipulating whole dlists rather than single entries, as
 		* sometimes we already know the next/prev entries and we can
 		* generate better code by using them directly rather than
 		* using the generic single-entry routines.
 	*/
 	
+	
+	
 	/*
 		* Insert a _new entry between two known consecutive entries.
 		*
-		* This is only for internal list manipulation where we know
+		* This is only for internal dlist manipulation where we know
 		* the prev/next entries already!
 	*/
 	//Добавляет элемент _new между двумя последовательно расположенными элементами.
@@ -64,11 +59,10 @@
 		prev->next = _new;
 	}
 	
-	
 	/**
 		* dlist_add - add a _new entry
 		* @_new: _new entry to be added
-		* @head: list head to add it after
+		* @head: dlist head to add it after
 		*
 		* Insert a _new entry after the specified head.
 		* This is good for implementing stacks.
@@ -79,13 +73,13 @@
 	{
 		__dlist_add(_new, head, head->next);
 	}
-	#define dlist_add_next(_new, head) dlist_add(_new, head)
+	#define dlist_add_next(x, y) dlist_add(x, y)
 	
 	
 	/**
 		* dlist_add_tail - add a _new entry
 		* @_new: _new entry to be added
-		* @head: list head to add it before
+		* @head: dlist head to add it before
 		*
 		* Insert a _new entry before the specified head.
 		* This is useful for implementing queues.
@@ -96,13 +90,12 @@
 	{
 		__dlist_add(_new, head->prev, head);
 	}
-	#define dlist_add_prev(_new, head) dlist_add_tail(_new, head)
-
+	
 	/*
-		* Delete a list entry by making the prev/next entries
+		* Delete a dlist entry by making the prev/next entries
 		* point to each other.
 		*
-		* This is only for internal list manipulation where we know
+		* This is only for internal dlist manipulation where we know
 		* the prev/next entries already!
 	*/
 	//Удаляет элемент находящийся между prev/next элементами.
@@ -114,8 +107,8 @@
 	}
 	
 	/**
-		* dlist_del - deletes entry from list.
-		* @entry: the element to delete from the list.
+		* dlist_del - deletes entry from dlist.
+		* @entry: the element to delete from the dlist.
 		* Note: dlist_empty() on entry does not return true after this, the entry is
 		* in an undefined state.
 	*/
@@ -129,8 +122,7 @@
 	static inline void dlist_del(struct dlist_head *entry)
 	{
 		__dlist_del(entry->prev, entry->next);
-		entry->next = DLIST_POISON1;
-		entry->prev = DLIST_POISON2;
+		INIT_dlist_HEAD(entry);
 	}
 	
 	
@@ -156,62 +148,51 @@
 	struct dlist_head *_new)
 	{
 		dlist_replace(old, _new);
-		INIT_DLIST_HEAD(old);
+		INIT_dlist_HEAD(old);
 	}
-	
+		
 	/**
-		* dlist_del_init - deletes entry from list and reinitialize it.
-		* @entry: the element to delete from the list.
-	*/
-	//Удаляет entry и реинициализирует его.
-	static inline void dlist_del_init(struct dlist_head *entry)
-	{
-		__dlist_del_entry(entry);
-		INIT_DLIST_HEAD(entry);
-	}
-	
-	/**
-		* dlist_move - delete from one list and add as another's head
-		* @list: the entry to move
+		* dlist_move - delete from one dlist and add as another's head
+		* @dlist: the entry to move
 		* @head: the head that will precede our entry
 	*/
 	//Удаляет элемент из одного списка и добавляя в другой
 	//после элемента head.
-	static inline void dlist_move(struct dlist_head *list, struct dlist_head *head)
+	static inline void dlist_move(struct dlist_head *dlist, struct dlist_head *head)
 	{
-		__dlist_del_entry(list);
-		dlist_add(list, head);
+		__dlist_del_entry(dlist);
+		dlist_add(dlist, head);
 	}
 	
 	/**
-		* dlist_move_tail - delete from one list and add as another's tail
-		* @list: the entry to move
+		* dlist_move_tail - delete from one dlist and add as another's tail
+		* @dlist: the entry to move
 		* @head: the head that will follow our entry
 	*/
 	//Удаляет элемент из одного списка и добавляя в другой
 	//перед элементом head.
-	static inline void dlist_move_tail(struct dlist_head *list,
+	static inline void dlist_move_tail(struct dlist_head *dlist,
 	struct dlist_head *head)
 	{
-		__dlist_del_entry(list);
-		dlist_add_tail(list, head);
+		__dlist_del_entry(dlist);
+		dlist_add_tail(dlist, head);
 	}
 	
 	/**
-		* dlist_is_last - tests whether @list is the last entry in list @head
-		* @list: the entry to test
-		* @head: the head of the list
+		* dlist_is_last - tests whether @dlist is the last entry in dlist @head
+		* @dlist: the entry to test
+		* @head: the head of the dlist
 	*/
-	//Проверяет, является ли list последним в списке.
-	static inline int dlist_is_last(const struct dlist_head *list,
+	//Проверяет, является ли dlist последним в списке.
+	static inline int dlist_is_last(const struct dlist_head *dlist,
 	const struct dlist_head *head)
 	{
-		return list->next == head;
+		return dlist->next == head;
 	}
 	
 	/**
-		* dlist_empty - tests whether a list is empty
-		* @head: the list to test.
+		* dlist_empty - tests whether a dlist is empty
+		* @head: the dlist to test.
 	*/
 	//Проверяет, является ли head пустым списком.
 	static inline int dlist_empty(const struct dlist_head *head)
@@ -222,16 +203,16 @@
 	
 	
 	/**
-		* dlist_empty_careful - tests whether a list is empty and not being modified
-		* @head: the list to test
+		* dlist_empty_careful - tests whether a dlist is empty and not being modified
+		* @head: the dlist to test
 		*
 		* Description:
-		* tests whether a list is empty _and_ checks that no other CPU might be
+		* tests whether a dlist is empty _and_ checks that no other CPU might be
 		* in the process of modifying either member (next or prev)
 		*
 		* NOTE: using dlist_empty_careful() without synchronization
 		* can only be safe if the only activity that can happen
-		* to the list entry is dlist_del_init(). Eg. it cannot be used
+		* to the dlist entry is dlist_del_init(). Eg. it cannot be used
 		* if another CPU could re-dlist_add() it.
 	*/ 
 	//Проверяет, является ли head пустым списком.
@@ -243,8 +224,8 @@
 	}
 	
 	/**
-		* dlist_rotate_left - rotate the list to the left
-		* @head: the head of the list
+		* dlist_rotate_left - rotate the dlist to the left
+		* @head: the head of the dlist
 	*/
 	//Проворачивает список на один элемент.
 	//Первый становится последним.
@@ -259,8 +240,8 @@
 	}
 	
 	/**
-		* dlist_is_singular - tests whether a list has just one entry.
-		* @head: the list to test.
+		* dlist_is_singular - tests whether a dlist has just one entry.
+		* @head: the dlist to test.
 	*/
 	//Возвращает истину, если в списке остался только один элемент.
 	static inline int dlist_is_singular(const struct dlist_head *head)
@@ -268,37 +249,37 @@
 		return !dlist_empty(head) && (head->next == head->prev);
 	}
 	
-	static inline void __dlist_cut_position(struct dlist_head *list,
+	static inline void __dlist_cut_position(struct dlist_head *dlist,
 	struct dlist_head *head, struct dlist_head *entry)
 	{
 		struct dlist_head *new_first = entry->next;
-		list->next = head->next;
-		list->next->prev = list;
-		list->prev = entry;
-		entry->next = list;
+		dlist->next = head->next;
+		dlist->next->prev = dlist;
+		dlist->prev = entry;
+		entry->next = dlist;
 		head->next = new_first;
 		new_first->prev = head;
 	}
 	
 	
 	//Вырезает часть листа между head и entry(послений - включительно)
-	//list становится новым заголовком вырезанной части. 
+	//dlist становится новым заголовком вырезанной части. 
 	//Предыдущее его состояние теряется.
 	/**
-		* dlist_cut_position - cut a list into two
-		* @list: a _new list to add all removed entries
-		* @head: a list with entries
+		* dlist_cut_position - cut a dlist into two
+		* @dlist: a _new dlist to add all removed entries
+		* @head: a dlist with entries
 		* @entry: an entry within head, could be the head itself
-		*	and if so we won't cut the list
+		*	and if so we won't cut the dlist
 		*
 		* This helper moves the initial part of @head, up to and
-		* including @entry, from @head to @list. You should
-		* pass on @entry an element you know is on @head. @list
-		* should be an empty list or a list you do not care about
+		* including @entry, from @head to @dlist. You should
+		* pass on @entry an element you know is on @head. @dlist
+		* should be an empty dlist or a dlist you do not care about
 		* losing its data.
 		*
 	*/
-	static inline void dlist_cut_position(struct dlist_head *list,
+	static inline void dlist_cut_position(struct dlist_head *dlist,
 	struct dlist_head *head, struct dlist_head *entry)
 	{
 		if (dlist_empty(head))
@@ -307,17 +288,17 @@
 		(head->next != entry && head != entry))
 		return;
 		if (entry == head)
-		INIT_DLIST_HEAD(list);
+		INIT_dlist_HEAD(dlist);
 		else
-		__dlist_cut_position(list, head, entry);
+		__dlist_cut_position(dlist, head, entry);
 	}
 	
-	static inline void __dlist_splice(const struct dlist_head *list,
+	static inline void __dlist_splice(const struct dlist_head *dlist,
 	struct dlist_head *prev,
 	struct dlist_head *next)
 	{
-		struct dlist_head *first = list->next;
-		struct dlist_head *last = list->prev;
+		struct dlist_head *first = dlist->next;
+		struct dlist_head *last = dlist->prev;
 		
 		first->prev = prev;
 		prev->next = first;
@@ -327,70 +308,72 @@
 	}
 	
 	/**
-		* dlist_splice - join two lists, this is designed for stacks
-		* @list: the _new list to add.
-		* @head: the place to add it in the first list.
+		* dlist_splice - join two dlists, this is designed for stacks
+		* @dlist: the _new dlist to add.
+		* @head: the place to add it in the first dlist.
 	*/
-	//Соединяет два списка. Содержимое списка list оказывается  
+	//Соединяет два списка. Содержимое списка dlist оказывается  
 	// в начале списка head
-	static inline void dlist_splice(const struct dlist_head *list,
+	static inline void dlist_splice(const struct dlist_head *dlist,
 	struct dlist_head *head)
 	{
-		if (!dlist_empty(list))
-		__dlist_splice(list, head, head->next);
+		if (!dlist_empty(dlist))
+		__dlist_splice(dlist, head, head->next);
 	}
 	
 	/**
-		* dlist_splice_tail - join two lists, each list being a queue
-		* @list: the _new list to add.
-		* @head: the place to add it in the first list.
+		* dlist_splice_tail - join two dlists, each dlist being a queue
+		* @dlist: the _new dlist to add.
+		* @head: the place to add it in the first dlist.
 	*/
-	//Соединяет два списка. Содержимое списка list оказывается  
+	//Соединяет два списка. Содержимое списка dlist оказывается  
 	// в хвосте списка head
-	static inline void dlist_splice_tail(struct dlist_head *list,
+	static inline void dlist_splice_tail(struct dlist_head *dlist,
 	struct dlist_head *head)
 	{
-		if (!dlist_empty(list))
-		__dlist_splice(list, head->prev, head);
+		if (!dlist_empty(dlist))
+		__dlist_splice(dlist, head->prev, head);
 	}
 	
 	/**
-		* dlist_splice_init - join two lists and reinitialise the emptied list.
-		* @list: the _new list to add.
-		* @head: the place to add it in the first list.
+		* dlist_splice_init - join two dlists and reinitialise the emptied dlist.
+		* @dlist: the _new dlist to add.
+		* @head: the place to add it in the first dlist.
 		*
-		* The list at @list is reinitialised
+		* The dlist at @dlist is reinitialised
 	*/
-	//Соединяет два списка. Содержимое списка list оказывается  
-	// в начале списка head. Реинициализирует элемент list
-	static inline void dlist_splice_init(struct dlist_head *list,
+	//Соединяет два списка. Содержимое списка dlist оказывается  
+	// в начале списка head. Реинициализирует элемент dlist
+	static inline void dlist_splice_init(struct dlist_head *dlist,
 	struct dlist_head *head)
 	{
-		if (!dlist_empty(list)) {
-			__dlist_splice(list, head, head->next);
-			INIT_DLIST_HEAD(list);
+		if (!dlist_empty(dlist)) {
+			__dlist_splice(dlist, head, head->next);
+			INIT_dlist_HEAD(dlist);
 		}
 	}
 	
 	/**
-		* dlist_splice_tail_init - join two lists and reinitialise the emptied list
-		* @list: the _new list to add.
-		* @head: the place to add it in the first list.
+		* dlist_splice_tail_init - join two dlists and reinitialise the emptied dlist
+		* @dlist: the _new dlist to add.
+		* @head: the place to add it in the first dlist.
 		*
-		* Each of the lists is a queue.
-		* The list at @list is reinitialised
+		* Each of the dlists is a queue.
+		* The dlist at @dlist is reinitialised
 	*/
-	//Соединяет два списка. Содержимое списка list оказывается  
-	// в хвосте списка head. Реинициализирует элемент list
-	static inline void dlist_splice_tail_init(struct dlist_head *list,
+	//Соединяет два списка. Содержимое списка dlist оказывается  
+	// в хвосте списка head. Реинициализирует элемент dlist
+	static inline void dlist_splice_tail_init(struct dlist_head *dlist,
 	struct dlist_head *head)
 	{
-		if (!dlist_empty(list)) {
-			__dlist_splice(list, head->prev, head);
-			INIT_DLIST_HEAD(list);
+		if (!dlist_empty(dlist)) {
+			__dlist_splice(dlist, head->prev, head);
+			INIT_dlist_HEAD(dlist);
 		}
 	}
 	
+#define dlist_next(x) ((x)->next)
+
 	/**
 		* dlist_entry - get the struct for this entry
 		* @ptr:	the &struct dlist_head pointer.
@@ -402,12 +385,12 @@
 	container_of(ptr, type, member)
 	
 	/**
-		* dlist_first_entry - get the first element from a list
-		* @ptr:	the list head to take the element from.
+		* dlist_first_entry - get the first element from a dlist
+		* @ptr:	the dlist head to take the element from.
 		* @type:	the type of the struct this is embedded in.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Note, that list is expected to be not empty.
+		* Note, that dlist is expected to be not empty.
 	*/
 	//Расчитывает первую структуру, содержащуюся в списке ptr,
 	//или структуру, содержащую элемент списка следующий за ptr.
@@ -416,12 +399,12 @@
 	dlist_entry((ptr)->next, type, member)
 	
 	/**
-		* dlist_last_entry - get the last element from a list
-		* @ptr:	the list head to take the element from.
+		* dlist_last_entry - get the last element from a dlist
+		* @ptr:	the dlist head to take the element from.
 		* @type:	the type of the struct this is embedded in.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Note, that list is expected to be not empty.
+		* Note, that dlist is expected to be not empty.
 	*/
 	//Расчитывает последнюю структуру, содержащуюся в списке ptr,
 	//или структуру, содержащую элемент списка предшествующий ptr.
@@ -430,12 +413,12 @@
 	dlist_entry((ptr)->prev, type, member)
 	
 	/**
-		* dlist_first_entry_or_null - get the first element from a list
-		* @ptr:	the list head to take the element from.
+		* dlist_first_entry_or_null - get the first element from a dlist
+		* @ptr:	the dlist head to take the element from.
 		* @type:	the type of the struct this is embedded in.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Note that if the list is empty, it returns NULL.
+		* Note that if the dlist is empty, it returns NULL.
 	*/
 	//Расчитывает первую структуру, содержащуюся в списке ptr.
 	//возвращает NULL, если список пустой.
@@ -443,36 +426,36 @@
 	(!dlist_empty(ptr) ? dlist_first_entry(ptr, type, member) : NULL)
 	
 	/**
-		* dlist_next_entry - get the next element in list
+		* dlist_next_entry - get the next element in dlist
 		* @pos:	the type * to cursor
 		* @member:	the name of the dlist_head within the struct.
 	*/
 	//Расчитывает следующую структуру.
 	#define dlist_next_entry(pos, member) \
-	dlist_entry((pos)->member.next, typeof(*(pos)), member)
+	dlist_entry((pos)->member.next, decltypeof(*(pos)), member)
 	
 	/**
-		* dlist_prev_entry - get the prev element in list
+		* dlist_prev_entry - get the prev element in dlist
 		* @pos:	the type * to cursor
 		* @member:	the name of the dlist_head within the struct.
 	*/
 	//Расчитывает предыдущую структуру.
 	#define dlist_prev_entry(pos, member) \
-	dlist_entry((pos)->member.prev, typeof(*(pos)), member)
+	dlist_entry((pos)->member.prev, decltypeof(*(pos)), member)
 	
 	/**
-		* dlist_for_each	-	iterate over a list
+		* dlist_for_each	-	iterate over a dlist
 		* @pos:	the &struct dlist_head to use as a loop cursor.
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 	*/
 	//Цикл, выполняющийся по всем элементам списка.
 	#define dlist_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); pos = pos->next)
 	
 	/**
-		* dlist_for_each_prev	-	iterate over a list backwards
+		* dlist_for_each_prev	-	iterate over a dlist backwards
 		* @pos:	the &struct dlist_head to use as a loop cursor.
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 	*/
 	//Цикл, выполняющийся по всем элементам списка в обратном
 	//направлении
@@ -480,10 +463,10 @@
 	for (pos = (head)->prev; pos != (head); pos = pos->prev)
 	
 	/**
-		* dlist_for_each_safe - iterate over a list safe against removal of list entry
+		* dlist_for_each_safe - iterate over a dlist safe against removal of dlist entry
 		* @pos:	the &struct dlist_head to use as a loop cursor.
 		* @n:		another &struct dlist_head to use as temporary storage
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 	*/
 	//Цикл, выполняющийся по всем элементам списка.
 	//Безопасен при использовании операций удаления.
@@ -492,10 +475,10 @@
 	pos = n, n = pos->next)
 	
 	/**
-		* dlist_for_each_prev_safe - iterate over a list backwards safe against removal of list entry
+		* dlist_for_each_prev_safe - iterate over a dlist backwards safe against removal of dlist entry
 		* @pos:	the &struct dlist_head to use as a loop cursor.
 		* @n:		another &struct dlist_head to use as temporary storage
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 	*/
 	//Цикл, выполняющийся по всем элементам списка в обратном
 	//направлении
@@ -506,51 +489,49 @@
 	pos = n, n = pos->prev)
 	
 	/**
-		* dlist_for_each_entry	-	iterate over list of given type
+		* dlist_for_each_entry	-	iterate over dlist of given type
 		* @pos:	the type * to use as a loop cursor.
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 	*/
 	//Цикл, выполняющийся по всем структурам списка.
 	#define dlist_for_each_entry(pos, head, member)				\
-	for (pos = dlist_first_entry(head, typeof(*pos), member);	\
+	for (pos = dlist_first_entry(head, decltypeof(*pos), member);	\
 	&pos->member != (head);					\
 	pos = dlist_next_entry(pos, member))
-	#define dlist_foreach_entry(pos, head, member)	dlist_for_each_entry(pos, head, member)
-	
 	
 	/**
-		* dlist_for_each_entry_reverse - iterate backwards over list of given type.
+		* dlist_for_each_entry_reverse - iterate backwards over dlist of given type.
 		* @pos:	the type * to use as a loop cursor.
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 	*/
 	//Цикл, выполняющийся по всем структурам списка, движущийся в
 	//обратном направлении.
 	#define dlist_for_each_entry_reverse(pos, head, member)			\
-	for (pos = dlist_last_entry(head, typeof(*pos), member);		\
+	for (pos = dlist_last_entry(head, decltypeof(*pos), member);		\
 	&pos->member != (head); 					\
 	pos = dlist_prev_entry(pos, member))
 	
 	/**
 		* dlist_prepare_entry - prepare a pos entry for use in dlist_for_each_entry_continue()
 		* @pos:	the type * to use as a start point
-		* @head:	the head of the list
+		* @head:	the head of the dlist
 		* @member:	the name of the dlist_head within the struct.
 		*
 		* Prepares a pos entry for use as a start point in dlist_for_each_entry_continue().
 	*/
 	//Подготавливает pos для использования в качестве курсора  dlist_for_each_entry_continue
 	#define dlist_prepare_entry(pos, head, member) \
-	((pos) ? : dlist_entry(head, typeof(*pos), member))
+	((pos) ? : dlist_entry(head, decltypeof(*pos), member))
 	
 	/**
-		* dlist_for_each_entry_continue - continue iteration over list of given type
+		* dlist_for_each_entry_continue - continue iteration over dlist of given type
 		* @pos:	the type * to use as a loop cursor.
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Continue to iterate over list of given type, continuing after
+		* Continue to iterate over dlist of given type, continuing after
 		* the current position.
 	*/
 	//выполнять цикл, начиная со следующего элемента.
@@ -562,10 +543,10 @@
 	/**
 		* dlist_for_each_entry_continue_reverse - iterate backwards from the given point
 		* @pos:	the type * to use as a loop cursor.
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Start to iterate over list of given type backwards, continuing after
+		* Start to iterate over dlist of given type backwards, continuing after
 		* the current position.
 	*/
 	//выполнять цикл, начиная с предыдущего элемента в обратном направлении. 
@@ -575,12 +556,12 @@
 	pos = dlist_prev_entry(pos, member))
 	
 	/**
-		* dlist_for_each_entry_from - iterate over list of given type from the current point
+		* dlist_for_each_entry_from - iterate over dlist of given type from the current point
 		* @pos:	the type * to use as a loop cursor.
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Iterate over list of given type, continuing from current position.
+		* Iterate over dlist of given type, continuing from current position.
 	*/
 	//Начать с этой точки.
 	#define dlist_for_each_entry_from(pos, head, member) 			\
@@ -589,28 +570,28 @@
 	
 		
 	/**
-		* dlist_for_each_entry_safe - iterate over list of given type safe against removal of list entry
+		* dlist_for_each_entry_safe - iterate over dlist of given type safe against removal of dlist entry
 		* @pos:	the type * to use as a loop cursor.
 		* @n:		another type * to use as temporary storage
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 	*/
 	//Стоек к удалению.
 	#define dlist_for_each_entry_safe(pos, n, head, member)			\
-	for (pos = dlist_first_entry(head, typeof(*pos), member),	\
+	for (pos = dlist_first_entry(head, decltypeof(*pos), member),	\
 	n = dlist_next_entry(pos, member);			\
 	&pos->member != (head); 					\
 	pos = n, n = dlist_next_entry(n, member))
 	
 	/**
-		* dlist_for_each_entry_safe_continue - continue list iteration safe against removal
+		* dlist_for_each_entry_safe_continue - continue dlist iteration safe against removal
 		* @pos:	the type * to use as a loop cursor.
 		* @n:		another type * to use as temporary storage
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Iterate over list of given type, continuing after current point,
-		* safe against removal of list entry.
+		* Iterate over dlist of given type, continuing after current point,
+		* safe against removal of dlist entry.
 	*/
 	//Стоек к удалению, начинает со следующей позиции.
 	#define dlist_for_each_entry_safe_continue(pos, n, head, member) 		\
@@ -620,14 +601,14 @@
 	pos = n, n = dlist_next_entry(n, member))
 	
 	/**
-		* dlist_for_each_entry_safe_from - iterate over list from current point safe against removal
+		* dlist_for_each_entry_safe_from - iterate over dlist from current point safe against removal
 		* @pos:	the type * to use as a loop cursor.
 		* @n:		another type * to use as temporary storage
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Iterate over list of given type from current point, safe against
-		* removal of list entry.
+		* Iterate over dlist of given type from current point, safe against
+		* removal of dlist entry.
 	*/
 	#define dlist_for_each_entry_safe_from(pos, n, head, member) 			\
 	for (n = dlist_next_entry(pos, member);					\
@@ -635,17 +616,17 @@
 	pos = n, n = dlist_next_entry(n, member))
 	
 	/**
-		* dlist_for_each_entry_safe_reverse - iterate backwards over list safe against removal
+		* dlist_for_each_entry_safe_reverse - iterate backwards over dlist safe against removal
 		* @pos:	the type * to use as a loop cursor.
 		* @n:		another type * to use as temporary storage
-		* @head:	the head for your list.
+		* @head:	the head for your dlist.
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* Iterate backwards over list of given type, safe against removal
-		* of list entry.
+		* Iterate backwards over dlist of given type, safe against removal
+		* of dlist entry.
 	*/
 	#define dlist_for_each_entry_safe_reverse(pos, n, head, member)		\
-	for (pos = dlist_last_entry(head, typeof(*pos), member),		\
+	for (pos = dlist_last_entry(head, decltypeof(*pos), member),		\
 	n = dlist_prev_entry(pos, member);			\
 	&pos->member != (head); 					\
 	pos = n, n = dlist_prev_entry(n, member))
@@ -656,9 +637,9 @@
 		* @n:		temporary storage used in dlist_for_each_entry_safe
 		* @member:	the name of the dlist_head within the struct.
 		*
-		* dlist_safe_reset_next is not safe to use in general if the list may be
+		* dlist_safe_reset_next is not safe to use in general if the dlist may be
 		* modified concurrently (eg. the lock is dropped in the loop body). An
-		* exception to this is if the cursor element (pos) is pinned in the list,
+		* exception to this is if the cursor element (pos) is pinned in the dlist,
 		* and dlist_safe_reset_next is called after re-taking the lock and before
 		* completing the current iteration of the loop body.
 	*/
@@ -666,19 +647,7 @@
 	n = dlist_next_entry(pos, member)
 	
 
-	static inline struct dlist_head *dlist_next(const struct dlist_head *list) {
-	assert(!dlist_empty(list));
-	return list->next;
-}
-
-static inline struct dlist_head *dlist_prev(const struct dlist_head *list) {
-	assert(!dlist_empty(list));
-	return list->prev;
-}
 	
-
-#define dlist_first dlist_next
-#define dlist_last  dlist_prev	
 	
 	
 #endif

@@ -40,16 +40,16 @@ BasicWaiter()
 void WaitServer::waiter_put_to_list(Waiter* w)
 {
 	bits_clr(w->_trait, Waiter_DONE);
-	list_move_tail(&w->lst, &wait_list);
+	dlist_move_tail(&w->lst, &wait_list);
 };
 
 void WaitServer::timwaiter_put_to_list(TimWaiter* t)
 {
-	list_head* it;
-	list_for_each(it, &timer_list)
+	dlist_head* it;
+	dlist_for_each(it, &timer_list)
 	{
 		if (
-		((time_t)list_entry(it, TimWaiter, lst)->_timer.finish() - 
+		((time_t)dlist_entry(it, TimWaiter, lst)->_timer.finish() - 
 		(time_t)t->_timer.finish() > 0) 
 		|| 
 		it==&timer_list
@@ -58,7 +58,7 @@ void WaitServer::timwaiter_put_to_list(TimWaiter* t)
 	};
 	bits_clr(t->_trait, TimWaiter_DONE);
 
-	list_move_tail(&t->lst, &list_entry(it, TimWaiter, lst)->lst);
+	dlist_move_tail(&t->lst, &dlist_entry(it, TimWaiter, lst)->lst);
 };
 
 void WaitServer::postprocessing_timer(TimWaiter* t)
@@ -72,12 +72,12 @@ void WaitServer::postprocessing_timer(TimWaiter* t)
 
 	if (bits_mask(t->_trait, TimWaiter_AUTOMATIC_CREATED))
 		{
-			list_del(&t->lst); 	
+			dlist_del(&t->lst); 	
 			delete t;
 		}
 	else 
 		{
-			list_del(&t->lst); 	
+			dlist_del(&t->lst); 	
 			bits_set(t->_trait, TimWaiter_DONE);
 		};
 };
@@ -92,12 +92,12 @@ void WaitServer::postprocessing_waiter(Waiter* w)
 
 	if (bits_mask(w->_trait, Waiter_AUTOMATIC_CREATED))
 		{
-			list_del(&w->lst); 	
+			dlist_del(&w->lst); 	
 			delete w;
 		}
 	else 
 		{
-			list_del(&w->lst); 	
+			dlist_del(&w->lst); 	
 			bits_set(w->_trait, Waiter_DONE);
 		};
 };
@@ -105,9 +105,9 @@ void WaitServer::postprocessing_waiter(Waiter* w)
 void WaitServer::check_timers()
 {
 	//dpr("1");
-	if (list_empty(&timer_list)) return;
+	if (dlist_empty(&timer_list)) return;
 	//dpr("2");
-	TimWaiter* t = list_first_entry(&timer_list, TimWaiter, lst);
+	TimWaiter* t = dlist_first_entry(&timer_list, TimWaiter, lst);
 	if (t->_timer.check(millis())) 
 	{
 		t->_action(t->_action_data);
@@ -118,7 +118,7 @@ void WaitServer::check_timers()
 void WaitServer::check_waiters()
 {
 	Waiter *w, *tmp;
-	list_for_each_entry_safe(w, tmp, &wait_list, lst)
+	dlist_for_each_entry_safe(w, tmp, &wait_list, lst)
 	{
 		if (w->_condition(w->_condition_data)) 
 		{

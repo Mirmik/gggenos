@@ -9,11 +9,11 @@
 			if (!ready()) return;
 			automScheduler::process_autom* proc;
 
-			if(list_empty(&running_list)) return; 
+			if(dlist_empty(&running_list)) return; 
 			
 			proc = 
-			list_entry(running_list.next, automScheduler::process_autom, lst);
-			list_move_tail(&proc->lst, &running_list);
+			dlist_entry(running_list.next, automScheduler::process_autom, lst);
+			dlist_move_tail(&proc->lst, &running_list);
 		
 			current_schedee(proc);		
 			//stdout.printhex((uint16_t)proc);
@@ -29,14 +29,14 @@
 		{
 			automScheduler::process_autom* proc = reinterpret_cast<automScheduler::process_autom*>(sch);
 			bits_mask_assign(proc->status, RUN, STATEMASK);
-			list_move_tail(&proc->lst, &running_list);
+			dlist_move_tail(&proc->lst, &running_list);
 		};
 		
 		void automScheduler::schedee_set_wait(schedee* sch)
 		{
 			automScheduler::process_autom* proc = reinterpret_cast<automScheduler::process_autom*>(sch);
 			bits_mask_assign(proc->status, WAIT, STATEMASK);
-			list_move_tail(&proc->lst, &waiting_list);
+			dlist_move_tail(&proc->lst, &waiting_list);
 		};
 		
 		void automScheduler::schedee_set_zombie(schedee* sch)
@@ -53,7 +53,7 @@
 		void automScheduler::schedee_exit(schedee* sch)
 		{
 			automScheduler::process_autom* proc = reinterpret_cast<automScheduler::process_autom*>(sch);
-			list_del(&proc->lst);
+			dlist_del(&proc->lst);
 			delete proc;
 		};
 

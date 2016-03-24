@@ -1,7 +1,7 @@
 #ifndef GENOS_SCHEDULER_BASE
 #define GENOS_SCHEDULER_BASE
 	
-#include <genos/datastruct/list.h>
+#include <util/dlist.h>
 #include <genos/schedproc/schedee_base.h>
 #include "util/bits.h"
 #include "inttypes.h"

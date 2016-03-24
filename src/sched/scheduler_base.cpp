@@ -1,7 +1,7 @@
 
 #include "genos/debug/debug.h"
 #include "genos/schedproc/scheduler_base.h"
-#include <genos/datastruct/list.h>
+//#include <genos/datastruct/list.h>
 //#include "genos/datastruct/bits.h"
 //#include "genos/syscontext/syscontext.h"
 

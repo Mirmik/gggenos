@@ -1,7 +1,7 @@
 #ifndef GENOS_WAITSERVER
 #define GENOS_WAITSERVER
 
-#include "genos/datastruct/list.h"
+#include "util/dlist.h"
 #include "genos/sigslot/delegate.h"
 #include "defines/time_t.h"
 #include "genos/time/basic_timer.h"
@@ -24,7 +24,7 @@ constexpr uint8_t Waiter_NO_UNWAIT = 0x10;
 //В поле trait сохраняются опции, связанные с выполнением.
 struct BasicWaiter
 {
-	list_head lst;
+	dlist_head lst;
 	delegate<void, void*> _action;
 	void* _action_data;
 	uint8_t _trait;
@@ -57,8 +57,8 @@ struct TimWaiter : public BasicWaiter
 class WaitServer 
 {
 private:
-	list_head wait_list;
-	list_head timer_list;
+	dlist_head wait_list;
+	dlist_head timer_list;
 
 	void postprocessing_waiter(Waiter* w);
 	void postprocessing_timer(TimWaiter* t);

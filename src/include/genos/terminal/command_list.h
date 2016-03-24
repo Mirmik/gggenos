@@ -4,7 +4,7 @@
 	#define COMMAND_LIST_H
 
 	#include "util/stub.h"	
-	#include <genos/datastruct/list.h>
+	#include <util/dlist.h>
 	#include "genos/sigslot/delegate.h"
 	#include <string.h>
 	#include <genos/io/stream.h>
@@ -58,14 +58,14 @@
 		public:
 		delegate<void, int, char**> _d;
 		const char* _name;
-		list_head lst;
+		dlist_head lst;
 		public:
 		command_t(const char* name, delegate<void, int, char**> d) : _d(d), _name(name) {};
 	};
 	
 	class command_list{
 		
-		list_head list;
+		dlist_head list;
 
 		public:
 		command_list() : list() {};
@@ -73,14 +73,14 @@
 		void add(const char* str, delegate<void, int, char**> d) 
 		{
 			command_t* cmd = new command_t(str, d); 
-			list_add(&cmd->lst, &list);
+			dlist_add(&cmd->lst, &list);
 		};	
 
 		void add(const char* str, void(*f)(int,char**)) 
 		{
 			delegate<void, int, char**>d = f;
 			command_t* cmd = new command_t(str, d); 
-			list_add(&cmd->lst, &list);
+			dlist_add(&cmd->lst, &list);
 		};	
 
 
@@ -88,7 +88,7 @@
 		{
 			delegate<void, int, char**>d = (void(*)(int,char**)) f;
 			command_t* cmd = new command_t(str, d); 
-			list_add(&cmd->lst, &list);
+			dlist_add(&cmd->lst, &list);
 		};
 
 		template<typename T>
@@ -96,7 +96,7 @@
 		{
 			delegate<void, int, char**>d = delegate<void, int, char**>(a, ptr);
 			command_t* cmd = new command_t(str, d); 
-			list_add(&cmd->lst, &list);
+			dlist_add(&cmd->lst, &list);
 		};
 
 		template<typename T>
@@ -104,14 +104,14 @@
 		{
 			delegate<void, int, char**>d = delegate<void, int, char**>(a, (void (T::*)(int, char**))ptr);
 			command_t* cmd = new command_t(str, d); 
-			list_add(&cmd->lst, &list);
+			dlist_add(&cmd->lst, &list);
 		};
 
 		int find(const char* str,  delegate<void, int, char**> &outd) 
 		{
 			outd = (executed_t) do_nothing;
 			command_t* elem;
-			list_for_each_entry(elem, &list, lst)
+			dlist_for_each_entry(elem, &list, lst)
 			{
 				if (!strcmp(elem->_name, str)) 
 				{
@@ -134,13 +134,15 @@
 		int print_list(stream& strm)
 		{
 			command_t* elem;
-			list_for_each_entry(elem, &list, lst)
+			dlist_for_each_entry(elem, &list, lst)
 			{
 				strm.println(elem->_name);
 			};
 		};
 
 	};
+	
+	void sysexec(const char*);
 	
 extern command_list central_cmdlist;
 
