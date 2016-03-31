@@ -5,8 +5,8 @@
 	#include "defines/decltypeof.h" 
 	//#include "genos/datastruct/base_struct_def.h"
 	
-	#define dlist_POISON1 ((dlist_head*)-1)
-	#define dlist_POISON2 ((dlist_head*)-2)
+	//#define dlist_POISON1 ((dlist_head*)-1)
+	//#define dlist_POISON2 ((dlist_head*)-2)
 	
 	
 	class dlist_head{			
@@ -648,6 +648,10 @@
 	
 
 	
+
+	#define dlist_find_first(pos, head, member, condition, result) \
+	result = 0;														\
+	dlist_for_each_entry(pos, head, member) { if (condition) { result = 1; break; }; };
 	
 	
 #endif

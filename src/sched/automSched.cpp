@@ -39,6 +39,13 @@
 			dlist_move_tail(&proc->lst, &waiting_list);
 		};
 		
+		void automScheduler::schedee_set_wait_child(schedee* sch)
+		{
+			automScheduler::process_autom* proc = reinterpret_cast<automScheduler::process_autom*>(sch);
+			bits_mask_assign(proc->status, WAITCHILD, STATEMASK);
+			dlist_move_tail(&proc->lst, &child_wait_list);
+		};
+
 		void automScheduler::schedee_set_zombie(schedee* sch)
 		{
 			error_stub();
@@ -49,16 +56,29 @@
 			error_stub();
 		};
 		
+		//void automScheduler::child_end(schedee*)
+		//{
+		//}; 
 
 		void automScheduler::schedee_exit(schedee* sch)
 		{
+			process_autom* ptr;
+			process_autom* parent;
+
+			int result = 0;
 			automScheduler::process_autom* proc = reinterpret_cast<automScheduler::process_autom*>(sch);
+			if (proc->parent != 0)
+				{
+					parent = reinterpret_cast<automScheduler::process_autom*>(proc->parent);
+					if (bits_mask(parent->status, STATEMASK) == WAITCHILD) schedee_set_running(parent);
+				};
 			dlist_del(&proc->lst);
 			delete proc;
 		};
 
 		void automScheduler::schedee_init(automScheduler::process_autom* proc)
 		{
+			proc->parent = current_schedee();
 			schedee_set_running(proc);
 		};
 

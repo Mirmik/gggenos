@@ -18,6 +18,9 @@ constexpr uint8_t Waiter_DONE = 0x01;
 constexpr uint8_t Waiter_AUTOMATIC_CREATED = 0x08;
 constexpr uint8_t Waiter_NO_UNWAIT = 0x10;
 
+constexpr uint8_t NoneWaiter_DONE = 0x01;
+constexpr uint8_t NoneWaiter_AUTOMATIC_CREATED = 0x08;
+constexpr uint8_t NoneWaiter_NO_UNWAIT = 0x10;
 
 //Базовый класс вэйтеров. 
 //Поля action и action_data сохраняют данные о выполняемом действии.
@@ -39,7 +42,7 @@ struct Waiter : public BasicWaiter
 	delegate<bool, void*> _condition;
 	void* _condition_data;
 
-	Waiter (	);
+	Waiter ();
 	Waiter( delegate<void, void*> action, void* action_data,
 		delegate<bool, void*> condition, void* condition_data,
 		uint8_t trait);
@@ -49,8 +52,15 @@ struct TimWaiter : public BasicWaiter
 {
 	BasicTimer _timer;
 
-	TimWaiter (	);
+	TimWaiter ();
 	TimWaiter (	delegate<void, void*> action, void* action_data,
+		uint8_t trait );
+};
+
+struct NoneWaiter : public BasicWaiter
+{
+	NoneWaiter ();
+	NoneWaiter ( delegate<void, void*> action, void* action_data, 
 		uint8_t trait );
 };
 
@@ -59,13 +69,16 @@ class WaitServer
 private:
 	dlist_head wait_list;
 	dlist_head timer_list;
+	dlist_head none_list;
 
 	void postprocessing_waiter(Waiter* w);
 	void postprocessing_timer(TimWaiter* t);
+	void postprocessing_nonewaiter(NoneWaiter* nw);
 public:
 	
 	void waiter_put_to_list(Waiter* w);
 	void timwaiter_put_to_list(TimWaiter* t);
+	void nonewaiter_put_to_list(NoneWaiter* w);
 
 	void check();
 	void check_waiters();
@@ -73,10 +86,15 @@ public:
 
 	void unwait(Waiter* w);
 	void unwait(TimWaiter* t);
+	void unwait(NoneWaiter* t);
+
+	//void unwait(Waiter* w);
+	//void unwait(TimWaiter* t);
+	void force_end(NoneWaiter* t);
 
 	//utility:
 	void exec_on_u8flag(void(*f)(), uint8_t* flag);
-	void method_on_u8flag(void(*f)(), uint8_t* flag);
+	//void method_on_u8flag(void(*f)(), uint8_t* flag);
 
 	void schedee_on_u8flag(schedee* sch, uint8_t* flag);
 	TimWaiter* schedee_on_simple_timer(schedee* sch, time_t interval);
@@ -84,6 +102,8 @@ public:
 	TimWaiter* schedee_on_bias_timer(schedee* sch, TimWaiter* timer, time_t interval);
 
 	TimWaiter* delegate_on_simple_timer(delegate<void, void*>, void* data, TimWaiter* timer, time_t interval);
+
+	NoneWaiter* schedee_on_external(schedee* sch);
 
 	Waiter* schedee_on_stream_available(schedee* sch, stream* strm);
 

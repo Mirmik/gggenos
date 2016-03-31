@@ -37,6 +37,22 @@ TimWaiter::TimWaiter ( ) :
 BasicWaiter()
 {};
 
+NoneWaiter::NoneWaiter (	
+	delegate<void, void*> action, void* action_data,
+	uint8_t trait) :
+BasicWaiter(action, action_data, trait)
+{};
+
+NoneWaiter::NoneWaiter ( ) :
+BasicWaiter()
+{};
+
+void WaitServer::nonewaiter_put_to_list(NoneWaiter* w)
+{
+	bits_clr(w->_trait, NoneWaiter_DONE);
+	dlist_move_tail(&w->lst, &none_list);
+};
+
 void WaitServer::waiter_put_to_list(Waiter* w)
 {
 	bits_clr(w->_trait, Waiter_DONE);
@@ -102,6 +118,26 @@ void WaitServer::postprocessing_waiter(Waiter* w)
 		};
 };
 
+void WaitServer::postprocessing_nonewaiter(NoneWaiter* w)
+{
+	//stdout.println("HERE");
+//	if (bits_mask(w->_trait, NoneWaiter_NO_UNWAIT))
+//		{
+//			return;
+	//	};
+
+	if (bits_mask(w->_trait, NoneWaiter_AUTOMATIC_CREATED))
+		{
+			dlist_del(&w->lst); 	
+			delete w;
+		}
+	else 
+		{
+			dlist_del(&w->lst); 	
+			bits_set(w->_trait, NoneWaiter_DONE);
+		};
+};
+
 void WaitServer::check_timers()
 {
 	//dpr("1");
@@ -136,8 +172,17 @@ void WaitServer::check()
 
 void WaitServer::unwait(TimWaiter* t)
 {
+	if (bits_mask(t->_trait, Waiter_DONE)) return;
 	postprocessing_timer(t);
 };
+
+void WaitServer::force_end(NoneWaiter* w)
+{
+	if (bits_mask(w->_trait, Waiter_DONE)) return;
+	w->_action(w->_action_data);
+	postprocessing_nonewaiter(w);
+};
+
 
 bool check_u8_flag(void* ptr)
 {
@@ -206,6 +251,17 @@ Waiter* WaitServer::schedee_on_stream_available(schedee* sch, stream* strm)
 	waiter_put_to_list(w); 
 	return w;		
 };
+
+NoneWaiter* WaitServer::schedee_on_external(schedee* sch)
+{
+	delegate<void, void*> a = schedee_run;
+	void* ad = reinterpret_cast<void*>(sch);
+	uint8_t tr = NoneWaiter_AUTOMATIC_CREATED;
+	NoneWaiter* nw = new NoneWaiter(a, ad, tr);
+	nonewaiter_put_to_list(nw); 
+	return nw;		
+};
+
 
 TimWaiter* WaitServer::schedee_on_bias_timer(schedee* sch, TimWaiter* timer, time_t interval)
 {

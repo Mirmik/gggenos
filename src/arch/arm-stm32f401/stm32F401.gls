@@ -3,8 +3,8 @@
 module arch_stm32f401
 {
 	include = ["include", "march", "periph/inc"];
-	s_source = ["asm/startup_stm32f401xx.s"];
-	cc_source = ["asm/arch.c", "asm/diag.c", "asm/system_stm32f4xx.c"];
+	s_source = ["asm/startup_stm32f401xx.s", "asm/context_switch.S"];
+	cc_source = ["asm/arch.c", "asm/diag.c", "asm/system_stm32f4xx.c", "asm/context.c"];
 };
 
 
@@ -18,4 +18,11 @@ module stm32f401_procdelay
 {
 	include = ["include", "march", "periph/inc"];
 	cc_source = ["asm/delay.c"];
+};
+
+
+module stm32f407_ethernet
+{
+	include = ["include/stmeth", "include", "march", "periph/inc"];
+	cc_source = ["stmeth/stm32f4x7_eth.c"];
 };

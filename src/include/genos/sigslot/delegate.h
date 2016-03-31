@@ -32,7 +32,7 @@
 			//Возможный вариант рассмотрения метода,
 			//как функции, параметром которой предшествует указатель.
 			//Сомнительная переносимость.
-			//static constexpr uint8_t EXTFUNCTION =0x03;
+			static constexpr uint8_t EXTFUNCTION =0x03;
 			
 			using obj_t 		= AbstractDelegate*;			
 			using mtd_t 		= R (AbstractDelegate::*)(Args ...);
@@ -46,8 +46,8 @@
 			union{
 				mtd_t method;
 				struct{
-					fnc_t function;
-					fnc_t attributes;	
+					fnc_t function;	
+					fnc_t attributes;
 				};
 			};
 			
@@ -62,6 +62,13 @@
 				method = d.method;
 			};
 			
+			delegate(volatile const delegate& d)
+			{
+				object = d.object;
+				method = d.method;
+			};
+			
+
 			//Конструктор перемещения
 			delegate(delegate&& d)
 			{
@@ -107,6 +114,17 @@
 				object = pr.first;
 				method = pr.second;
 			};	
+
+
+			//BLACK_MAGIC
+			void set_ext(extfnc_t func, void* obj)
+			{
+				object = reinterpret_cast<obj_t>(obj);
+				attributes = 0;
+				function = reinterpret_cast<fnc_t>(func);
+			};
+			///////////////
+
 
 			//Конструктор. Делегат функции.
 			//@1 указатель на функцию.
@@ -167,6 +185,10 @@
 			//из двух реализаций. Оператору передаются параметры 
 			//в соответствии с сигнатурой делегата.
 			R operator()(Args ... arg) {
+
+				//debug_printhex_uint32((uint32_t)object);dln;
+				//while(1);
+
 				//uint8_t type = attributes ? METHOD : object ? EXTFUNCTION : FUNCTION;
 				uint8_t type = object ? METHOD : FUNCTION;
 				switch (type)
@@ -177,8 +199,9 @@
 					case FUNCTION: 
 					return function(arg ...);
 					
-					//case EXTFUNCTION: 
-					//return (reinterpret_cast<extfnc_t>(function))(object, arg ...);
+				//	case EXTFUNCTION: 
+					//debug_print("EXTFUNC");
+				//	return (reinterpret_cast<extfnc_t>(function))(object, arg ...);
 				};
 			};
 			

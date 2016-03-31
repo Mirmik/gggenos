@@ -49,6 +49,12 @@ void exit_autom()
 	current_scheduler()->schedee_exit(current_schedee());
 };
 
+void wait_child(schedee* sch)
+{
+	current_scheduler()->schedee_set_wait_child(current_schedee());	
+};
+
+
 
 
 

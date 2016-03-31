@@ -22,7 +22,7 @@ var AR = "arm-none-eabi-ar";
 var CFLAGS = "-std=gnu99 -mthumb -mcpu=cortex-m4 -static -fdata-sections -ffunction-sections -Wl,--gc-sections -O1";
 var CXXFLAGS = "-std=gnu++11 -mthumb -mcpu=cortex-m4 -static -fdata-sections -ffunction-sections -Wl,--gc-sections -O1";
 var LDFLAGS = CXXFLAGS;
-var global_include = ["src/include", "curprj", "src/compat/cxx/include"];
+var global_include = ["src/include", "curprj", "curprj/inc", "src/compat/cxx/include"];
 var global_mdepends = ["arch"];
 };
 

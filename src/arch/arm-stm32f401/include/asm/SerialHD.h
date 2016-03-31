@@ -23,17 +23,18 @@ class HardwareSerialHD
     void* callback_data = 0;
 
     char message[64];
-    char* message_ptr;
-    int message_len;
-    int mode = 0;
-    int count = 0;
+    volatile char* volatile message_ptr;
+    volatile int message_len;
+    volatile int mode = 0;
+    volatile int count = 0;
 
-    uint8_t rx_mode = 0;
+    volatile uint8_t rx_mode = 0;
 
-    char answer[32];
-    char* answer_ptr;
+    volatile char answer_buff[64];
+    volatile char* volatile answer = answer_buff;
+    volatile char* volatile answer_ptr;
     char answer_term;
-    uint8_t answer_len;
+    volatile uint8_t answer_len;
 
     GPIO_TypeDef* changedir_port;
     uint32_t changedir_pin;
@@ -53,16 +54,16 @@ class HardwareSerialHD
 
     void start_session();
     void restart_session();
-    void end_session(); 
+    void end_session()  volatile; 
 
-	void success_check_result();
-	void success_session();
-	void bad_session(uint8_t f);
+	void success_check_result() volatile;
+	void success_session()  volatile;
+	void bad_session(uint8_t f)  volatile;
 
 
-    void irq_txe();
-    void irq_tc();
-    void irq_rxne();
+    void irq_txe() volatile;
+    void irq_tc() volatile;
+    void irq_rxne() volatile;
 }; 
 
 

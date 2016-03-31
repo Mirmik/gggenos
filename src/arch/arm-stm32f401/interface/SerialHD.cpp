@@ -5,14 +5,15 @@
 #include "syscontext/syscontext.h"
 
 #define ERROR_REPEAT 40
-#define TIMEOUT_RS485 7
-#define BREAK_END 8
+#define TIMEOUT_RS485 2
+#define BREAK_END 20
 
 HardwareSerialHD::HardwareSerialHD(){};
 
 
 void HardwareSerialHD::break_end(void*)
 {
+	rx_mode = 0;
   //USART_ITConfig(USART6, USART_IT_RXNE, DISABLE);
   USART_ITConfig(USART6, USART_IT_TXE, DISABLE); 
   USART_ITConfig(USART6, USART_IT_TC, DISABLE);
@@ -25,11 +26,13 @@ void HardwareSerialHD::break_end(void*)
 
 void HardwareSerialHD::configure_session(char* _message, int len, char _answer_term)
 {
+	rx_mode = 0;
 USART_ITConfig(USART6, USART_IT_RXNE, ENABLE);
   memcpy(message, _message, len);
   message_len = len;
   answer_term = _answer_term;
   flag = 0;
+  answer = answer_buff; 
   answer_len = 0;
   answer_ptr = answer;
   message_ptr = message;  
@@ -40,7 +43,7 @@ USART_ITConfig(USART6, USART_IT_RXNE, ENABLE);
 
 void HardwareSerialHD::print_answer(void*)
 {
-	stdout.write(answer, answer_len);	
+	stdout.write((char*)answer, answer_len);	
 };
 
 void HardwareSerialHD::start_session()
@@ -63,6 +66,7 @@ void HardwareSerialHD::restart_session()
 {
   char drop = usart->DR;
   answer_len = 0;
+  answer = answer_buff;
   answer_ptr = answer;
   message_ptr = message;  
   rx_mode = 0;
@@ -74,9 +78,9 @@ void HardwareSerialHD::restart_session()
   //USART_ITConfig(USART6, USART_IT_RXNE, DISABLE);
 };
 
-void HardwareSerialHD::end_session()
+void HardwareSerialHD::end_session() volatile
 {
-  waitserver.unwait(&watchDog);
+  waitserver.unwait((TimWaiter*)&watchDog);
   
   //USART_ITConfig(USART6, USART_IT_RXNE, DISABLE); 
   USART_ITConfig(USART6, USART_IT_TXE, DISABLE); 
@@ -86,7 +90,7 @@ void HardwareSerialHD::end_session()
   gpio_port_set_mask(changedir_port, changedir_pin);
 };
 
-void HardwareSerialHD::success_check_result()
+void HardwareSerialHD::success_check_result() volatile
 {
 //debug_print("HERE");
 //debug_putchar(answer[2]);
@@ -114,37 +118,38 @@ void HardwareSerialHD::print_callback()
 	callback = delegate_mtd(this, &HardwareSerialHD::print_answer);
 };
 
-void HardwareSerialHD::success_session()
+void HardwareSerialHD::success_session() volatile
 {
-  callback(callback_data);
+//	debug_print(answer);
+  ((delegate<void,void*>)callback)(callback_data);
   flag = 1;
 };
 
-void HardwareSerialHD::bad_session(uint8_t f)
+void HardwareSerialHD::bad_session(uint8_t f) volatile
 {
   flag = f;
 };
 
 
 
-void HardwareSerialHD::irq_txe()
+void HardwareSerialHD::irq_txe() volatile
 {
 	usart->DR = *message_ptr++;
   	if (message_ptr - message >= message_len) USART_ITConfig(USART6, USART_IT_TXE, DISABLE); 
 };
 
-void HardwareSerialHD::irq_tc() 
+void HardwareSerialHD::irq_tc()  volatile
 {
 	gpio_port_clr_mask(changedir_port, changedir_pin);
 	rx_mode = 1;
-	waitserver.delegate_on_simple_timer(BreakEndDelegate, (void*)0, &watchDog, BREAK_END);
+	waitserver.delegate_on_simple_timer(BreakEndDelegate, (void*)0, (TimWaiter*)&watchDog, BREAK_END);
   	USART_ITConfig(USART6, USART_IT_TC, DISABLE);
-  	USART_ITConfig(USART6, USART_IT_RXNE, ENABLE);   
+  	//USART_ITConfig(USART6, USART_IT_RXNE, ENABLE);   
 };
 
-void HardwareSerialHD::irq_rxne()
+void HardwareSerialHD::irq_rxne() volatile
 {
-	char* ptr;
+	volatile char* ptr;
 	int zerolen;
 	volatile unsigned char c = usart->DR;
 	if (rx_mode == 0) return;
@@ -157,17 +162,25 @@ void HardwareSerialHD::irq_rxne()
     answer_len++;
     if (answer_len >= 50) {end_session(); success_check_result();};
     if (c == answer_term || mode == 1)
-    {count++; mode = 1;} 
-    if (count == 3) 
     {
-      ptr = answer;
-      while(*ptr == 0) {ptr++;};
-      zerolen = ptr - answer;
-      memmove(answer, ptr, answer_len -zerolen);
-      answer_len = answer_len - zerolen;
-      end_session();
-      success_check_result();
-    };
+    	++count; 
+    	mode = 1;
+    	do_nothing();
+      	//debug_print("here"); 
+    	if (count >= 3) 
+    	{
+      		//debug_printdec_uint32(ans_len);
+
+      		answer = answer_buff;
+      	//debug_print("here");
+      		ptr = answer;
+      		while(*ptr != 2) {ptr++;};
+      		answer = ptr;
+      		answer_len = answer_len - (answer - answer_buff);
+      		end_session();
+      		success_check_result();
+    	};
+	};
 };
 
 extern HardwareSerialHD SerialHD6;
@@ -182,8 +195,9 @@ void SerialHDDriver::broken_session()
 			debug_print("\n\r");
 	  		debug_print("flag:"); debug_printdec_int8(SerialHD6.flag); dln;
   			debug_print("mes:"); debug_write(SerialHD6.message,SerialHD6.message_len);dln; 
-  			debug_print("ans:"); debug_write(SerialHD6.answer,SerialHD6.answer_len);dln;
-  			debug_print("ans[2]:"); debug_putchar(SerialHD6.answer[2]);dln;
+  			debug_print("ans:"); debug_write((char*)SerialHD6.answer,SerialHD6.answer_len);dln;
+  			debug_print("dmp:"); debug_print_dump((void*)SerialHD6.answer,SerialHD6.answer_len);dln;
+  			debug_print("ans[2]:"); debug_putchar(((char*)SerialHD6.answer)[2]);dln;
 
 
 			debug_panic("SerialHDDriverErrorCount");
@@ -230,15 +244,14 @@ dlist_head  *ptr;
 		if (SerialHD6.flag != 1)
 		{
 			//debug_print("here");
-			state = 78;
-			msleep_autom(TIMEOUT_RS485);
+			state = 75;
 			return;
 		};
 
 
 		//debug_print("here");
 
-		memcpy(task->answer, SerialHD6.answer, SerialHD6.answer_len);
+		memcpy(task->answer, (char*)SerialHD6.answer, SerialHD6.answer_len);
 		task->answer_len = SerialHD6.answer_len;
 		task->flag = 1;
 		dlist_move_tail(dlist_next(&list), &list);
@@ -252,16 +265,36 @@ dlist_head  *ptr;
 
 		case 2:
 		//debug_print("here");
+			//debug_print("\n\r");
+	  		//debug_print("flag:"); debug_printdec_int8(SerialHD6.flag); dln;
+  			//debug_print("mes:"); debug_write(SerialHD6.message,SerialHD6.message_len);dln; 
+  			//debug_print("ans:"); debug_write((char*)SerialHD6.answer,SerialHD6.answer_len);dln;
+  			//debug_print("ans_len:"); debug_printdec_uint32(SerialHD6.answer_len);dln;
+  			//debug_print("ans[2]:"); debug_putchar(((char*)SerialHD6.answer)[2]);dln;
+  			//debug_print("dmp:"); debug_print_dump((void*)SerialHD6.answer,SerialHD6.answer_len);dln;
+  			
+
 		msleep_autom(TIMEOUT_RS485);
 		state = 0;
 		break;
 
-		case 78:
+		case 75:
+		gpio_port_set_mask(SerialHD6.changedir_port, SerialHD6.changedir_pin);
+		msleep_autom(1);
+		state = 76;			
+		break;
 
-		//debug_printdec_uint32(error_count);
+
+		case 76:
+		USART6->DR = 3;
+		msleep_autom(1);
+		state = 78;			
+		break;
+
+
+		case 78:
 		broken_session();
 		state =1;
-
 		break;
 
 	};
