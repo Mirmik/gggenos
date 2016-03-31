@@ -1,10 +1,9 @@
 
 
 module main {
-	cpp_source = ["main.cpp", "configure.cpp"];
-	cc_source = ["spi.c", "Ethernet/wizchip_conf.c", "Ethernet/W5500/w5500.c", "Ethernet/socket.c"];
+	cpp_source = ["main.cpp"];
 	
-	include = ["Ethernet", "Ethernet/W5500"];
+	include = ["hal"];
 
 	depends = ["main.gls"];
 	#defines = ["GENOS=222"];
@@ -35,13 +34,8 @@ application genos
 	["diag", "diag_impl", ""],
 	["genos_assert", ""],
 	["arch", "arch_stm32f401", ""],
-#	["stm32f401_periph", ""],
 	["local_periph", ""],
-	["stm32f401_sysclock", ""],
-	["stm32f401_procdelay", ""],
-	["sysclock_func", ""],
-#	["stm32f4x7_eth", ""],
-#	["stm32f4xx_hal", ""],
+	["stm32f407_hal_periph", ""],
 	];
 
 	target = "genos";
