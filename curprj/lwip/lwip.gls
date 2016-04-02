@@ -1,0 +1,10 @@
+
+var __cc_source = scantree_regex(__dirpath__(), "\.c$", "HIDE");
+var _cc_source = sublast_list(unvar(__cc_source), length(__dirpath__()) + 1);
+
+module lwip
+{
+	cc_source = _cc_source;
+	include = ["src/include", "src/include/ipv4", "port/stm32f4x7", "port/stm32f4x7/Standalone"];	
+	mdepends = ["stm32f4x7_eth"];
+};

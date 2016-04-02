@@ -1,0 +1,42 @@
+
+
+module main {
+	cpp_source = ["main.cpp"];
+	
+	include = ["hal"];
+
+	depends = ["main.gls"];
+	#defines = ["GENOS=222"];
+
+	mdepends = ["arch", "stm32f407_mbed"];
+};
+
+module local_periph {
+	cc_source = [
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_gpio.c",
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_usart.c",
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_rcc.c",
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_spi.c",
+	"../src/arch/arm-stm32f401/periph/src/misc.c",
+	];
+
+	depends = ["main.gls"];
+#	mdepends = ["arch"];
+};
+
+
+application genos 
+{
+	modules = 
+	[
+	["main", ""],
+	["debug_print_diag", ""],
+	["diag", "diag_impl", ""],
+	["genos_assert", ""],
+	["arch", "empty_arch", ""],
+	["stm32f407_mbed", ""]
+	];
+
+	target = "genos";
+};
+

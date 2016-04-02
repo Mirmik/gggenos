@@ -1,0 +1,5 @@
+module empty_arch
+{
+	cc_source = ["asm/arch.c"];
+	include = ["include"];
+};

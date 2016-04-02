@@ -68,6 +68,7 @@ class scheduler
 	*/
 	
 void exit_autom();
+void exit_subst();
 void wait_child(schedee*);
 
 #endif

@@ -7,40 +7,41 @@
 #include "misc.h" 
 #include "hal/gpio.h"
 
+
 void usart2_configure(uint32_t baud)
 {
 GPIO_InitTypeDef GPIO_InitStructure;
 USART_InitTypeDef USART_InitStructure;
 
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE); //for USART2, USART3, UART4 or UART5
-RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
-  GPIO_Init(GPIOA, &GPIO_InitStructure); 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
+	GPIO_Init(GPIOD, &GPIO_InitStructure); 
 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOA, &GPIO_InitStructure); 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOD, &GPIO_InitStructure); 
 
 
 /* Connect USART2 pins to AF */ 
-  // TX = PA2, RX = PA3
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
-  USART_InitStructure.USART_BaudRate = baud;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx |USART_Mode_Tx;
-  USART_Init(USART2, &USART_InitStructure);
+	// TX = PA2, RX = PA3
+ 	GPIO_PinAFConfig(GPIOD, GPIO_PinSource5, GPIO_AF_USART2);
+ 	GPIO_PinAFConfig(GPIOD, GPIO_PinSource6, GPIO_AF_USART2);
+	USART_InitStructure.USART_BaudRate = baud;
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;
+	USART_InitStructure.USART_Parity = USART_Parity_No;
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_Mode = USART_Mode_Rx |USART_Mode_Tx;
+	USART_Init(USART2, &USART_InitStructure);
 
-  USART_Cmd(USART2, ENABLE); // enable USART2
+	USART_Cmd(USART2, ENABLE); // enable USART2
 }
 
 void usart2_rx_interrupt_enable()
@@ -69,6 +70,8 @@ NVIC_InitTypeDef NVIC_InitStructure;
 };
 
 
+
+
 void leds_configure()
 {
 
@@ -86,59 +89,46 @@ GPIO_InitTypeDef  GPIO_InitStructure;
 
 };
 
-void sdio_configure()
-{
-  uint32_t tempreg;
-   
-  GPIO_InitTypeDef GPIO_InitStructure;
-   
-  // GPIOC and GPIOD Periph clock enable
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOD, ENABLE);
- 
-  //Initialize the pins
-  GPIO_PinAFConfig(GPIOC, GPIO_PinSource8, GPIO_AF_SDIO);
-  //GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_SDIO);
-  //GPIO_PinAFConfig(GPIOC, GPIO_PinSource10, GPIO_AF_SDIO);
-  //GPIO_PinAFConfig(GPIOC, GPIO_PinSource11, GPIO_AF_SDIO);
-  GPIO_PinAFConfig(GPIOC, GPIO_PinSource12, GPIO_AF_SDIO);
-  GPIO_PinAFConfig(GPIOD, GPIO_PinSource2, GPIO_AF_SDIO);
- 
-  // Configure PC.08, PC.09, PC.10, PC.11 pins: D0, D1, D2, D3 pins
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 ; // | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11; // раскомментируйте для 4ех битной шины
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_Init(GPIOC, &GPIO_InitStructure);
- 
-  // Configure PD.02 CMD line
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
-  GPIO_Init(GPIOD, &GPIO_InitStructure);
- 
-  // Configure PC.12 pin: CLK pin
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOC, &GPIO_InitStructure);
-   
-  //Enable the SDIO APB2 Clock
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SDIO, ENABLE);
- 
-  // Enable the DMA2 Clock
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
-   
-  //Инициализируем SDIO (с начальным тактированием  HW_Flow Disabled, Rising Clock Edge, Disable CLK ByPass, Bus Width=0, Power save Disable
-  SDIO->CLKCR=tempreg;
- 
-  // Включаем SDIO
-  SDIO->POWER = 0x03;
-};
 
 void project_configure()
 {
+  //FLASH_Unlock();
+//  usart6_configure(38400);
   usart2_configure(9600);
+	
+//  tim10_configure(); //ONE_PULSE_GENERATOR
+//  tim5_configure(); //ENCODER X
+//	tim4_configure(); //GENERATOR X
+//  motor_pins_configure();
   leds_configure();
-  sdio_configure();
 };
 
+#include "genos/debug/debug.h"
+#include "asm/Serial.h"
+#include "asm/SerialHD.h"
+extern HardwareSerial Serial2;
 
 
+
+
+
+
+extern "C" void USART2_IRQHandler();
+void USART2_IRQHandler()
+{
+  //Действия по опустошению регистра передачи.
+  if (USART_GetITStatus(USART2, USART_IT_TXE) == SET)
+    {
+        Serial2.irq_txe();
+        return;
+    };
+
+if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
+    {
+        Serial2.irq_rxne();
+        return;
+    };
+
+
+  debug_panic("USART_DEBUG_PANIC2");
+};

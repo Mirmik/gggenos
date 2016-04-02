@@ -2,11 +2,17 @@
 
 module arch_stm32f401
 {
-	include = ["include", "march", "periph/inc"];
+	include = ["include", "march", "periph/inc", "device_hal"];
 	s_source = ["asm/startup_stm32f401xx.s", "asm/context_switch.S"];
-	cc_source = ["asm/arch.c", "asm/diag.c", "asm/system_stm32f4xx.c", "asm/context.c"];
+	cc_source = ["asm/arch.c", "asm/diag.c", "asm/system_stm32f4xx.c"];
 };
 
+module stm32f4xx_mx_context
+{
+	cc_source = ["asm/context.c"];	
+	s_source = ["asm/context_switch.S"];
+	
+};
 
 module stm32f401_sysclock
 {

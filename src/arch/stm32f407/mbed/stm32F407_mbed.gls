@@ -1,0 +1,10 @@
+
+var __cc_source = scantree_regex(__dirpath__(), "\.c$", "HIDE");
+var _cc_source = sublast_list(unvar(__cc_source), length(__dirpath__()) + 1);
+
+module stm32f407_mbed
+{
+	include = ["inc"];
+	cc_source = _cc_source;
+}
+

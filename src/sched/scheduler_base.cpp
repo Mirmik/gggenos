@@ -49,6 +49,15 @@ void exit_autom()
 	current_scheduler()->schedee_exit(current_schedee());
 };
 
+#include "kernel/context.h"
+extern context schedule_context;
+void exit_subst()
+{
+	current_scheduler()->schedee_exit(current_schedee());
+	context_switch(current_context_get(), &schedule_context);
+};
+
+
 void wait_child(schedee* sch)
 {
 	current_scheduler()->schedee_set_wait_child(current_schedee());	

@@ -96,7 +96,7 @@ public:
 	void exec_on_u8flag(void(*f)(), uint8_t* flag);
 	//void method_on_u8flag(void(*f)(), uint8_t* flag);
 
-	void schedee_on_u8flag(schedee* sch, uint8_t* flag);
+	Waiter* schedee_on_u8flag(schedee* sch, uint8_t* flag);
 	TimWaiter* schedee_on_simple_timer(schedee* sch, time_t interval);
 	TimWaiter* schedee_on_simple_timer(schedee* sch, TimWaiter* timer, time_t interval);
 	TimWaiter* schedee_on_bias_timer(schedee* sch, TimWaiter* timer, time_t interval);
@@ -119,5 +119,11 @@ Waiter* wait_autom(uint8_t* flag);
 Waiter* wait_autom(stream* strm);
 TimWaiter* msleep_autom(long int a);
 TimWaiter* msleep_autom_bias(TimWaiter* timer, long int a);
+
+TimWaiter* msleep_subst(long int a);
+TimWaiter* msleep_subst_bias(TimWaiter* timer, long int a);
+Waiter* wait_subst(uint8_t* flag);
+Waiter* wait_subst(stream* strm);
+
 
 #endif

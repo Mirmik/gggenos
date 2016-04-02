@@ -70,6 +70,15 @@ fn scantree_regex(path, prot, hide){
 	return toexec;
 };
 
+fn scandir_regex(path, prot, hide){
+	var toexec = [];
+	var dirpath = path + '/';
+	foreach(f, listdir(unvar(dirpath)))
+	{
+		if (length(regex(unvar(prot), dirpath + unvar(unvar(f)))) != 0) toexec = toexec + [dirpath + unvar(unvar(f))];  
+	};
+	return toexec;
+};
 
 fn scantree_isdir(path, hide){
 	var ret = [];

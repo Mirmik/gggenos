@@ -1,3 +1,5 @@
+#include "genos/io/stream.h"
+#include "genos/decoration.h"
 
 const char* machine_name = "input"; 
 

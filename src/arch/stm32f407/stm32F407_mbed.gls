@@ -1,0 +1,7 @@
+
+
+module arch_stm32f407_mbed
+{
+	cc_source = ["asm/empty.c"];
+	include = ["cmsis"];	
+};

@@ -2,9 +2,12 @@
 #include "util/bits.h"
 #include "genos/time/sysclock.h"
 #include "utilxx/stub.h"
+#include "kernel/global_schedule.h"
 
 #include "syscontext/syscontext.h"
 WaitServer waitserver;
+
+
 
 BasicWaiter::BasicWaiter() 	: 
 _action(tg_error_stub<void, void*>), _action_data(nullptr), 
@@ -273,7 +276,7 @@ TimWaiter* WaitServer::schedee_on_bias_timer(schedee* sch, TimWaiter* timer, tim
 	return timer;		
 };
 
-void WaitServer::schedee_on_u8flag(schedee* sch, uint8_t* flag)
+Waiter* WaitServer::schedee_on_u8flag(schedee* sch, uint8_t* flag)
 {
 	delegate<void, void*> a = schedee_run;
 	void* ad = reinterpret_cast<void*>(sch);
@@ -282,12 +285,13 @@ void WaitServer::schedee_on_u8flag(schedee* sch, uint8_t* flag)
 	uint8_t tr = Waiter_AUTOMATIC_CREATED;
 	Waiter* w = new Waiter(a, ad, c, cd, tr);
 	waiter_put_to_list(w); 		
+	return w;
 };
 
 Waiter* wait_autom(uint8_t* flag)
 {
 	current_scheduler()->schedee_set_wait(current_schedee()); 
-	waitserver.schedee_on_u8flag(current_schedee(), flag); 
+	return waitserver.schedee_on_u8flag(current_schedee(), flag); 
 }
 
 Waiter* wait_autom(stream* strm)
@@ -306,4 +310,40 @@ TimWaiter* msleep_autom_bias(TimWaiter* timer, long int a)
 { 
 	current_scheduler()->schedee_set_wait(current_schedee()); 
 	return waitserver.schedee_on_bias_timer(current_schedee(), timer, a); 
+}
+
+#include "kernel/context.h"
+extern context schedule_context;
+TimWaiter* msleep_subst(long int a) 
+{ 
+//	debug_print("msleep");
+	current_scheduler()->schedee_set_wait(current_schedee());
+	TimWaiter* temp_timer = waitserver.schedee_on_simple_timer(current_schedee(), a);
+	context_switch(current_context_get(), &schedule_context);
+	return temp_timer; 
+}
+
+TimWaiter* msleep_subst_bias(TimWaiter* timer, long int a) 
+{ 
+//	debug_print("msleep");
+	current_scheduler()->schedee_set_wait(current_schedee());
+	TimWaiter* temp_timer = waitserver.schedee_on_bias_timer(current_schedee(), timer, a);
+	context_switch(current_context_get(), &schedule_context);
+	return temp_timer; 
+}
+
+Waiter* wait_subst(stream* strm)
+{
+	current_scheduler()->schedee_set_wait(current_schedee()); 
+	Waiter* waiter = waitserver.schedee_on_stream_available(current_schedee(), strm);
+	context_switch(current_context_get(), &schedule_context);
+	return waiter;
+}
+
+Waiter* wait_subst(uint8_t* flag)
+{
+	current_scheduler()->schedee_set_wait(current_schedee()); 
+	Waiter* waiter = waitserver.schedee_on_u8flag(current_schedee(), flag); 
+	context_switch(current_context_get(), &schedule_context);
+	return waiter;	
 }

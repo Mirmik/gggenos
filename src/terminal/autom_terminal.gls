@@ -3,3 +3,9 @@ module automTerminal {
 	cpp_source = ["autom_terminal.cpp"];
 
 };
+
+module automTerminal_subst {
+	
+	cpp_source = ["autom_terminal_subst.cpp"];
+
+};

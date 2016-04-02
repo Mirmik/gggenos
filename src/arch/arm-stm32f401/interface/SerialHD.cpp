@@ -203,101 +203,73 @@ void SerialHDDriver::broken_session()
 			debug_panic("SerialHDDriverErrorCount");
 		};
 	SerialHD6.restart_session();
-	wait_autom(&SerialHD6.flag);	
+	wait_subst(&SerialHD6.flag);	
 };
 
 #include "genos/debug/debug.h"
 void SerialHDDriver::exec()
 {
 dlist_head  *ptr;
-	switch(state)
-	{
-		case 0:
-		error_count = 0;
-			
-		if (dlist_empty(&list)) return;
+
+while(1)
+{
+
+	search:
+
+	while (dlist_empty(&list)) msleep_subst(1);;
 		
-		ptr = list.next;
-		task = dlist_entry(ptr, Task, list);
+	ptr = list.next;
+	task = dlist_entry(ptr, Task, list);
 
 
-		if (task->flag == 0)
-		{
+	if (task->flag == 0)
+	{
 		//debug_print("task:"); debug_printhex_uint32((uint32_t) task);dln;
-			SerialHD6.configure_session(task->message , task->message_len, 3);
-			SerialHD6.callback = task->callback;
-			SerialHD6.start_session();
-			state = 1;
-			wait_autom(&SerialHD6.flag);
-			return;
-		}
-		else {dlist_move_tail(dlist_next(&list), &list); return;}
+		SerialHD6.configure_session(task->message , task->message_len, 3);
+		SerialHD6.callback = task->callback;
+		SerialHD6.start_session();
+		wait_subst(&SerialHD6.flag);
+		goto start;
+	}
+	else 
+	{
+		dlist_move_tail(dlist_next(&list), &list); 
+		msleep_subst(1);
+		goto search;
+	};
 
-		debug_panic("???");
-		break;
+	debug_panic("???");
 
-		case 1:
-
-		//debug_printhex_uint32(SerialHD6.flag);
-		//debug_write(SerialHD6.answer, SerialHD6.answer_len);
-			//debug_print("flag:");debug_printdec_uint32(SerialHD6.flag);
-		if (SerialHD6.flag != 1)
+	start:
+	if (SerialHD6.flag != 1)
 		{
-			//debug_print("here");
-			state = 75;
-			return;
+			goto error;
 		};
-
-
-		//debug_print("here");
 
 		memcpy(task->answer, (char*)SerialHD6.answer, SerialHD6.answer_len);
 		task->answer_len = SerialHD6.answer_len;
 		task->flag = 1;
 		dlist_move_tail(dlist_next(&list), &list);
-		state = 2;
-		 if (error_count > max_error) max_error = error_count; 
+		if (error_count > max_error) max_error = error_count; 
 		error_count = 0;
-		
-		//debug_print("flag:");
-		//debug_printdec_uint32();
-		break;
 
-		case 2:
-		//debug_print("here");
-			//debug_print("\n\r");
-	  		//debug_print("flag:"); debug_printdec_int8(SerialHD6.flag); dln;
-  			//debug_print("mes:"); debug_write(SerialHD6.message,SerialHD6.message_len);dln; 
-  			//debug_print("ans:"); debug_write((char*)SerialHD6.answer,SerialHD6.answer_len);dln;
-  			//debug_print("ans_len:"); debug_printdec_uint32(SerialHD6.answer_len);dln;
-  			//debug_print("ans[2]:"); debug_putchar(((char*)SerialHD6.answer)[2]);dln;
-  			//debug_print("dmp:"); debug_print_dump((void*)SerialHD6.answer,SerialHD6.answer_len);dln;
-  			
+//debug_print("2");		
+		msleep_subst(TIMEOUT_RS485);
+//debug_print("1");
 
-		msleep_autom(TIMEOUT_RS485);
-		state = 0;
-		break;
+		goto search;
 
-		case 75:
+	error:
 		gpio_port_set_mask(SerialHD6.changedir_port, SerialHD6.changedir_pin);
-		msleep_autom(1);
-		state = 76;			
-		break;
-
-
-		case 76:
+		msleep_subst(1);
 		USART6->DR = 3;
-		msleep_autom(1);
-		state = 78;			
-		break;
-
-
-		case 78:
+		msleep_subst(1);
 		broken_session();
-		state =1;
-		break;
+		goto start;		
 
-	};
+
+	debug_panic("???");	
+};
 };
 
 

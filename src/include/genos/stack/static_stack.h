@@ -12,7 +12,7 @@
 		public:
 		//Возврат указателя на последний байт стека (стек растет 
 		//от старших байт к младшим).  
-		void* top(){return (reinterpret_cast<void*>(this + 1) - 1);};
+		void* top(){return (reinterpret_cast<char*>(this + 1) - 1);};
 		
 		protected:
 		uint8_t size[N];

@@ -1,3 +1,0 @@
-module automSched {
-	cpp_source = ["automSched.cpp", "scheduler_base.cpp"];
-};

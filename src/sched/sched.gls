@@ -7,5 +7,10 @@ module sched
 
 module sched_little
 {
-	cpp_source = ["schedproc.cpp"];
+	cpp_source = ["schedproc.cpp", "scheduler_base.cpp"];
+};
+
+module switchSched
+{
+	cpp_source = ["switchSched.cpp"];
 };

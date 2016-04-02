@@ -1,0 +1,5 @@
+module stm32f4x7_eth
+{
+	cc_source = ["src/stm32f4x7_eth.c", "src/stm32f4x7_eth_bsp.c"];
+	include = ["inc"];
+};
