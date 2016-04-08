@@ -1,6 +1,7 @@
 #ifndef GENOS_UTIL_RING
 #define GENOS_UTIL_RING
 
+/*
 #define ring_next(index, len)	\
 ({								\
 	(index + 1) % len;			\
@@ -47,6 +48,6 @@
 	tail = ring_next(tail, len);						\
 	c;													\
 })
-
+*/
 
 #endif

@@ -96,7 +96,7 @@ void WaitServer::postprocessing_timer(TimWaiter* t)
 		}
 	else 
 		{
-			dlist_del(&t->lst); 	
+			dlist_del_init(&t->lst); 	
 			bits_set(t->_trait, TimWaiter_DONE);
 		};
 };
@@ -116,7 +116,7 @@ void WaitServer::postprocessing_waiter(Waiter* w)
 		}
 	else 
 		{
-			dlist_del(&w->lst); 	
+			dlist_del_init(&w->lst); 	
 			bits_set(w->_trait, Waiter_DONE);
 		};
 };
@@ -233,14 +233,14 @@ TimWaiter* WaitServer::schedee_on_simple_timer(schedee* sch, time_t interval)
 	return t;		
 };
 
-TimWaiter* WaitServer::delegate_on_simple_timer(delegate<void, void*> d, void* data, TimWaiter* timer, time_t interval)
+TimWaiter* WaitServer::delegate_on_simple_timer(delegate<void, void*> d, void* data, TimWaiter* timwaiter, time_t interval)
 {
-	timer->_action = d;
-	timer->_action_data = data;
-	timer->_trait = 0;
-	timer->_timer.set(millis(), interval);
-	timwaiter_put_to_list(timer); 
-	return timer;		
+	timwaiter->_action = d;
+	timwaiter->_action_data = data;
+	timwaiter->_trait = 0;
+	timwaiter->_timer.set(millis(), interval);
+	timwaiter_put_to_list(timwaiter); 
+	return timwaiter;		
 };
 
 Waiter* WaitServer::schedee_on_stream_available(schedee* sch, stream* strm)

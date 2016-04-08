@@ -71,6 +71,8 @@ void debug_putchar(char c);
 //Вывод дампа памяти. size - размер в байтах.
  void debug_print_dump(void* address, uint32_t size);
  void debug_print_dump_ascii(void* address, uint32_t size);
+ 
+ void debug_print_dump_simple(void* address, uint32_t size);
 
 //Вывод логического значения.
  void debug_print_bool(uint8_t b);

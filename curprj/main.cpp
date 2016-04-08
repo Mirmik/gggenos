@@ -13,7 +13,7 @@
 #include "configure.h"
 
 #include "genos/kernel/waitserver.h"
-#include "asm/Serial.h"
+//#include "asm/Serial.h"
 #include "genos/terminal/command_list.h"
 #include "syscontext/syscontext.h"
 
@@ -24,8 +24,10 @@
 #include "genos/terminal/autom_terminal.h"
 
 #include "genos/decoration.h"
-#include "netconf.h"
-#include "httpd.h"
+
+#include "util/meslst.h"
+
+#include "genos/io/Serial.h"
 
 volatile uint32_t LocalTime = 0;
 context schedule_context;
@@ -45,7 +47,13 @@ void emergency_stop()
 context cntxt1, cntxt2, cntxt3; 
 static_stack<500> stck2, stck3;
 
-HardwareSerial Serial2;
+//HardwareSerial Serial2;
+
+
+Serial_t Serial2;
+AdapterSerial ASerial2;
+
+
 syscontext syscntxt;
 switchScheduler switchSched;
 automTerminal automTerm;
@@ -54,7 +62,8 @@ void* operator new(size_t, void* ptr) {return ptr;};
 void global_constructor_stub()
 {
 	new(&waitserver) WaitServer;
-	new(&Serial2) HardwareSerial;
+	new(&Serial2) Serial_t;
+	new(&ASerial2) AdapterSerial;
 	new(&syscntxt) syscontext;
 	new(&central_cmdlist) command_list;
 	new(&switchSched) switchScheduler;
@@ -79,18 +88,6 @@ volatile uint32_t m;
 //     while(1)
  // {
   	m = millis();
-  	//debug_printdec_uint32(m);dln;
-	  /* check if any packet received */
-	   if (ETH_CheckFrameReceived())
-	   {
-	   	debug_print("Frame?");
-	  /* process received ethernet packet */
-	     LwIP_Pkt_Handle();
-	   }
-	  /* handle periodic timers for LwIP */
-	   //LwIP_Periodic_Handle(m);
-//  context_switch(current_context_get(), &schedule_context);
- // };
 };
 
 
@@ -100,6 +97,7 @@ while(1)
 	{
 	gpio_port_tgl_pin(GPIOD, 15);
 	msleep_subst(1000);
+	USART6->DR = 'H';
 	};
 };
 
@@ -114,31 +112,32 @@ void setup(){
 	(current_syscontext()->__stdout).direct(&Serial2);
 	(current_syscontext()->__stdin).direct(&Serial2);
 
-	Serial2.usart = USART2;
 	gpio_port_set_pin(GPIOD, 12);
 
+	usart2_interrupt_enable();
 
-	uint16_t value = ETH_BSP_Config();
+	dprln("DebugPrint");
+	
+	ASerial2.usart = USART2;
+	Serial2.init(&ASerial2);
 
-	debug_printhex_uint8(value);
+	meslst ml;
 
-	LwIP_Init();
+	//delay(10);
+	//stdout.print("Allgood");
+	//delay(100);
 
-    httpd_init();
-
-    //delay(10);
-    //debug_printhex_uint8(millis());
-	//debug_print("lwip_inited");
-
-	machine_name = "eth_winner";
+	//stdout.print("Deletegood");
+	
+//	while(1);
 
 	switchSched.registry(task2);
 	switchSched.registry(task1);
 //	switchSched.registry(server);
 	switchSched.registry(&automTerm, &automTerminal::exec);
 
-	usart2_interrupt_enable();
-	usart2_rx_interrupt_enable();
+	
+	USART6->DR = 'H';
 };
 
 
@@ -148,22 +147,6 @@ int main()
 	global_schedule();
 };
 
-extern "C" void EXTI15_10_IRQHandler(void); 
-void EXTI15_10_IRQHandler(void)
-{
-	debug_print("irq");
-  if(EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET)
-  {
-    Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
-    /* Clear interrupt pending bit */
-    EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
-  }
-}
-
-extern "C" void ETH_IRQHandler()
-{
-	debug_panic("ETH_IRQ");
-};
 
 void global_schedule()
 {

@@ -51,7 +51,7 @@ void usart2_rx_interrupt_enable()
 
 void usart2_interrupt_enable()
 {
-NVIC_InitTypeDef NVIC_InitStructure;
+  NVIC_InitTypeDef NVIC_InitStructure;
   NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
@@ -68,6 +68,56 @@ NVIC_InitTypeDef NVIC_InitStructure;
   NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;
   NVIC_Init(&NVIC_InitStructure);
 };
+
+
+
+
+
+void usart6_configure(uint32_t baud)
+{
+GPIO_InitTypeDef GPIO_InitStructure;
+USART_InitTypeDef USART_InitStructure;
+
+RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART6, ENABLE); //for USART2, USART3, UART4 or UART5
+RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
+  GPIO_Init(GPIOC, &GPIO_InitStructure); 
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOC, &GPIO_InitStructure); 
+
+
+/* Connect USART2 pins to AF */ 
+  // TX = PA2, RX = PA3
+  GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_USART6);
+  GPIO_PinAFConfig(GPIOC, GPIO_PinSource7, GPIO_AF_USART6);
+  USART_InitStructure.USART_BaudRate = baud;
+  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+  USART_InitStructure.USART_StopBits = USART_StopBits_1;
+  USART_InitStructure.USART_Parity = USART_Parity_No;
+  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+  USART_InitStructure.USART_Mode = USART_Mode_Rx |USART_Mode_Tx;
+  USART_Init(USART6, &USART_InitStructure);
+
+  USART_Cmd(USART6, ENABLE); // enable USART2
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -93,7 +143,7 @@ GPIO_InitTypeDef  GPIO_InitStructure;
 void project_configure()
 {
   //FLASH_Unlock();
-//  usart6_configure(38400);
+  usart6_configure(9600);
   usart2_configure(9600);
 	
 //  tim10_configure(); //ONE_PULSE_GENERATOR
@@ -104,29 +154,34 @@ void project_configure()
 };
 
 #include "genos/debug/debug.h"
+//#include "asm/Serial.h"
+//#include "asm/SerialHD.h"
+//extern HardwareSerial Serial2;
+
+
+
 #include "asm/Serial.h"
-#include "asm/SerialHD.h"
-extern HardwareSerial Serial2;
 
-
-
-
-
-
+extern AdapterSerial ASerial2;
 extern "C" void USART2_IRQHandler();
 void USART2_IRQHandler()
 {
   //Действия по опустошению регистра передачи.
   if (USART_GetITStatus(USART2, USART_IT_TXE) == SET)
     {
-        Serial2.irq_txe();
+        ASerial2.sended();
+        //debug_panic("irq_txe");
         return;
     };
 
 if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
     {
-        Serial2.irq_rxne();
-        return;
+          //debug_panic("irq_rxne");
+          
+          char c = ASerial2.usart->DR;
+          if (!ASerial2.correct_receive()) return;
+          ASerial2.recv(c);
+          return;
     };
 
 

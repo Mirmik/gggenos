@@ -10,10 +10,11 @@
 #define __PLATFORM_ARCH "stm32f401"
 
 #include "stm32f4xx.h"
-typedef unsigned int ipl_t;
+typedef unsigned int sreg_t;
 
-#define __arch_atomic_temp(temp) ipl_t temp; __asm__ __volatile__ ( "mrs %0, PRIMASK;\n\t" "cpsid i \n\t" : "=r"(temp));
-#define __arch_deatomic_temp(temp)  __asm__ __volatile__ ( "msr PRIMASK, %0;\n\t" : : "r"(temp) );
+
+#define __arch_atomic_temp(temp) __asm__ __volatile__ ( "mrs %0, PRIMASK;\n\t" "cpsid i \n\t" : "=r"(temp));
+#define __arch_deatomic_temp(temp) __asm__ __volatile__ ( "msr PRIMASK, %0;\n\t" : : "r"(temp) );
 
 #define __arch_atomic() __asm__ __volatile__ ( "cpsid i \n\t" );
 #define __arch_deatomic() __asm__ __volatile__ ( "cpsie i \n\t" );

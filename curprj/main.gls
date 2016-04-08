@@ -2,13 +2,13 @@
 
 module main {
 	cpp_source = ["main.cpp", "configure.cpp"];
-	cc_source = ["stm32f4x7_eth_bsp.c", "netconf.c", "httpd.c", "httpd_cgi_ssi.c", "stm32f4_discovery.c", "fs.c"];
+	#cc_source = [];
 
 
 	depends = ["main.gls"];
 	#defines = ["GENOS=222"];
 
-	mdepends = ["arch", "stm32f4x7_eth", "lwip"];
+	mdepends = ["arch", "stm32f4x7_eth"];
 };
 
 module local_periph {
@@ -33,6 +33,7 @@ application genos
 	[
 	["main", ""],
 	["debug_print_diag", ""],
+	["debug_printxx", ""],
 	["diag", "diag_impl", ""],
 	["genos_assert", ""],
 	["arch", "arch_stm32f401", ""],
@@ -52,9 +53,9 @@ application genos
 	["genos_decoration" , ""],
 	["command_list" , ""],
 	["kernel_waitserver", ""],
-	["stm32f401_Serial", ""],
-	["stm32f401_SerialHD", ""],
-	["lwip", ""],
+#	["stm32f401_Serial", ""],
+#	["stm32f401_SerialHD", ""],
+#	["lwip", ""],
 	];
 
 	target = "genos";

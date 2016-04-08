@@ -125,6 +125,12 @@
 		INIT_dlist_HEAD(entry);
 	}
 	
+	static inline void dlist_del_init(struct dlist_head *entry)
+	{
+		__dlist_del(entry->prev, entry->next);
+		INIT_dlist_HEAD(entry);
+	}
+	
 	
 	/**
 		* dlist_replace - replace old entry by _new one

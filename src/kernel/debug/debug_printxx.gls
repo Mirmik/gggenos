@@ -1,0 +1,5 @@
+
+module debug_printxx
+{
+	cpp_source = ["debug_printxx.cpp"]	
+};

@@ -186,7 +186,7 @@
 			}
 			else if ( mark == 15 )
 			{
-				debug_print("\n");
+				debug_print("\n\r");
 				mark = 0;
 				
 				addr_tmp += 0x10;
@@ -197,7 +197,7 @@
 				mark++;
 			}
 		} 
-		debug_putchar('\n');
+		debug_print("\r\n");
 	}
 	
 	void debug_print_dump_ascii(void* address, uint32_t size)
@@ -225,7 +225,7 @@
 			}
 			else if ( mark == 15 )
 			{
-				debug_print("\n");
+				debug_print("\n\r");
 				mark = 0;
 				
 				addr_tmp += 0x10;
@@ -236,8 +236,14 @@
 				mark++;
 			}
 		} 
-		debug_putchar('\n');
+		debug_print("\n\r");
 	}
+
+	void debug_print_dump_simple(void* ptr, uint32_t size)
+	{
+		uint8_t* _ptr = (uint8_t*) ptr;
+		while(size--) {debug_printhex_uint8(*_ptr++);};
+	};
 	
 	void debug_printdec_int8(int8_t x){	debug_printdec_int64((int64_t)x);};
 	void debug_printdec_int16(int16_t x){debug_printdec_int64((int64_t)x);};

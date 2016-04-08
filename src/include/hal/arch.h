@@ -1,6 +1,7 @@
 #ifndef HAL_ARCH_H_
 #define HAL_ARCH_H_
 
+#include <util/macro.h>
 #include <asm/hal/arch.h>
 #include <compiler.h>
 #include <sys/cdefs.h>
@@ -34,6 +35,11 @@ __END_DECLS
 
 #define arch_atomic() __arch_atomic()
 #define arch_deatomic() __arch_deatomic()
+
+
+
+//#define __arch_ATOMIC_BLOCK(temp)  sreg_t temp;
+//#define arch_ATOMIC_BLOCK __arch_ATOMIC_BLOCK(MACRO_GUARD(save))
 
 
 #endif /* HAL_ARCH_H_ */

@@ -12,7 +12,7 @@
 #ifndef GENOS_DELEGATE_H
 	#define GENOS_DELEGATE_H
 	
-	#include "genos/sigslot/horrible_cast.h"
+	#include "genos/gstl/horrible_cast.h"
 	#include "genos/gstl/utility.h"		
 	#include "genos/debug/debug.h"		
 	
