@@ -1,9 +1,0 @@
-
-
-module genos_compiler
-{
-	
-	include = ["include"];
-
-	target = ""
-}

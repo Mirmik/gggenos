@@ -89,6 +89,17 @@ __BEGIN_DECLS
  */
  char *itoa( int num, char *buf, unsigned short int base );
 
+ char *utoa( unsigned int num, char *buf, unsigned short int base );
+
+ char *ltoa( long int num, char *buf, unsigned short int base );
+
+ char *ultoa( unsigned long int num, char *buf, unsigned short int base );
+
+
+
+
+
+
 /* Allocate and free dynamic memory */
  void *calloc(size_t nmemb, size_t size);
  

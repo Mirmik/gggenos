@@ -30,6 +30,7 @@
 		
 		int usart0_diag_putchar(int c)
 		{
+			sreg_t temp;
 			arch_atomic_temp(temp);
 			UCSR0A |= 1<<TXC0;
 			while ((UCSR0A & (1 << UDRE0)) == 0) {};  

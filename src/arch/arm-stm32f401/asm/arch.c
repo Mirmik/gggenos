@@ -14,12 +14,14 @@ void SysTick_Handler()
   sysclock_tick();
 };
 
+//void interrupt_connector();
 
 extern struct diag_ops usart2_diag;
 void arch_init()
 {
 	SysTick_Config(84000);
 	current_diag = &usart2_diag;
+	//interrupt_connector();
 }
 
 unsigned int arch_systimer_state()

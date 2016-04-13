@@ -2,6 +2,7 @@
 #include "genos/decoration.h"
 #include "genos/defs.h"
 #include "stdlib.h"
+#include "util/vt102/vt102.h"
 
 void automTerminal::reset_event() 
 {
@@ -86,13 +87,14 @@ void  automTerminal::exec()
 while(1)
 
 {
-
 	switch(state)
 	{
 		case 0:
+	//dprhex((uint32_t)&stdout);
 			print_banner(&stdout);
 			print_about(&stdout);
 			state=1;
+	//dpr("here");
 			break;
 
 		case 1:
@@ -100,6 +102,7 @@ while(1)
 			stdout.print(machine_name);
 			stdout.putc(':');
 			state=2;
+//	dpr("here");
 			break;
 				
 		case 2:
@@ -118,7 +121,12 @@ while(1)
 				switch(c)
 				{
 					case '\b': 
-						rl.backspace(); stdout.putc('\b'); break;
+						if (rl.backspace()) 
+						{ 
+							stdout.print(VT102_LEFT);
+							stdout.print(VT102_DEL);
+						};
+						break;
 					case '\r': 
 					case '\n': 
 						stdout.print("\r\n"); endl_event(); goto _unwait_exit;

@@ -208,7 +208,7 @@ void schedee_run(void* ptr)
 {
 	//debug_print("run!!!");
 	schedee* sch = reinterpret_cast<schedee*>(ptr);
-	current_scheduler()->schedee_set_running(sch);
+	current_scheduler()->schedee_unwait(sch);
 };
 
 void WaitServer::exec_on_u8flag(void(*f)(), uint8_t* flag)

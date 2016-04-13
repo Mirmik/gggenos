@@ -16,6 +16,7 @@ volatile double mmtime;
 
 void set_clock_param(clock_t f_cpu, clock_t timer_divide, unsigned int systimer_ceil)
 {	
+	sreg_t temp;
 	arch_atomic_temp(temp);
 
 	double s_dvd = double(timer_divide) / double(f_cpu);

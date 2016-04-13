@@ -5,6 +5,7 @@ const char* machine_name = "input";
 
 void print_banner(stream* strm)
 {
+	strm->println();
 	strm->println("  __             __   __ ");
 	strm->println(" /              /  | /   ");
 	strm->println("( __  ___  ___ (   |(___ ");

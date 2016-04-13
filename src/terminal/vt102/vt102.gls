@@ -1,0 +1,5 @@
+
+module vt102
+{
+	cpp_source = ["vt102.cpp"];
+}

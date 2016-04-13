@@ -9,12 +9,21 @@ delegate<void>* volatile starter_delegate;
 		
 		extern context* schedule_context;
 		void switchScheduler::schedule(){	//вызов планировщика 
-			
+			switchScheduler::process_switch* proc;
+
+			while (!dlist_empty(&zombie_list))
+				{
+//				debug_print("delete_zombie!");
+				proc = 
+				dlist_entry(zombie_list.next, switchScheduler::process_switch, lst);
+				dlist_del(&proc->lst);
+				delete proc;
+				};
+
 			_start:
 
 			if (!ready()) debug_panic("subst_shed not ready");
-			switchScheduler::process_switch* proc;
-
+			
 			if(dlist_empty(&running_list)) return; 
 			
 			proc = 
@@ -65,9 +74,37 @@ delegate<void>* volatile starter_delegate;
 
 		void switchScheduler::schedee_set_zombie(schedee* sch)
 		{
-			debug_panic("A");
+//			debug_print("set_zombie");
+//			debug_printhex_int32((int32_t)sch);
+			switchScheduler::process_switch* proc = reinterpret_cast<switchScheduler::process_switch*>(sch);
+			bits_mask_assign(proc->status, ZOMBIE, STATEMASK);
+			//dpr("z:");dprln((int32_t)dlist_count(&zombie_list));
+			//dpr("r:");dprln((int32_t)dlist_count(&running_list));
+			dlist_move_tail(&proc->lst, &zombie_list);
+			//dpr("z:");dprln((int32_t)dlist_count(&zombie_list));
+			//dpr("r:");dprln((int32_t)dlist_count(&running_list));
+			//dlist_del(&proc->lst);
+			//delete proc;
 		};
 		
+		void switchScheduler::schedee_unwait(schedee* sch)
+		{
+			switchScheduler::process_switch* proc = reinterpret_cast<switchScheduler::process_switch*>(sch);
+			//bits_mask_assign(proc->status, RUN, STATEMASK);
+			//dlist_move_tail(&proc->lst, &running_list);
+			switchScheduler::process_switch* pos;
+			dlist_for_each_entry(pos, &waiting_list, lst)
+			{
+				if (pos == proc) 
+				{
+					schedee_set_running(sch);
+					return;
+				}
+			};
+			return;
+		};
+
+
 		void switchScheduler::schedee_set_stop(schedee* sch)
 		{
 			debug_panic("B");
@@ -92,6 +129,7 @@ delegate<void>* volatile starter_delegate;
 			dlist_del(&proc->lst);
 			delete proc;*/
 			schedee_set_zombie(sch);
+
 		};
 
 		void switchScheduler::schedee_init(switchScheduler::process_switch* proc)

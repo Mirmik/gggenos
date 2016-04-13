@@ -1,56 +1,41 @@
+#ifndef GENOS_SERIAL_ADAPTER_H
+#define GENOS_SERIAL_ADAPTER_H
 
-#ifndef HardwareSerial_h
-#define HardwareSerial_h
-
-#include <inttypes.h>
 #include "cpu/usart_control_struct.h"
-#include "genos/io/stream.h"
+#include "genos/sigslot/delegate.h"
+#include "utilxx/stub.h"
+#include "genos/debug/debug.h"
+#include "util/bits.h"
+#include "avr/io.h"
 
-void rx_irq(void* data);
-void udre_irq(void* data);
-
-class HardwareSerial : public stream
+class AdapterSerial 
 {
-  public:
-     usart_regs* usart;
 
-#if SERIAL_RX_BUFFER_SIZE < 256
-    volatile uint8_t rx_head = 0;
-    volatile uint8_t rx_tail = 0;
-#else
-    volatile uint16_t rx_head = 0;
-    volatile uint16_t rx_tail = 0;
-#endif
-#if SERIAL_TX_BUFFER_SIZE < 256
-    volatile uint8_t tx_head = 0;
-    volatile uint8_t tx_tail = 0;
-#else
-    volatile uint16_t tx_head = 0;
-    volatile uint16_t tx_tail = 0;
-#endif
+    public:
+    void putc(char c) { *usart->udr = c; };
+    char getc() { return *usart->udr; };
 
-    char rx_buffer[SERIAL_RX_BUFFER_SIZE];
-    char tx_buffer[SERIAL_TX_BUFFER_SIZE];
-
-  public:
-    HardwareSerial();
+    bool tx_ready() { return usart_udr_is_empty(usart); };
     
-    void connect(usart_regs* _usart) 
+    void tx_interrupt_disable() { usart_udr_empty_isr_disable(usart); };
+    void tx_interrupt_enable() { usart_udr_empty_isr_enable(usart); };
+    void rx_interrupt_disable() { usart_rx_isr_disable(usart); };
+    void rx_interrupt_enable() { usart_rx_isr_enable(usart); };
+    
+    bool correct_receive()
     {
-        usart = _usart;
-        usart->data = (void*) this;
-        usart->rx_headler = rx_irq;
-        usart->udre_headler = udre_irq;
+        return bits_bit_is_clr(*usart->ucsr_a, UPE0);
     };
-    
-    int putc(char t);
-    int getc(void);
-    int available(void);
-    //int peek(void);
-    //int flush(void);
+
+    //ресурсы:
+    delegate<void> sended = tg_do_nothing<void>;
+    delegate<void, char> recv = tg_do_nothing<void,char>;
+    usart_regs* usart;   
 };
 
-
-extern HardwareSerial Serial0; 
+extern AdapterSerial ASerial0;
+extern AdapterSerial ASerial1;
+extern AdapterSerial ASerial2;
+extern AdapterSerial ASerial3;
 
 #endif

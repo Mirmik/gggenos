@@ -9,11 +9,8 @@
 #include "utilxx/ring.h"
 #include "stdlib.h"
 
-#define SERIAL_RX_BUFFER 256
-#define SERIAL_TX_BUFFER 512
-
 //class AdapterSerial; 
-
+template<uint16_t SERIAL_RX_BUFFER, uint16_t SERIAL_TX_BUFFER>
 class Serial_t : public stream
 {
   private:

@@ -1,0 +1,4 @@
+module ASCII2KeyCom 
+{
+	cpp_source = ["ASCII2KeyCom.cpp"];
+}

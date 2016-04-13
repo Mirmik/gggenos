@@ -42,6 +42,7 @@ class scheduler
 	virtual void schedee_set_zombie(schedee* proc)=0;
 	virtual void schedee_set_stop(schedee* proc)=0;
 	virtual void schedee_exit(schedee* proc)=0;
+	virtual void schedee_unwait(schedee* proc)=0;
 	
 	virtual void schedule()=0;
 	
@@ -69,6 +70,7 @@ class scheduler
 	
 void exit_autom();
 void exit_subst();
+void schedule_subst();
 void wait_child(schedee*);
 
 #endif

@@ -1,0 +1,57 @@
+
+
+module main {
+	cpp_source = ["main.cpp", "configure.cpp", "mitsuprotocol.cpp", "movecontroller.cpp", "communication_func.cpp"];
+	
+	depends = ["main.gls"];
+	#defines = ["GENOS=222"];
+
+	mdepends = ["arch"];
+};
+
+module local_periph {
+	cc_source = [
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_gpio.c",
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_usart.c",
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_rcc.c",
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_spi.c",
+	"../src/arch/arm-stm32f401/periph/src/stm32f4xx_tim.c",
+	"../src/arch/arm-stm32f401/periph/src/misc.c",
+	];
+
+	depends = ["main.gls"];
+#	mdepends = ["arch"];
+};
+
+application genos 
+{
+	modules = 
+	[
+	["main", ""],
+	["debug_print_diag", ""],
+	["diag", "diag_impl", ""],
+	["genos_assert", ""],
+	["arch", "arch_stm32f401", ""],
+#	["stm32f401_periph", ""],
+	["local_periph", ""],
+	["stm32f4xx_mx_context", ""],
+	["stm32f401_sysclock", ""],
+	["stm32f401_procdelay", ""],
+	["sched_little", ""],
+	["sysclock_func", ""],
+	["switchSched", ""],
+	["automTerminal_subst", ""],
+	["syscontext" , ""],
+	["stream_impl", ""],
+	["command_list", ""],
+#	["genos_decoration_radioline" , ""],
+	["genos_decoration" , ""],
+	["command_list" , ""],
+	["kernel_waitserver", ""],
+	["stm32f401_Serial", ""],
+	["stm32f401_SerialHD", ""],
+	];
+
+	target = "genos";
+};
+

@@ -3,41 +3,15 @@
 	//Реализация " таблицав коде" делает функцию устойчивой 
 	//к пропаданию data секции. Теоретически.
 	void debug_printhex_uint4(uint8_t b){
-		uint8_t c;
-		switch (b)
-		{
-			case 0b00000000 : 	c='0';break;
-			case 0b00000001 : 	c='1';break;
-			case 0b00000010 : 	c='2';break;
-			case 0b00000011 : 	c='3';break;
-			case 0b00000100 : 	c='4';break;
-			case 0b00000101 : 	c='5';break;
-			case 0b00000110 : 	c='6';break;
-			case 0b00000111 : 	c='7';break;
-			case 0b00001000 : 	c='8';break;
-			case 0b00001001 : 	c='9';break;
-			case 0b00001010 : 	c='A';break;
-			case 0b00001011 : 	c='B';break;
-			case 0b00001100 : 	c='C';break;
-			case 0b00001101 : 	c='D';break;
-			case 0b00001110 : 	c='E';break;
-			case 0b00001111 : 	c='F';break;
-		}
+		uint8_t c = b < 10 ? b + '0' : b + 'A' - 10;
 		debug_putchar(c);
 	};
 	
 	void debug_printhex_uint8 (uint8_t b){
-		debug_printhex_uint4((b & 0b11110000)>>4);	
-		debug_printhex_uint4(b & 0b00001111);
+		debug_printhex_uint4((b & 0xF0)>>4);	
+		debug_printhex_uint4(b & 0x0F);
 	};
-	
-	void debug_printbin_uint4 (uint8_t b){
-		debug_putchar((b & 0b00001000) ? '1': '0');
-		debug_putchar((b & 0b00000100) ? '1': '0');
-		debug_putchar((b & 0b00000010) ? '1': '0');
-		debug_putchar((b & 0b00000001) ? '1': '0');
-	};
-	
+		
 	void debug_printbin_uint8 (uint8_t b){
 		debug_putchar((b & 0b10000000) ? '1': '0');
 		debug_putchar((b & 0b01000000) ? '1': '0');

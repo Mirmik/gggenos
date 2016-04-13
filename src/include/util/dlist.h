@@ -658,7 +658,14 @@
 	#define dlist_find_first(pos, head, member, condition, result) \
 	result = 0;														\
 	dlist_for_each_entry(pos, head, member) { if (condition) { result = 1; break; }; };
-	
+
+	static int dlist_count(struct dlist_head* head)
+	{
+		int n = 0;	
+		struct dlist_head* pos;		
+		dlist_for_each(pos, head) {n++;};	
+		return n;	
+	};		
 	
 #endif
 

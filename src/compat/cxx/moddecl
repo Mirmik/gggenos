@@ -1,6 +1,0 @@
-
-#Module cxx
-$name = "cxx"
-$target = "cxx.a"
-$incl = ["%s%s" % [$relpath, "include"]]
-declare_module

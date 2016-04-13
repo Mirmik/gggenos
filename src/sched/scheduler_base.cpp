@@ -57,6 +57,10 @@ void exit_subst()
 	context_switch(current_context_get(), &schedule_context);
 };
 
+void schedule_subst()
+{
+	context_switch(current_context_get(), &schedule_context);
+};
 
 void wait_child(schedee* sch)
 {

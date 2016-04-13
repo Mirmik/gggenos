@@ -21,9 +21,11 @@ void starter();
 		static constexpr uint8_t RUN = 0x01;
 		static constexpr uint8_t WAIT = 0x02;
 		static constexpr uint8_t WAITCHILD = 0x03;
+		static constexpr uint8_t ZOMBIE = 0x04;
 		static constexpr uint8_t STATEMASK = 0x0F;		
 		static constexpr uint8_t EXECUTE = 0x80;
 
+	public:
 		//Структура, содержащая информацию о процессе.
 		struct process_switch : public schedee
 		{		
@@ -38,6 +40,7 @@ void starter();
 	
 		dlist_head running_list;
 		dlist_head waiting_list;
+		dlist_head zombie_list;
 		dlist_head child_wait_list;
 	
 		//Методы:
@@ -50,6 +53,7 @@ void starter();
 		void schedee_set_zombie(schedee* sch);
 		void schedee_set_stop(schedee* sch);
 		void schedee_exit(schedee* sch);
+		void schedee_unwait(schedee* sch);
 		void schedee_init(process_switch* proc);
 	
 //		void child_end(schedee*);
@@ -75,11 +79,7 @@ void starter();
 		//Конструктор
 		switchScheduler();
 
-
-
-
-
-		};	
+	};	
 
 
 #endif				

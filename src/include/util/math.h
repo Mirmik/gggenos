@@ -3,6 +3,13 @@
 #ifndef UTIL_MATH_H_
 #define UTIL_MATH_H_
 
+#include "defines/decltypeof.h"
+
+#define abs(a) ({ \
+decltypeof(a) b = a; \
+b < 0 ? -b : b; \
+})
+
 //Возвращает наибольшее из двух вариантов.
 #define max(a, b) \
 	({                                         \

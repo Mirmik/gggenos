@@ -19,7 +19,7 @@ extern unsigned int micros_inc;
 
 __BEGIN_DECLS
 
-//void set_clock_param(clock_t f_cpu, clock_t timer_divide, unsigned int systimer_ceil);
+void set_clock_param(clock_t f_cpu, clock_t timer_divide, unsigned int systimer_ceil);
 
 void sysclock_tick();
 clock_t clock();

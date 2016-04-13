@@ -12,7 +12,9 @@
 
 #include "avr/interrupt.h"
 
-#define __arch_atomic_temp(temp) uint8_t temp = SREG; cli();
+typedef uint8_t sreg_t;
+
+#define __arch_atomic_temp(temp) ({temp = SREG; cli();})
 #define __arch_deatomic_temp(temp) SREG = temp;
 
 #define __arch_atomic() cli()

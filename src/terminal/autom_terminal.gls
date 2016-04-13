@@ -1,11 +1,21 @@
 module automTerminal {
 	
-	cpp_source = ["autom_terminal.cpp"];
+	cpp_source = [
+	"autom_terminal.cpp",
+	];
 
 };
 
 module automTerminal_subst {
-	
-	cpp_source = ["autom_terminal_subst.cpp"];
+	cpp_source = [
+	"autom_terminal_subst.cpp",
+	];
+};
 
+
+module automTerminal_simple {
+	cpp_source = 
+	[
+	"autom_terminal_simple.cpp", 
+	];
 };
