@@ -12,6 +12,7 @@ class AdapterSerial
 {
 public:
 	void putc(char c) { usart->DR = c; };
+	char getc() { return usart->DR; };
 
 	bool tx_ready() { return USART_GetFlagStatus(usart, USART_FLAG_TC) == SET; };
 	
@@ -30,22 +31,9 @@ public:
 			));
 	};
 
-
-	//void hardware_sended()
-	//{
-	//	sended();
-	//};
-
-	//void hardware_recv()
-	//{
-	//	char c = usart->DR;
-	//	if (check_correct_receive()) return;
-	//	recv(c);
-	//};
-
 	//ресурсы:
-	delegate<void> sended = tg_do_nothing<void>;
-	delegate<void, char> recv = tg_do_nothing<void,char>;
+	fastdelegate<void> sended;
+	fastdelegate<void> recv;
     USART_TypeDef* usart;	
 };
 

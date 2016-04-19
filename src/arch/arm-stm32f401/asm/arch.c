@@ -17,10 +17,12 @@ void SysTick_Handler()
 //void interrupt_connector();
 
 extern struct diag_ops usart2_diag;
+extern struct diag_ops usart6_diag;
 void arch_init()
 {
 	SysTick_Config(84000);
-	current_diag = &usart2_diag;
+	//current_diag = &usart2_diag;
+	current_diag = &usart6_diag;
 	//interrupt_connector();
 }
 

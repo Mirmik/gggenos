@@ -1,7 +1,8 @@
+#include "genos.h"
 #include "genos/io/stream.h"
 #include "genos/decoration.h"
 
-const char* machine_name = "input"; 
+string machine_name = "input"; 
 
 void print_banner(stream* strm)
 {

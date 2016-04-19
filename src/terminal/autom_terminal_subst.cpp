@@ -14,6 +14,7 @@ void automTerminal::reset_event()
 
 void automTerminal::endl_event() 
 {
+	argvc_t a;
 	state = 1;
 	delegate<void,int,char**> d;
 	bool success = false;	
@@ -62,8 +63,7 @@ void automTerminal::endl_event()
 		goto _exit;
 	};
 
-	argvc_t a;
-	split_argv(str, a);	
+	a = split_argv(str);	
 
 	if (!central_cmdlist.find(a.argv[0], d))
 	{
@@ -99,7 +99,7 @@ while(1)
 
 		case 1:
 			stdout.putc('#');
-			stdout.print(machine_name);
+			stdout.print(machine_name.c_str());
 			stdout.putc(':');
 			state=2;
 //	dpr("here");

@@ -2,9 +2,8 @@
 #ifndef _READLINE_H_
 #define _READLINE_H_
 
-#define READLINE_SIZE 40
-
 #include "assert.h"
+template<unsigned int READLINE_SIZE>
 class  Readline
 {
 private:
@@ -18,8 +17,8 @@ public:
 	};
 	
 	int putc(char c) {
+		if (length() >= READLINE_SIZE) return -1;
 		*cursor++=c;
-		if (cursor - cmdline >= READLINE_SIZE) return -1;
 		return 1;
 	};
 	
@@ -33,6 +32,11 @@ public:
 	char* get_line()
 	{
 		*cursor = '\0'; return cmdline;
+	};
+
+	inline uint16_t length()
+	{
+		return cursor - cmdline;
 	};
 
 	Readline() {init();};

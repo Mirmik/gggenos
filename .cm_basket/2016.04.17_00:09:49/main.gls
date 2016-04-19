@@ -1,0 +1,43 @@
+
+
+module main {
+	cpp_source = ["main.cpp", "isr_impl.cpp"];
+
+	depends = ["main.gls"];
+	defines = ["GENOS=222"];
+
+	mdepends = ["libc"];
+};
+
+
+application genos 
+{
+	modules = 
+	[
+	["main", "-DLLL=12"],
+	["libc", "genos_libc", ""],
+	["cxx", ""],
+	["arch", "arch_avr", ""],
+	["diag", "diag_impl", ""],
+	["arduino_mega_gpio", ""],
+	["automTerminal_simple", ""],
+	
+#	["ASCII2KeyCom", ""],
+
+	["WString", ""],
+#	["vt102", ""],
+
+	["time_service", ""],
+	["sysclock_func", ""],
+	["debug_print_diag", ""],
+	["debug_printxx", ""],
+	["diag_impl", ""],
+	["stream_impl", ""],
+	["syscontext", ""],
+	["genos_decoration", ""],
+	["command_list", ""],
+	];
+
+	target = "genos";
+};
+

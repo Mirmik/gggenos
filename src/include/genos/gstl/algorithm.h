@@ -1,8 +1,8 @@
+#ifndef GENOS_ALGORITHM_H
+#define GENOS_ALGORITHM_H
+
 #include <genos/gstl/utility.h>
 #include <genos/gstl/functional.h>
-
-#ifndef GENOS_HEADER_ALGORITHM
-	#define GENOS_HEADER_ALGORITHM 1
 	
 	//Elliminate any previously defined macro
 	#undef min

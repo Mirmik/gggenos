@@ -6,6 +6,10 @@
 #include "asm/Serial.h"
 #include "genos/io/Serial.h"
 #include "genos/schedproc/automSched.h"
+#include "genos/io/SerToSer.h"
+#include "util/ascii_codes.h"
+
+#include "genos/terminal/numcmd_list.h"
 
 #include "configure.h"
 //#include "stm32f4xx_rcc.h"
@@ -15,6 +19,7 @@
 #include "genos/schedproc/switchScheduler.h"
 #include "genos/terminal/autom_terminal.h"
 #include "genos/terminal/command_list.h"
+#include "genos/io/SerToSer.h"
 
 #include "axis.h"
 
@@ -97,7 +102,13 @@ public:
 
 
 Serial_t<512,512> Serial2;
+Serial_t<512,512> Serial6;
 AdapterSerial ASerial2;
+AdapterSerial ASerial6;
+
+SerToSer S2S;
+
+numcmd_list Ncmd;
 
 syscontext syscntxt;
 
@@ -113,10 +124,9 @@ void print_encoder2()
 };
 
 extern uint32_t impulse_count;
-void pulse_x_impulse(int n, char** c)
+
+void x_impulse(int32_t impulse)
 {
-	if (n!=2) {stdout.println("NumpErr");};	
-	int32_t impulse = atoll(c[1]);
 	if (impulse > 0)
 	{
 		axis_x.set_direction(Axis::FORWARD);
@@ -127,6 +137,13 @@ void pulse_x_impulse(int n, char** c)
 		axis_x.set_direction(Axis::BACKWARD);
 		axis_x.set_generator(abs(impulse));
 	}
+}
+
+void pulse_x_impulse(int n, char** c)
+{
+	if (n!=2) {stdout.println("NumpErr");};	
+	int32_t impulse = atoll(c[1]);
+	x_impulse(impulse);
 };
 
 
@@ -186,7 +203,7 @@ void timer10info()
 
 };
 
-
+#include "genos/decoration.h"
 void* operator new(size_t, void* ptr) {return ptr;};
 void global_constructor_stub()
 {
@@ -198,11 +215,16 @@ void global_constructor_stub()
 	new(&waitserver) WaitServer;
 	new(&Serial2) Serial_t<512,512>;
 	new(&ASerial2) AdapterSerial;
+	new(&Serial6) Serial_t<512,512>;
+	new(&ASerial6) AdapterSerial;
 	new(&syscntxt) syscontext;
+	new(&Ncmd) numcmd_list;
 	new(&central_cmdlist) command_list;
 	new(&periodic_move_x) PeriodicMoveController;
 	new(&test_direction_x) TestDirectionController;
 	new(&home_position_controller_x) HomePositionController;
+	new(&S2S) SerToSer;
+	machine_name = "input";
 };
 
 void stop()
@@ -263,6 +285,20 @@ void set_home_position()
 	home_position_gen_x = axis_x.read_generator();
 }
 
+string impulse_com(string str)
+{
+	int32_t imp = hexcode_to_int32(str.c_str());
+	x_impulse(imp);
+	return string("impulse");
+};
+
+
+string testcmd_com(string str)
+{
+	//dpr("testcmd");
+	dprln(str);
+	return string("!A!");
+};
 
 void setup(){
 	global_constructor_stub();
@@ -276,7 +312,11 @@ void setup(){
 	ASerial2.usart = USART2;
 	Serial2.init(&ASerial2);
 
-	usart2_interrupt_enable();
+	ASerial6.usart = USART6;
+	Serial6.init(&ASerial6);
+
+	//usart2_interrupt_enable();
+	usart6_interrupt_enable();
 
 	axis_x.init(&TIM5->CNT, &TIM4->ARR, &TIM5->CCR3, 
 		8400000, 50000, 5000);
@@ -308,6 +348,11 @@ void setup(){
 
 	central_cmdlist.add("go_home", set_home_gen_controller);
 
+	debug_print("Hello,World!");
+
+	Ncmd.add(3, testcmd_com);
+	Ncmd.add(4, impulse_com);
+
 	axis_x.set_direction(Axis::FORWARD);
 	
 	axis_x.set_speed(300);
@@ -319,7 +364,23 @@ void setup(){
 	switchSched.registry(&blinker, &Blinker::exec);
 	//switchSched.registry(&blinker2, &Blinker2::exec);
 
-	switchSched.registry(&automTerm, &automTerminal::exec);
+	//switchSched.registry(&automTerm, &automTerminal::exec);
+	S2S.strm.direct(&Serial6);
+	S2S.ncmd = &Ncmd;
+
+	switchSched.registry(&S2S, &SerToSer::exec);
+
+	//delegate<string,string> dlg;
+	//dprln((int8_t)Ncmd.find(3,dlg));
+	//dprln((int8_t)Ncmd.find(2,dlg));
+
+	//charbuf<2> ggg = uint_to_hexcode2(0xAB);
+	//debug_write(ggg.to_buf(), 2);
+	//string mes = S2S.mbuild("0000FFFF", 0x4, 0x1);
+	//dpr(mes);
+
+	//Serial6.simulation_input(mes.c_str(),mes.length());
+	//Serial6.simulation_input(mes.c_str(),mes.length());
 };
 
 
@@ -452,7 +513,31 @@ void USART2_IRQHandler()
 
 if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
     {
-        ASerial2.recv(USART2->DR);
+        ASerial2.recv();
+        return;
+    };
+
+
+  debug_panic("USART_DEBUG_PANIC2");
+};
+
+
+extern AdapterSerial ASerial6;
+extern "C" void USART6_IRQHandler();
+void USART6_IRQHandler()
+{
+  //Действия по опустошению регистра передачи.
+  if (USART_GetITStatus(USART6, USART_IT_TXE) == SET)
+    {
+//        debug_panic("TX");
+        ASerial6.sended();
+        return;
+    };
+
+if (USART_GetITStatus(USART6, USART_IT_RXNE) == SET)
+    {
+//       debug_panic("RX");
+        ASerial6.recv();
         return;
     };
 

@@ -9,9 +9,8 @@
 #ifndef UTIL_MEMBER_H_
 #define UTIL_MEMBER_H_
 
-#include <assert.h>
+#include <util/assert.h>
 #include <stddef.h>
-#include <defines/decltypeof.h> 
 
 /**
  * A type describing a @a member inside a @a container type.
@@ -40,8 +39,6 @@
  *   This can be a chain of names as well in case of nested containers,
  *   for example, @c bar[42].baz.
  */
-
-
 #define member_t(object_t, member_nm) \
 	union __attribute__ ((packed)) {                              \
 		object_t object;                                      \
@@ -52,40 +49,35 @@
 	}
 
 
-#define container_of(member_ptr, type, member) \
-	member_cast_out(member_ptr, type, member)
-	
 /** &foo --> &foo.bar;  @a struct_ptr must not be null; @see #member_t() */
-//#define member_of_object(struct_ptr, member_type) \
-//	member_cast_in(member_cast_out(struct_ptr, \
-//			member_type, object), member)
+#define member_of_object(struct_ptr, member_type) \
+	member_cast_in(member_cast_out(struct_ptr, \
+			member_type, object), member)
 
 /** &foo --> &foo.bar; NULL --> NULL;  @see #member_t() */
-//#define member_of_object_or_null(struct_ptr, member_type) \
-//	member_cast_in_or_null(member_cast_out_or_null(struct_ptr, \
-//			member_type, object), member)
+#define member_of_object_or_null(struct_ptr, member_type) \
+	member_cast_in_or_null(member_cast_out_or_null(struct_ptr, \
+			member_type, object), member)
 
 
 /** &foo.bar --> &foo;  @a member_ptr must not be null; @see #member_t() */
-//#define member_to_object(member_ptr, member_type) \
-//	member_cast_in(member_cast_out(member_ptr, \
-//			member_type, member), object)
+#define member_to_object(member_ptr, member_type) \
+	member_cast_in(member_cast_out(member_ptr, \
+			member_type, member), object)
 
 /** &foo.bar --> &foo; NULL --> NULL;  @see #member_t() */
-//#define member_to_object_or_null(member_ptr, member_type) \
-//	member_cast_in_or_null(member_cast_out_or_null(member_ptr, \
-//			member_type, member), object)
+#define member_to_object_or_null(member_ptr, member_type) \
+	member_cast_in_or_null(member_cast_out_or_null(member_ptr, \
+			member_type, member), object)
 
 
 /** typeof(foo.bar);  @a type is (an expr of) a struct or a union */
-
 #define member_typeof(type, member_nm) \
-	decltypeof(decltypeof, decltype)(((decltypeof(type) *) 0x0)->member_nm)
-	
+	typeof(((typeof(type) *) 0x0)->member_nm)
 
 /** sizeof(foo.bar);  @a type is (an expr of) a struct or a union */
 #define member_sizeof(type, member_nm) \
-	sizeof(((decltypeof(type) *) 0x0)->member_nm)
+	sizeof(((typeof(type) *) 0x0)->member_nm)
 
 
 /** &foo --> &foo.bar;  @a struct_ptr must not be null */
@@ -99,10 +91,10 @@
 	member_cast_in_or_null(struct_ptr, member)
 #define member_cast_in_or_null(struct_ptr, member) \
 	({ \
-		decltypeof(struct_ptr) __member_expr__ = (struct_ptr); \
+		typeof(struct_ptr) __member_expr__ = (struct_ptr); \
 		__member_expr__                                    \
 			? &__member_expr__->member                 \
-			: (decltypeof(&__member_expr__->member)) NULL; \
+			: (typeof(&__member_expr__->member)) NULL; \
 	})
 
 
@@ -114,8 +106,6 @@
 			- offsetof(type, member)))
 
 /** &foo.bar --> &foo; NULL --> NULL; */
-//Вариант mcast_out, предотвращающий обращение к отрицаетльному адресу
-//при передаче NULL в качестве параметра
 #define mcast_out_or_null(member_ptr, type, member) \
 	member_cast_out_or_null(member_ptr, type, member)
 #define member_cast_out_or_null(member_ptr, type, member) \
@@ -126,16 +116,18 @@
 	})
 
 
-//Штука, которая ничего не делает, по сути...
 #ifndef NDEBUG
 # define __member_check_notnull(expr) \
 	({                                             \
-		decltypeof(expr) __member_expr__ = (expr); \
+		typeof(expr) __member_expr__ = (expr); \
 		assert(__member_expr__ != NULL);       \
 		__member_expr__;                       \
 	})
 #else
 # define __member_check_notnull(expr) (expr)
 #endif /* NDEBUG */
+
+#define container_of(member_ptr, type, member) \
+	member_cast_out(member_ptr, type, member)
 
 #endif /* UTIL_MEMBER_H_ */

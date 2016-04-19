@@ -1,0 +1,36 @@
+print "Standart rules include";
+
+fn init_module() downleveled 
+{
+var s_source = [];
+var cc_source = [];
+var cpp_source = [];
+var include = [];
+var target = name + ".a";
+var options = [];
+var headers = [];
+var depends = [];
+var defines = [];
+var mdepends = [];
+var filename = __filename__();
+var relpath = __relpath__();
+var dirpath = __dirpath__();
+var CC = "avr-gcc";
+var CPP = "avr-g++";
+var AR = "avr-ar";
+var CFLAGS = "-std=gnu99  -mmcu=atmega2560 -DF_CPU=16000000 -fdata-sections -ffunction-sections -Wl,--gc-sections -Os";
+var CXXFLAGS = "-mmcu=atmega2560 -DF_CPU=16000000  -DSERIAL_BUFFER_SIZE=64 -std=gnu++11 -fdata-sections -ffunction-sections -Wl,--gc-sections -Os";
+var LDFLAGS = CXXFLAGS + " -nostdinc";
+var global_include = ["src/include", "curprj"];
+var global_mdepends = ["libc", "cxx"];
+};
+
+fn init_application() downleveled 
+{
+var modules = [];
+var target = name;
+var LDFLAGS = "-mmcu=atmega2560 -DF_CPU=16000000  -std=c++11 -fdata-sections -ffunction-sections -Wl,--gc-sections -Os";
+var LD = "avr-g++";
+};
+
+

@@ -1,6 +1,6 @@
+#include "genos.h"
 #include "genos/terminal/autom_terminal.h"
 #include "genos/decoration.h"
-#include "genos/defs.h"
 #include "stdlib.h"
 #include "util/vt102/vt102.h"
 
@@ -93,7 +93,7 @@ void  automTerminal::exec()
 
 		case 1:
 			stdout.putc('#');
-			stdout.print(machine_name);
+			stdout.print(machine_name.c_str());
 			stdout.putc(':');
 			state=2;
 			break;

@@ -28,8 +28,8 @@ class AdapterSerial
     };
 
     //ресурсы:
-    delegate<void> sended = tg_do_nothing<void>;
-    delegate<void, char> recv = tg_do_nothing<void,char>;
+    fastdelegate<void> sended;
+    fastdelegate<void, char> recv;
     usart_regs* usart;   
 };
 

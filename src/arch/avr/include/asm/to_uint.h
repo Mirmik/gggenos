@@ -5,6 +5,9 @@
 
 typedef uint32_t float_uint;
 typedef uint32_t double_uint;
-typedef uint16_t ptr_uint;
+
+#ifndef uintptr_t
+typedef uint16_t uintptr_t;
+#endif
 
 #endif

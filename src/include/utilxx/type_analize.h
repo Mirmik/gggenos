@@ -12,4 +12,6 @@ template<typename T>
 const char* pretty_function(T obj)
 	{return __PRETTY_FUNCTION__;};
 
+#define pretty_that_function() debug_print(__PRETTY_FUNCTION__)
+
 #endif

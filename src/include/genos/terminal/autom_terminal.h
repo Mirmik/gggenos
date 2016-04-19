@@ -16,7 +16,7 @@
 		uint8_t state = 0;	
 		char oldchar = '\0';
 		bool scanmode = false;
-		Readline rl;
+		Readline<40> rl;
 
 		//int alghoritm();
 		void reset_event();

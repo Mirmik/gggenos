@@ -1,7 +1,7 @@
 #ifndef GENOS_WAITSERVER
 #define GENOS_WAITSERVER
 
-#include "util/dlist.h"
+#include "genos/container/dlist_head.h"
 #include "genos/sigslot/delegate.h"
 #include "defines/time_t.h"
 #include "genos/time/basic_timer.h"

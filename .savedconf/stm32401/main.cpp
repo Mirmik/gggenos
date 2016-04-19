@@ -1,32 +1,32 @@
 #include "hal/arch.h"
 #include "genos/debug/debug.h" 
 #include "genos/time/sysclock.h"
-#include "genos/debug/delay.h"
 #include "hal/gpio.h"
 #include "genos/kernel/waitserver.h"
 #include "asm/Serial.h"
 #include "genos/io/Serial.h"
 #include "genos/schedproc/automSched.h"
-#include "stm32f4xx_flash.h"
+#include "genos/io/SerToSer.h"
 #include "util/ascii_codes.h"
 
-#include "configure.h"
-#include "stm32f4xx_rcc.h"
-#include "stm32f4xx_tim.h"
-#include "asm/SerialHD.h"
+#include "genos/terminal/numcmd_list.h"
 
-#include "mitsuprotocol.h"
-#include "movecontroller.h"
-#include "communication_func.h"
+#include "configure.h"
+//#include "stm32f4xx_rcc.h"
+//#include "stm32f4xx_tim.h"
 #include "stdlib.h"
 
 #include "genos/schedproc/switchScheduler.h"
 #include "genos/terminal/autom_terminal.h"
 #include "genos/terminal/command_list.h"
+#include "genos/io/SerToSer.h"
 
+#include "axis.h"
 
-uint32_t communication_absolute_position;
-uint32_t communication_revolution_position;
+int32_t home_position_enc_x = 0;
+int32_t home_position_gen_x = 0;
+
+MoveController* volatile current_controller = 0;
 
 uint32_t acceleration = 150;
 uint8_t pulse_direction = 1;
@@ -36,28 +36,27 @@ automTerminal automTerm;
 
 context schedule_context;
 
+PeriodicMoveController periodic_move_x;
+TestDirectionController test_direction_x;
+HomePositionController home_position_controller_x;
+
+
+
+void remove_controller(MoveController* ctrl)
+{
+	debug_print("force_remove_controller ");
+	//debug_printhex_uint32((uint32_t) ctrl);
+	dln;
+	ctrl->remove();
+};
+
 void emergency_stop()
 {
-	usart2_interrupt_disable();
-//	usart6_interrupt_disable();
-	
+	arch_atomic();
+	axis_x.stop();
 	debug_print("EMERGENCY_STOP");
 };
 
-/*
-void stop()
-{
-
-	debug_panic("emergstp");
-};
-
-
-void print_mode()
-{
-	debug_printdec_uint32(global_mode);dln;
-};
-
-*/
 void setup();
 void loop();
 
@@ -77,10 +76,8 @@ public:
 		while(1)
 		{
 		gpio_port_tgl_pin(GPIOD,13);
-		//msleep_autom_bias(&t, 100);
 		msleep_subst(100);
 		gpio_port_tgl_pin(GPIOD,12);
-		//msleep_autom_bias(&t, 100);
 		msleep_subst(100);
 		};
 	};
@@ -96,549 +93,79 @@ public:
 		while(1)
 		{
 		gpio_port_tgl_pin(GPIOD,15);
-		msleep_subst_bias(&t, 101);
+		msleep_subst(101);
 		gpio_port_tgl_pin(GPIOD,14);
-		msleep_subst_bias(&t, 101);
+		msleep_subst(101);
 		};
 	};
 } blinker2;
 
 
-Serial_t Serial2;
+Serial_t<512,512> Serial2;
+Serial_t<512,512> Serial6;
 AdapterSerial ASerial2;
-//HardwareSerialHD SerialHD6;
-//SerialHDDriver rsDriver;
+AdapterSerial ASerial6;
+
+SerToSer S2S;
+
+numcmd_list Ncmd;
 
 syscontext syscntxt;
 
-
 void print_encoder()
 {
-	stdout.println((int32_t)TIM5->CNT);
+	stdout.println(axis_x.read_encoder());
 };
 
-
-/*
-
-class ManualRS
+void print_encoder2()
 {
-public:
-SerialHDDriver::Task task;
-
-char mes[20];
-int mes_len;
-public:
-
-	void exec()
-	{
-			rsDriver.active(&task);
-			wait_subst(&task.flag);
-			debug_print(task.answer);dln;
-	};
-
-
-	void sesconf(int i, char** c)
-	{
-		if (i!=3) {stdout.println("Err:NumP error");return;};
-		if (strlen(c[1])!=2) {stdout.println("Err:Len[1]!=2");return;};
-		if (strlen(c[2])!=2) {stdout.println("Err:Len[2]!=2");return;};
-		
-		confmes(task.message, c[1], c[2]);
-
-		task.message_len = 10;
-		stdout.println(task.message);
-		exec();	
-	};
-
-	void sesconf8(int i, char** c)
-	{
-		if (i!=4) {stdout.println("Err:NumP error");return;};
-		if (strlen(c[1])!=2) {stdout.println("Err:Len[1]!=2");return;};
-		if (strlen(c[2])!=2) {stdout.println("Err:Len[2]!=2");return;};
-		if (strlen(c[3])!=8) {stdout.println("Err:Len[3]!=8");return;};
-		
-		confmes8(task.message, c[1], c[2], c[3]);
-
-		task.message_len = 18;
-		stdout.println(task.message);
-		exec();
-	};
-
-	void sesconf4(int i, char** c)
-	{
-		if (i!=4) {stdout.println("Err:NumP error");return;};
-		if (strlen(c[1])!=2) {stdout.println("Err:Len[1]!=2");return;};
-		if (strlen(c[2])!=2) {stdout.println("Err:Len[2]!=2");return;};
-		if (strlen(c[3])!=4) {stdout.println("Err:Len[3]!=4");return;};
-		
-		confmes4(task.message, c[1], c[2], c[3]);
-		task.message_len = 14;
-		stdout.println(task.message);
-		exec();
-	};
-
-	void registry()
-	{
-		dlist_move_tail(&task.list, &rsDriver.list);
-		//task.callback = delegate<void, void*>(&SerialHD6, &HardwareSerialHD::print_answer);
-	};
-
-} rsManual;*/
-/*
-class JOG_Operation
-{
-public:
-SerialHDDriver::Task task;
-	
-int state;
-char mes[50];
-int meslen;
-uint16_t speed = 255;
-bool direction = false;
-
-public:
-
-	void registry()
-	{
-		dlist_move_tail(&task.list, &rsDriver.list);
-		//task.callback = delegate<void, void*>(&SerialHD6, &HardwareSerialHD::print_answer);
-	};
-
-	void exec()
-	{
-		char temp[10];
-		switch(state)
-		{
-
-			case -1:
-			//stdout.print("step one:");
-
-			confmes4(task.message, "8B", "00", "0000");
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 0;
-			break;
-
-
-			case 0:
-			//stdout.print("step one:");
-
-			confmes4(task.message, "8B", "00", "0001");
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 1;
-			break;
-
-			case 1:
-			//stdout.println(task.answer);
-			//stdout.print("step two:");
-			//while(1);
-			assert (speed <= MAX_SPEED);
-			hilo_byte_to_symbol(speed, temp);	
-			confmes4(task.message, "A0", "10", temp);
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 2;
-			break;
-
-			case 2:
-			hilohilo_byte_to_symbol(acceleration, temp);
-			confmes8(task.message, "A0", "11", temp);
-			task.message_len = 18;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 3;
-			break;
-
-
-			case 3:
-			//stdout.println(task.answer);
-			//stdout.print("step four:");
-			if (direction == true)
-			confmes8(task.message, "92", "00", "00000807");
-			else 
-			confmes8(task.message, "92", "00", "00001007"); 
-			task.message_len = 18;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 4;
-			break;
-
-			case 4:
-			//stdout.println(task.answer);
-			exit_autom();
-			break;
-		};
-	};
-
-} jog_operation;
-
-
-
-
-
-class Position_Operation
-{
-public:
-SerialHDDriver::Task task;
-	
-int state;
-char mes[50];
-int meslen;
-uint32_t pos = 255;
-uint32_t speed = 255;
-bool direction = false;
-
-enum DIRMODE {FORWARD, BACKWARD} dir;
-enum COMMODE {ENCPULSE, COMPULSE} mode;
-
-public:
-
-	void registry()
-	{
-		dlist_move_tail(&task.list, &rsDriver.list);
-		//task.callback = delegate<void, void*>(&SerialHD6, &HardwareSerialHD::print_answer);
-	};
-
-	void exec()
-	{
-		char temp[20];
-		switch(state)
-		{
-
-			case -1:
-			stdout.println("step0");
-			confmes4(task.message, "8B", "00", "0000");
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 0;
-			break;
-
-
-			case 0:
-			stdout.println("step0");
-			confmes4(task.message, "8B", "00", "0002");
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 1;
-			break;
-
-
-			case 1:
-			stdout.println("step1");
-			hilo_byte_to_symbol(speed, temp);
-			confmes4(task.message, "A0", "10", temp);
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 2;
-			break;
-
-
-			case 2:
-			stdout.println("step2");	
-			//stdout.print("step three");
-			hilohilo_byte_to_symbol(acceleration, temp);
-			confmes8(task.message, "A0", "11", temp);
-			task.message_len = 18;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 3;
-			break;
-
-
-			case 3:
-			stdout.println("step3");
-			//stdout.print("step three");
-			hilohilo_byte_to_symbol(pos, temp);
-			confmes8(task.message, "A0", "20", temp);
-			debug_write(temp,8);
-			task.message_len = 18;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 4;
-			break;
-
-
-			case 4:
-			stdout.println("step5");
-			strcpy(temp, "0000");
-			if (mode == ENCPULSE) temp[1] = '1';
-			else temp[1] = '0';
-			if (dir == FORWARD) temp[3] = '1';
-			else temp[3] = '0';
-			confmes4(task.message, "A0", "21", temp);
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 5;
-			break;
-
-			case 5:
-			stdout.println("step4");
-			//stdout.print("step four");
-			//if (direction == true)
-			//confmes8(task.message, "92", "00", "00000807");
-			//else 
-			confmes8(task.message, "92", "00", "00000007"); 
-			task.message_len = 18;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 6;
-			break;
-
-			case 6:
-			stdout.println("step6");
-			confmes4(task.message, "A0", "40", "1EA5");
-			task.message_len = 14;
-			rsDriver.active(&task);
-			wait_autom(&task.flag);
-			state = 7;
-			break;
-
-			case 7:
-			exit_autom();
-			break;
-		};
-	};
-
-} position_operation;
-
-
-
-void pseudohome()
-{
-	TIM5->CNT = 0;
-	//sysexec("pos 100000 1");	
+	//stdout.println((int32_t)TIM2->CNT);
+	stdout.print("stub");
 };
 
-
-void reg_pos_enc(int n, char** c){
-	if (n != 3) {stdout.println("Err:NumP error");return;};
-	//if (n == 1) jog_operation.speed = 200;
-	//stdout.print(c[1]);
-	position_operation.pos = atoll(c[1]);
-
-	if (!strcmp(c[2], "0")) position_operation.dir = Position_Operation::FORWARD;
-	else if (!strcmp(c[2], "1")) position_operation.dir = Position_Operation::BACKWARD;
-	else {stdout.println("Err: wrong [2]");return;};
-
-	char temp[20];
-	hilohilo_byte_to_symbol(position_operation.pos, temp);
-
-	if (global_mode != POSITIONING)
-	{
-		global_mode = POSITIONING; 
-		position_operation.state = -1;
-	}
-	else
-	{
-		position_operation.state = -1;
-	};
-	position_operation.mode = Position_Operation::ENCPULSE;	
-	//automSched.registry(&position_operation, &Position_Operation::exec);
-};
-
-
-void reg_pos_com(int n, char** c){
-	if (n != 3) {stdout.println("Err:NumP error");return;};
-	//if (n == 1) jog_operation.speed = 200;
-	//stdout.print(c[1]);
-	position_operation.pos = atoll(c[1]);
-
-	if (!strcmp(c[2], "0")) position_operation.dir = Position_Operation::FORWARD;
-	else if (!strcmp(c[2], "1")) position_operation.dir = Position_Operation::BACKWARD;
-	else {stdout.println("Err: wrong [2].");return;};
-
-	char temp[20];
-	hilohilo_byte_to_symbol(position_operation.pos, temp);
-
-	if (global_mode != POSITIONING)
-	{
-		global_mode = POSITIONING; 
-		position_operation.state = -1;
-	}
-	else
-	{
-		position_operation.state = -1;
-	};
-	position_operation.mode = Position_Operation::COMPULSE;
-	//automSched.registry(&position_operation, &Position_Operation::exec);
-};
-
-
-void pos_speed(int n, char** c){
-	if (n != 2) {stdout.println("Err:NumP error");return;};
-
-	uint32_t speed = atol(c[1]);
-	if (speed > MAX_SPEED) {speed = MAX_SPEED; debug_print("speed decrease ");
-	debug_printdec_uint32(MAX_SPEED); dln;};
-	position_operation.speed = speed;	
-};
-
-
-void pos_acc(int n, char** c){
-	if (n != 2) {stdout.println("Err:NumP error");return;};
-	acceleration = atol(c[1]);	
-};
-
-void reg_jog(int n, char** c){
-	if (n != 2) {stdout.println("Err:NumP error");return;};
-	//if (n == 1) jog_operation.speed = 200;
-
-	uint32_t speed = atoi(c[1]);
-
-	if (speed > MAX_SPEED) {speed = MAX_SPEED; debug_print("speed decrease ");
-	debug_printdec_uint32(MAX_SPEED); dln;};
-
-	jog_operation.speed = speed;
-
-	if (global_mode != JOG)
-	{
-		debug_print("set jog\r\n");
-		global_mode = JOG; 
-		jog_operation.state = -1;
-	}
-	else
-	{
-		debug_print("not set jog\r\n");
-		jog_operation.state = 1;
-	};
-	automSched.registry(&jog_operation, &JOG_Operation::exec);
-};
-
-void reg_jog_direction(int n, char** c){
-	if ((n != 2 && n!=1)) {stdout.println("Err:NumP error");return;};
-	
-	if (n==1) {stdout.print((uint64_t)jog_operation.direction); return;};
-
-	if ((strcmp(c[1], "0")) && (strcmp(c[1], "1")))  {stdout.println("dirrwrong");return;};
-
-	
-	//return;
-	jog_operation.direction = atoi(c[1]);
-	if (global_mode == JOG)
-	{
-		jog_operation.state = 1;
-		automSched.registry(&jog_operation, &JOG_Operation::exec);
-	}
-	else
-	{
-		return;
-	};
-	
-};
-
-#include "stdlib.h"
-void restart_jog(int n, char** c){
-//	if (n!=2) {stdout.println("Err:NumP error");return;};
-	
-//	jog_operation.state = 1;
-//	jog_operation.speed = atoi(c[1]);
-};
-*/
 extern uint32_t impulse_count;
-void impulse(int n, char** c)
+
+void x_impulse(int32_t impulse)
 {
-	if (n!=2) {stdout.println("NumpErr");};	
-	impulse_count = atol(c[1]);
-};
-/*
-void freq(int n, char** c)
-{
-	if (n!=2) {stdout.println("NumpErr");};	
-	assert( atol(c[1]) >200);
-	TIM4->ARR = atol(c[1]);
-};
-
-*/
-#define TIM4_TPS 8400000
-void pulse_speed(int n, char** c)
-{
-	float speed_rev_min;
-	float speed_rev_sec;
-	float pps;
-
-	if (n!=2) {stdout.println("NumpErr");};	
-	speed_rev_min = atol(c[1]);
-
-	if (speed_rev_min > MAX_SPEED) {speed_rev_min = MAX_SPEED; debug_print("speed decrease ");
-	debug_printdec_uint32(MAX_SPEED); dln;};
-	
-
-	speed_rev_sec = speed_rev_min / 60;
-	pps = speed_rev_sec * ENCODER_RESOLUTION;
-
-	int res = TIM4_TPS / pps * 4 * 2 * 311 / 200;
-	//debug_printdec_uint32(res);
-
-	TIM4->ARR = res;
-};
-
-/*
-void pulse_dirrection_set(int n, char** c)
-{
-	if (n!=2) {stdout.println("NumpErr");};	
-	if ((strcmp(c[1], "0")) && (strcmp(c[1], "1")))  {stdout.println("dirrwrong");return;};
-
-	if (atoi(c[1]) == 1) pulse_direction = -1;
-	if (atoi(c[1]) == 0) pulse_direction = 1;
-};
-
-
-class Updater
-{
-int state;
-public:
-	SerialHDDriver::Task task;
-	void exec()
+	if (impulse > 0)
 	{
-		char mes[40];
-		switch(state)
-		{
-			case 0:
-				dlist_move_tail(&task.list, &rsDriver.list);
-				//task.callback = delegate<void, void*>(&SerialHD6, &HardwareSerialHD::print_answer);
-				state = 1;
-			break;
+		axis_x.set_direction(Axis::FORWARD);
+		axis_x.set_generator(abs(impulse));
+	}
+	else
+	{
+		axis_x.set_direction(Axis::BACKWARD);
+		axis_x.set_generator(abs(impulse));
+	}
+}
 
-			case 1:
-				confmes(task.message, "02", "91");
-				task.message_len = 10;
-				wait_autom(&task.flag);
-				rsDriver.active(&task);
-				state = 2;
-			break;
-
-
-			case 2:
-				communication_absolute_position = uint32_protocol_parse(task.answer + 3);
-				confmes(task.message, "01", "8B");
-				task.message_len = 10;
-				wait_autom(&task.flag);
-				rsDriver.active(&task);
-				state = 3;
-			break;
-			
-			case 3:
-				communication_revolution_position = uint32_protocol_parse(task.answer + 3 + 4);
-				state = 1;
-			break;
-		};
-	};
-
-
-} updater;
-
-
-void updater_start()
+void pulse_x_impulse(int n, char** c)
 {
-	automSched.registry(&updater, &Updater::exec);
+	if (n!=2) {stdout.println("NumpErr");};	
+	int32_t impulse = atoll(c[1]);
+	x_impulse(impulse);
+};
+
+
+//#define TIM4_TPS 8400000
+void pulse_x_speed(int n, char** c)
+{
+	if (n==1) {stdout.println((int64_t)axis_x.get_speed()); return;};
+	if (n!=2) {stdout.println("NumpErr");};	
+	uint32_t speed = atol(c[1]);
+
+	axis_x.set_speed(speed);
+};
+
+
+void pulse_x_direction_set(int n, char** c)
+{
+	if (n!=2) {stdout.println("NumpErr");};	
+	if ((strcmp(c[1], "0")) && (strcmp(c[1], "1")))  {stdout.println("dirwrong");return;};
+
+	if (atoi(c[1]) == 1) axis_x.set_direction(Axis::FORWARD);
+	else if (atoi(c[1]) == 0) axis_x.set_direction(Axis::BACKWARD);
+	else debug_print("WrongDir");
 };
 
 void timer4info()
@@ -647,6 +174,8 @@ void timer4info()
 	debug_print("CR2:");debug_printhex_uint32(TIM4->CR2);dln;
 	debug_print("SR:");debug_printhex_uint32(TIM4->SR);dln;
 	debug_print("DIER:");debug_printhex_uint32(TIM4->DIER);dln;
+	debug_print("CCMR1:");debug_printhex_uint32(TIM4->CCMR1);dln;
+	debug_print("CCMR2:");debug_printhex_uint32(TIM4->CCMR2);dln;
 };
 
 
@@ -656,24 +185,11 @@ void timer5info()
 	debug_print("CR2:");debug_printhex_uint32(TIM5->CR2);dln;
 	debug_print("SR:");debug_printhex_uint32(TIM5->SR);dln;
 	debug_print("DIER:");debug_printhex_uint32(TIM5->DIER);dln;
-debug_print("CCMR1:");debug_printhex_uint32(TIM5->CCMR1);dln;
-debug_print("CCMR2:");debug_printhex_uint32(TIM5->CCMR2);dln;
+	debug_print("CCMR1:");debug_printhex_uint32(TIM5->CCMR1);dln;
+	debug_print("CCMR2:");debug_printhex_uint32(TIM5->CCMR2);dln;
 
 };
 
-
-void print_communication_abs_pos()
-{
-	stdout.printhex(communication_absolute_position);
-	stdout.println();
-};
-
-
-void print_communication_rev_pos()
-{
-	stdout.printhex(communication_revolution_position);
-	stdout.println();
-};
 
 void timer10info()
 {
@@ -681,64 +197,108 @@ void timer10info()
 	debug_print("CR2:");debug_printhex_uint32(TIM10->CR2);dln;
 	debug_print("SR:");debug_printhex_uint32(TIM10->SR);dln;
 	debug_print("DIER:");debug_printhex_uint32(TIM10->DIER);dln;
-debug_print("CCMR1:");debug_printhex_uint32(TIM10->CCMR1);dln;
-debug_print("CCMR2:");debug_printhex_uint32(TIM10->CCMR2);dln;
-debug_print("CNT:");debug_printhex_uint32(TIM10->CNT);dln;
+	debug_print("CCMR1:");debug_printhex_uint32(TIM10->CCMR1);dln;
+	debug_print("CCMR2:");debug_printhex_uint32(TIM10->CCMR2);dln;
+	debug_print("CNT:");debug_printhex_uint32(TIM10->CNT);dln;
 
 };
 
-void rs485maxerror()
-{
-	stdout.print((uint64_t)rsDriver.max_error);	
-};
-
-
-void nac_manual_pulse()
-{
-	TIM_Cmd(TIM10, ENABLE);	
-};
-*/
+#include "genos/decoration.h"
 void* operator new(size_t, void* ptr) {return ptr;};
 void global_constructor_stub()
 {
 	new(&blinker) Blinker;
 	new(&blinker2) Blinker2;
-//	new(&automSched) automScheduler;
+	new(&axis_x) Axis;
 	new(&switchSched) switchScheduler;
 	new(&automTerm) automTerminal;
 	new(&waitserver) WaitServer;
-	new(&Serial2) Serial_t;
+	new(&Serial2) Serial_t<512,512>;
 	new(&ASerial2) AdapterSerial;
-//	new(&SerialHD6) HardwareSerialHD;
+	new(&Serial6) Serial_t<512,512>;
+	new(&ASerial6) AdapterSerial;
 	new(&syscntxt) syscontext;
+	new(&Ncmd) numcmd_list;
 	new(&central_cmdlist) command_list;
-//	new(&rsDriver) SerialHDDriver;	
-//	new(&rsManual) ManualRS;
-	//new(&updater) Updater;
-	//new(&jog_operation) JOG_Operation;
-	//new(&position_operation) Position_Operation;
-	//new(&communication) Communication;
-	//new(&position_controller) PositionController;
+	new(&periodic_move_x) PeriodicMoveController;
+	new(&test_direction_x) TestDirectionController;
+	new(&home_position_controller_x) HomePositionController;
+	new(&S2S) SerToSer;
+	machine_name = "input";
 };
 
-/*
-void position_controller_set()
+void stop()
 {
-	automSched.registry(&position_controller, &PositionController::exec);
+	if (current_controller) 
+		remove_controller(current_controller);
+	else axis_x.generator = 0;
 };
 
-
-void test_flash_write(int n, char** c)
+void nac_manual_pulse()
 {
+	one_pulse_generator_start();
+};
+
+void set_controller()
+{
+	dprln("periodic controller setup");
+	if (current_controller) remove_controller(current_controller);
 	
-};
+	periodic_move_x.init(
+		&axis_x,
+		one_pulse_generator_start
+	);
+	periodic_move_x.set_task(10000000, 100000, 100000, 2800, 1000);
 
-void test_flash_read(int n, char** c)
+	current_controller = &periodic_move_x;
+}
+
+
+void set_home_gen_controller()
 {
+	dprln("periodic controller setup");
+	if (current_controller) remove_controller(current_controller);
 	
-};
-*/
+	home_position_controller_x.init(&axis_x);
+	
+	current_controller = &home_position_controller_x;
+}
 
+void set_test_controller()
+{
+	dprln("test controller setup");
+	if (current_controller) remove_controller(current_controller);
+	test_direction_x.init(&axis_x);
+	current_controller = &test_direction_x;
+}
+
+
+void ctrstp()
+{
+	if (current_controller) 
+		remove_controller(current_controller);
+}
+
+void set_home_position()
+{
+	home_position_enc_x = axis_x.read_encoder();
+	home_position_gen_x = axis_x.read_generator();
+}
+
+string impulse_com(string str)
+{
+	int32_t imp = hexcode_to_int32(str.c_str());
+	x_impulse(imp);
+	return string("impulse");
+};
+
+
+string testcmd_com(string str)
+{
+	//dpr("testcmd");
+	dprln(str);
+	return string("!A!");
+};
 
 void setup(){
 	global_constructor_stub();
@@ -752,92 +312,235 @@ void setup(){
 	ASerial2.usart = USART2;
 	Serial2.init(&ASerial2);
 
-	//debug_print("JJJORKEY!!!");
+	ASerial6.usart = USART6;
+	Serial6.init(&ASerial6);
 
-	//SerialHD6.usart = USART6;
-	//SerialHD6.changedir_port = GPIOC;
-	//SerialHD6.changedir_pin = GPIO_Pin_8;
-	//gpio_port_set_mask(GPIOC, GPIO_Pin_8);
+	//usart2_interrupt_enable();
+	usart6_interrupt_enable();
 
-	//debug_print("setup");
-	usart2_interrupt_enable();
-	//usart6_interrupt_enable();
-	//usart2_rx_interrupt_enable();
+	axis_x.init(&TIM5->CNT, &TIM4->ARR, &TIM5->CCR3, 
+		8400000, 50000, 5000);
+	axis_x.enable_compare = tim5_compare_enable;
+	axis_x.disable_compare = tim5_compare_disable;
 
-	global_mode = PULSE;
 
 	current_context_set(&schedule_context);
-
-//	central_cmdlist.add("rs", &rsManual, &ManualRS::sesconf);
-//	central_cmdlist.add("rs8", &rsManual, &ManualRS::sesconf8);
-//	central_cmdlist.add("rs4", &rsManual, &ManualRS::sesconf4);
-
 	central_cmdlist.add("encoder", print_encoder);
-//	central_cmdlist.add("jog", reg_jog);
-//	central_cmdlist.add("jogdir", reg_jog_direction);
-
-//	central_cmdlist.add("nac", nac_manual_pulse);
-
+	central_cmdlist.add("encoder2", print_encoder2);
+	central_cmdlist.add("nac", nac_manual_pulse);
 	
-//	central_cmdlist.add("pos", reg_pos_com);
-//	central_cmdlist.add("encpos", reg_pos_enc);
-//	central_cmdlist.add("mode", print_mode);
+	central_cmdlist.add("impulse", pulse_x_impulse);
+	central_cmdlist.add("speed", pulse_x_speed);
+	central_cmdlist.add("direction", pulse_x_direction_set);
+
+	central_cmdlist.add("timer4", timer4info);
+	central_cmdlist.add("timer5", timer5info);
+	central_cmdlist.add("timer10", timer10info);
+
+	central_cmdlist.add("stop", stop);
+
+
+	central_cmdlist.add("testdirection", set_test_controller);
+
+	central_cmdlist.add("controller", set_controller);
+	central_cmdlist.add("ctrstp", ctrstp);
+	central_cmdlist.add("set_home", set_home_position);
+
+	central_cmdlist.add("go_home", set_home_gen_controller);
+
+	debug_print("Hello,World!");
+
+	Ncmd.add(3, testcmd_com);
+	Ncmd.add(4, impulse_com);
+
+	axis_x.set_direction(Axis::FORWARD);
 	
-//	central_cmdlist.add("posspeed", pos_speed);
-//	central_cmdlist.add("posacc", pos_acc);
-	
-	central_cmdlist.add("impulse", impulse);
-//	central_cmdlist.add("freq", freq);
-	central_cmdlist.add("speed", pulse_speed);
-//	central_cmdlist.add("direction", pulse_dirrection_set);
-	
-//	central_cmdlist.add("mpulse", pulsemode_set);
-	
+	axis_x.set_speed(300);
+	axis_x.generator_reverse = false;
+	axis_x.encoder_reverse = true;
 
-//	central_cmdlist.add("timer4", timer4info);
-//	central_cmdlist.add("timer5", timer5info);
-//	central_cmdlist.add("timer10", timer10info);
-				
+	//set_home_position();
 
-//	central_cmdlist.add("pseudohome", pseudohome);
-//	central_cmdlist.add("abs_pos", print_communication_abs_pos);
-//	central_cmdlist.add("rev_pos", print_communication_rev_pos);
-//	central_cmdlist.add("posctr", position_controller_set);
+	switchSched.registry(&blinker, &Blinker::exec);
+	//switchSched.registry(&blinker2, &Blinker2::exec);
 
+	//switchSched.registry(&automTerm, &automTerminal::exec);
+	S2S.strm.direct(&Serial6);
+	S2S.ncmd = &Ncmd;
 
+	switchSched.registry(&S2S, &SerToSer::exec);
 
+	//delegate<string,string> dlg;
+	//dprln((int8_t)Ncmd.find(3,dlg));
+	//dprln((int8_t)Ncmd.find(2,dlg));
 
-//	central_cmdlist.add("pulsemode", reg_pulsemode);
-	
-//	central_cmdlist.add("rs485maxerror", rs485maxerror);
-//	central_cmdlist.add("restart", restart_jog);
-//	jog_operation.registry();
-//	position_operation.registry();
-//	rsManual.registry();
-//	communication.registry();
+	//charbuf<2> ggg = uint_to_hexcode2(0xAB);
+	//debug_write(ggg.to_buf(), 2);
+	//string mes = S2S.mbuild("0000FFFF", 0x4, 0x1);
+	//dpr(mes);
 
-//	central_cmdlist.add("stop", stop);
-//	central_cmdlist.add("updater", updater_start);
-//	central_cmdlist.add("testwrite", test_flash_write);
-//	central_cmdlist.add("testread", test_flash_read);
-
-	sysexec("speed 100");
-
-//	switchSched.registry(&blinker, &Blinker::exec);
-//	switchSched.registry(&blinker2, &Blinker2::exec);
-
-	switchSched.registry(&automTerm, &automTerminal::exec);
-//	switchSched.registry(&rsDriver, &SerialHDDriver::exec);
-
-	//debug_print("here");
+	//Serial6.simulation_input(mes.c_str(),mes.length());
+	//Serial6.simulation_input(mes.c_str(),mes.length());
 };
 
 
 void loop()
 {
-	print_encoder();
-	delay(20);
 	waitserver.check();
 	switchSched.schedule();
+	//dpr("allGood");
+	//delay(100);
+	//gpio_port_tgl_pin(GPIOD, 13);
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+//INTERRUPT
+
+#include "genos/debug/debug.h"
+#include "asm/Serial.h"
+#include "hal/gpio.h"
+#include "stm32f4xx_gpio.h"
+#include "stm32f4xx_tim.h"
+#include "misc.h"
+
+extern "C" void TIM5_IRQHandler();
+void TIM5_IRQHandler()
+{
+  if (TIM_GetITStatus(TIM5, TIM_IT_CC3) != RESET)
+    {
+      axis_x.trigger_callback();
+      TIM_ClearITPendingBit(TIM5, TIM_IT_CC3);
+      return;
+    };
+    
+    debug_panic("TIMER5INTERRUPT");
+  };
+
+
+void state0()
+{
+  gpio_port_set_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_6);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_4);
+};
+
+void state1()
+{
+  gpio_port_set_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_6);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_4);
+};
+
+void state2()
+{
+  
+  gpio_port_set_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_4);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_6);
+};
+
+void state3()
+{
+  gpio_port_set_mask(GPIOD, GPIO_Pin_2 | GPIO_Pin_4);
+  gpio_port_clr_mask(GPIOD, GPIO_Pin_0 | GPIO_Pin_6);
+};
+
+
+extern "C" void TIM4_IRQHandler();
+void TIM4_IRQHandler()
+{
+//	dpr("here");
+  if(TIM4->SR & 0x1) //Прерывание по переполнению
+    {
+ //   	debug_printdec_uint32(axis_x.generator);
+      if (axis_x.generator <= 0) { gpio_port_clr_pin(GPIOD,15); goto _exit;};
+      gpio_port_set_pin(GPIOD,15);
+
+      if (axis_x.direction != axis_x.generator_reverse)
+      {
+		axis_x.pstate = (++axis_x.pstate) & 0x3; 
+		++axis_x.count_generated;
+      }
+      else
+      {
+      	axis_x.pstate = (--axis_x.pstate) & 0x3; 
+      	--axis_x.count_generated;
+      }
+      
+      switch(axis_x.pstate)
+      {
+        case 0: state0(); break;
+        case 1: state1(); break;
+        case 2: state2(); break;
+        case 3: state3(); break;
+      };
+      axis_x.generator--;
+      
+      _exit:
+      TIM4->SR &= ~0x1;    
+      return; 
+    };
+
+  dln;
+  debug_printhex_uint32(TIM4->CR1);dln;
+  debug_printhex_uint32(TIM4->SR);dln;
+  debug_panic("TIM4INTERRUPT");
+};
+
+
+
+
+#include "asm/Serial.h"
+extern AdapterSerial ASerial2;
+extern "C" void USART2_IRQHandler();
+void USART2_IRQHandler()
+{
+  //Действия по опустошению регистра передачи.
+  if (USART_GetITStatus(USART2, USART_IT_TXE) == SET)
+    {
+    	//dpr("interr");
+        ASerial2.sended();
+        return;
+    };
+
+if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
+    {
+        ASerial2.recv();
+        return;
+    };
+
+
+  debug_panic("USART_DEBUG_PANIC2");
+};
+
+
+extern AdapterSerial ASerial6;
+extern "C" void USART6_IRQHandler();
+void USART6_IRQHandler()
+{
+  //Действия по опустошению регистра передачи.
+  if (USART_GetITStatus(USART6, USART_IT_TXE) == SET)
+    {
+//        debug_panic("TX");
+        ASerial6.sended();
+        return;
+    };
+
+if (USART_GetITStatus(USART6, USART_IT_RXNE) == SET)
+    {
+//       debug_panic("RX");
+        ASerial6.recv();
+        return;
+    };
+
+
+  debug_panic("USART_DEBUG_PANIC2");
+};

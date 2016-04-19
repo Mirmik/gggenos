@@ -1,0 +1,4 @@
+module gstd
+{
+	cc_source = ["g_itoa.c"];
+}

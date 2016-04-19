@@ -53,13 +53,13 @@ BasicWaiter()
 void WaitServer::nonewaiter_put_to_list(NoneWaiter* w)
 {
 	bits_clr(w->_trait, NoneWaiter_DONE);
-	dlist_move_tail(&w->lst, &none_list);
+	dlist_move_prev(&w->lst, &none_list);
 };
 
 void WaitServer::waiter_put_to_list(Waiter* w)
 {
 	bits_clr(w->_trait, Waiter_DONE);
-	dlist_move_tail(&w->lst, &wait_list);
+	dlist_move_prev(&w->lst, &wait_list);
 };
 
 void WaitServer::timwaiter_put_to_list(TimWaiter* t)
@@ -77,7 +77,7 @@ void WaitServer::timwaiter_put_to_list(TimWaiter* t)
 	};
 	bits_clr(t->_trait, TimWaiter_DONE);
 
-	dlist_move_tail(&t->lst, &dlist_entry(it, TimWaiter, lst)->lst);
+	dlist_move_prev(&t->lst, &dlist_entry(it, TimWaiter, lst)->lst);
 };
 
 void WaitServer::postprocessing_timer(TimWaiter* t)
@@ -144,7 +144,7 @@ void WaitServer::postprocessing_nonewaiter(NoneWaiter* w)
 void WaitServer::check_timers()
 {
 	//dpr("1");
-	if (dlist_empty(&timer_list)) return;
+	if (dlist_is_empty(&timer_list)) return;
 	//dpr("2");
 	TimWaiter* t = dlist_first_entry(&timer_list, TimWaiter, lst);
 	if (t->_timer.check(millis())) 

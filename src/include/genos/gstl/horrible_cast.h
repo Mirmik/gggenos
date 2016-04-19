@@ -2,7 +2,7 @@
 //—åñòíî ñïÞðòî â 2015-îì ãîäó.
 
 #ifndef GENOS_HORIBLE_CAST_H
-	#define GENOS_HORIBLE_CAST_H
+#define GENOS_HORIBLE_CAST_H
 		
 //		implicit_cast< >
 // I believe this was originally going to be in the C++ standard but 

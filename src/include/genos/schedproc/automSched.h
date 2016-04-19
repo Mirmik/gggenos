@@ -1,7 +1,7 @@
 #ifndef GENOS_AUTOM_SCHED
 #define GENOS_AUTOM_SCHED
 	
-#include <util/dlist.h>
+#include <genos/container/dlist_head.h>
 #include "genos/schedproc/scheduler_base.h"
 #include "genos/schedproc/schedee_base.h"
 #include "genos/sigslot/delegate.h"

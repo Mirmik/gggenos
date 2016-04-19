@@ -1,53 +1,84 @@
-#ifndef GENOS_UTIL_RING
-#define GENOS_UTIL_RING
+#ifndef GENOS_UTIL_RING_H
+#define GENOS_UTIL_RING_H
 
-/*
-#define ring_next(index, len)	\
-({								\
-	(index + 1) % len;			\
-})
+#include "util/ring_head.h"
+#include "genos.h"
 
-#define ring_available_to_putc(head, tail, len) 				\
-({																\
-	(head >= tail) ? len - 1 - head + tail : tail - head - 1;	\
-})
+class ring
+{public:
+	char* buffer;
+	ring_head r;
+	
+	ring(char* _buffer, size_t sz):
+	r(sz), buffer((char*)_buffer)
+	{};
 
-#define ring_available_to_getc(head, tail, len)					\
-({																\
-	(head >= tail) ? head - tail : len + head - tail; 		  	\
-})
+	inline int _putc(char c)
+	{
+		*(buffer + r.head) = c;
+		ring_move_head_one(&r);
+		return 1;
+	}
 
-#define ring_full(head, tail, len)				\
-({												\
-	(ring_next(head, len) == tail) ? 1 : 0;		\
-})
+	int putc(char c)
+	{
+		if (ring_is_full(&r)) return -1;
+		return _putc(c);	
+	}
 
-#define ring_empty(head, tail)							\
-({														\
-	head == tail;										\
-})
+	inline int _getc()
+	{
+		char c = *(buffer + r.tail);
+		ring_move_tail_one(&r);
+		return (int)c;
+	}
 
-#define ring_putc(head, tail, buffer, len, c)			\
-({														\
-	buffer[head] = c;									\
-	head = ring_next(head, len);						\
-})
+	int getc()
+	{
+		if (ring_is_empty(&r)) return -1; 
+		return _getc();	
+	}
 
-#define ring_putc_if_available(head, tail, buffer, len, c)	\
-({															\
-	if (ring_avaible_to_putc(len, head, tail))				\
-	{														\
-		buffer[head] = c;									\
-		head = ring_next(head, len);						\
-	};														\
-})
+	int data_size()
+	{
+		return ring_data_size(&r);
+	};
 
-#define ring_getc(head, tail, buffer, len)				\
-({														\
-	char c = buffer[tail];								\
-	tail = ring_next(tail, len);						\
-	c;													\
-})
-*/
+	int room_size()
+	{
+		return ring_room_size(&r);
+	};
+
+	bool is_empty()
+	{
+		return ring_is_empty(&r);
+	};
+
+	bool is_full()
+	{
+		return ring_is_full(&r);
+	};
+
+#ifdef TO_STR
+	string to_info()
+	{
+		string str;
+		str.reserve(128);
+		str << "ring info:\r\n";
+		str << "size: " << r.size << "\r\n";
+		str << "head: " << r.head << "\r\n";
+		str << "tail: " << r.tail << "\r\n";
+		return str;
+	};
+
+	string to_str()
+	{
+		string str;
+		str.reserve(32);
+		str << "<ring>" << string(this, 16) << "\r\n";
+		return str;
+	};
+#endif //TO_STR
+};
 
 #endif

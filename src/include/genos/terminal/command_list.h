@@ -4,7 +4,7 @@
 	#define COMMAND_LIST_H
 
 	#include "util/stub.h"	
-	#include <util/dlist.h>
+	#include <genos/container/dlist_head.h>
 	#include "genos/sigslot/delegate.h"
 	#include <string.h>
 	#include <genos/io/stream.h>
@@ -16,8 +16,9 @@
 		char * argv[10];
 	};	
 
-	static void split_argv(char* c, argvc_t& a)
+	static argvc_t split_argv(char* c)
 	{
+		argvc_t a;
 		int state = 0;
 		char* ptr = c;
 		a.argc=0;
@@ -52,6 +53,7 @@
 			};
 		++ptr;
 		};
+		return a;
 	};
 
 	class command_t{
@@ -73,14 +75,14 @@
 		void add(const char* str, delegate<void, int, char**> d) 
 		{
 			command_t* cmd = new command_t(str, d); 
-			dlist_add(&cmd->lst, &list);
+			dlist_add_next(&cmd->lst, &list);
 		};	
 
 		void add(const char* str, void(*f)(int,char**)) 
 		{
 			delegate<void, int, char**>d = f;
 			command_t* cmd = new command_t(str, d); 
-			dlist_add(&cmd->lst, &list);
+			dlist_add_next(&cmd->lst, &list);
 		};	
 
 
@@ -88,7 +90,7 @@
 		{
 			delegate<void, int, char**>d = (void(*)(int,char**)) f;
 			command_t* cmd = new command_t(str, d); 
-			dlist_add(&cmd->lst, &list);
+			dlist_add_next(&cmd->lst, &list);
 		};
 
 		template<typename T>
@@ -96,7 +98,7 @@
 		{
 			delegate<void, int, char**>d = delegate<void, int, char**>(a, ptr);
 			command_t* cmd = new command_t(str, d); 
-			dlist_add(&cmd->lst, &list);
+			dlist_add_next(&cmd->lst, &list);
 		};
 
 		template<typename T>
@@ -104,7 +106,7 @@
 		{
 			delegate<void, int, char**>d = delegate<void, int, char**>(a, (void (T::*)(int, char**))ptr);
 			command_t* cmd = new command_t(str, d); 
-			dlist_add(&cmd->lst, &list);
+			dlist_add_next(&cmd->lst, &list);
 		};
 
 		int find(const char* str,  delegate<void, int, char**> &outd) 
@@ -124,8 +126,7 @@
 
 		int try_execute(char* c, delegate<void, int, char**> &outd)
 		{
-			argvc_t a;
-			split_argv(c, a);
+			argvc_t a = split_argv(c);
 			if (a.argc == 0) return -1;
 			if (find(a.argv[0], outd)) return -2;
 			return 0;

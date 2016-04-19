@@ -63,6 +63,20 @@ static int usart2_diag_init()
 			usart2_diag_init
 		}; 
 
+int usart6_diag_putchar(int c)
+		{
+			while((USART6->SR & USART_FLAG_TC)==0);
+  			USART6->DR = c;
+			while((USART6->SR & USART_FLAG_TC)==0);
+		};
+
+		struct diag_ops usart6_diag = {
+			usart6_diag_putchar, 
+			(diag_getc_t) do_nothing, 
+			diag_write_stub, 
+			(diag_read_t) do_nothing, 
+			(diag_init_t) do_nothing
+		}; 
 
 				
 		

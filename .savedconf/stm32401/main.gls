@@ -1,9 +1,11 @@
 
 
 module main {
-	cpp_source = ["main.cpp", "configure.cpp", "mitsuprotocol.cpp", "movecontroller.cpp", "communication_func.cpp"];
+	cpp_source = ["main.cpp", "configure.cpp", "axis.cpp"];
 	
-	depends = ["main.gls"];
+	depends = ["main.gls", 
+	"../src/include/genos/io/SerToSer.h",
+	];
 	#defines = ["GENOS=222"];
 
 	mdepends = ["arch"];
@@ -29,6 +31,7 @@ application genos
 	[
 	["main", ""],
 	["debug_print_diag", ""],
+	["debug_printxx", ""],
 	["diag", "diag_impl", ""],
 	["genos_assert", ""],
 	["arch", "arch_stm32f401", ""],
@@ -48,8 +51,8 @@ application genos
 	["genos_decoration" , ""],
 	["command_list" , ""],
 	["kernel_waitserver", ""],
-#	["stm32f401_Serial", ""],
-#	["stm32f401_SerialHD", ""],
+	["WString", ""],
+	["gstd",""],
 	];
 
 	target = "genos";

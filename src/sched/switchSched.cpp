@@ -11,7 +11,7 @@ delegate<void>* volatile starter_delegate;
 		void switchScheduler::schedule(){	//вызов планировщика 
 			switchScheduler::process_switch* proc;
 
-			while (!dlist_empty(&zombie_list))
+			while (!dlist_is_empty(&zombie_list))
 				{
 //				debug_print("delete_zombie!");
 				proc = 
@@ -24,11 +24,11 @@ delegate<void>* volatile starter_delegate;
 
 			if (!ready()) debug_panic("subst_shed not ready");
 			
-			if(dlist_empty(&running_list)) return; 
+			if(dlist_is_empty(&running_list)) return; 
 			
 			proc = 
 			dlist_entry(running_list.next, switchScheduler::process_switch, lst);
-			dlist_move_tail(&proc->lst, &running_list);
+			dlist_move_prev(&proc->lst, &running_list);
 		
 			current_schedee(proc);		
 			
@@ -55,21 +55,21 @@ delegate<void>* volatile starter_delegate;
 		{
 			switchScheduler::process_switch* proc = reinterpret_cast<switchScheduler::process_switch*>(sch);
 			bits_mask_assign(proc->status, RUN, STATEMASK);
-			dlist_move_tail(&proc->lst, &running_list);
+			dlist_move_prev(&proc->lst, &running_list);
 		};
 		
 		void switchScheduler::schedee_set_wait(schedee* sch)
 		{
 			switchScheduler::process_switch* proc = reinterpret_cast<switchScheduler::process_switch*>(sch);
 			bits_mask_assign(proc->status, WAIT, STATEMASK);
-			dlist_move_tail(&proc->lst, &waiting_list);
+			dlist_move_prev(&proc->lst, &waiting_list);
 		};
 		
 		void switchScheduler::schedee_set_wait_child(schedee* sch)
 		{
 			switchScheduler::process_switch* proc = reinterpret_cast<switchScheduler::process_switch*>(sch);
 			bits_mask_assign(proc->status, WAITCHILD, STATEMASK);
-			dlist_move_tail(&proc->lst, &child_wait_list);
+			dlist_move_prev(&proc->lst, &child_wait_list);
 		};
 
 		void switchScheduler::schedee_set_zombie(schedee* sch)
@@ -80,7 +80,7 @@ delegate<void>* volatile starter_delegate;
 			bits_mask_assign(proc->status, ZOMBIE, STATEMASK);
 			//dpr("z:");dprln((int32_t)dlist_count(&zombie_list));
 			//dpr("r:");dprln((int32_t)dlist_count(&running_list));
-			dlist_move_tail(&proc->lst, &zombie_list);
+			dlist_move_prev(&proc->lst, &zombie_list);
 			//dpr("z:");dprln((int32_t)dlist_count(&zombie_list));
 			//dpr("r:");dprln((int32_t)dlist_count(&running_list));
 			//dlist_del(&proc->lst);
@@ -91,7 +91,7 @@ delegate<void>* volatile starter_delegate;
 		{
 			switchScheduler::process_switch* proc = reinterpret_cast<switchScheduler::process_switch*>(sch);
 			//bits_mask_assign(proc->status, RUN, STATEMASK);
-			//dlist_move_tail(&proc->lst, &running_list);
+			//dlist_move_prev(&proc->lst, &running_list);
 			switchScheduler::process_switch* pos;
 			dlist_for_each_entry(pos, &waiting_list, lst)
 			{
