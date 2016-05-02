@@ -213,9 +213,9 @@ void schedee_run(void* ptr)
 
 void WaitServer::exec_on_u8flag(void(*f)(), uint8_t* flag)
 {
-	delegate<void, void*> a = void_func_execute;
+	delegate<void, void*> a (void_func_execute);
 	void* ad = reinterpret_cast<void*>(f);
-	delegate<bool, void*> c = check_u8_flag;
+	delegate<bool, void*> c (check_u8_flag);
 	void* cd = static_cast<void*>(flag);
 	uint8_t tr = Waiter_AUTOMATIC_CREATED;
 	Waiter* w = new Waiter(a, ad, c, cd, tr);
@@ -224,7 +224,7 @@ void WaitServer::exec_on_u8flag(void(*f)(), uint8_t* flag)
 
 TimWaiter* WaitServer::schedee_on_simple_timer(schedee* sch, time_t interval)
 {
-	delegate<void, void*> a = schedee_run;
+	delegate<void, void*> a (schedee_run);
 	void* ad = reinterpret_cast<void*>(sch);
 	uint8_t tr = TimWaiter_AUTOMATIC_CREATED;
 	TimWaiter* t = new TimWaiter(a, ad, tr);
@@ -245,9 +245,9 @@ TimWaiter* WaitServer::delegate_on_simple_timer(delegate<void, void*> d, void* d
 
 Waiter* WaitServer::schedee_on_stream_available(schedee* sch, stream* strm)
 {
-	delegate<void, void*> a = schedee_run;
+	delegate<void, void*> a (schedee_run);
 	void* ad = reinterpret_cast<void*>(sch);
-	delegate<bool, void*> c = check_stream_available;
+	delegate<bool, void*> c (check_stream_available);
 	void* cd = static_cast<void*>(strm);
 	uint8_t tr = Waiter_AUTOMATIC_CREATED;
 	Waiter* w = new Waiter(a, ad, c, cd, tr);
@@ -257,7 +257,7 @@ Waiter* WaitServer::schedee_on_stream_available(schedee* sch, stream* strm)
 
 NoneWaiter* WaitServer::schedee_on_external(schedee* sch)
 {
-	delegate<void, void*> a = schedee_run;
+	delegate<void, void*> a (schedee_run);
 	void* ad = reinterpret_cast<void*>(sch);
 	uint8_t tr = NoneWaiter_AUTOMATIC_CREATED;
 	NoneWaiter* nw = new NoneWaiter(a, ad, tr);
@@ -278,9 +278,9 @@ TimWaiter* WaitServer::schedee_on_bias_timer(schedee* sch, TimWaiter* timer, tim
 
 Waiter* WaitServer::schedee_on_u8flag(schedee* sch, uint8_t* flag)
 {
-	delegate<void, void*> a = schedee_run;
+	delegate<void, void*> a (schedee_run);
 	void* ad = reinterpret_cast<void*>(sch);
-	delegate<bool, void*> c = check_u8_flag;
+	delegate<bool, void*> c (check_u8_flag);
 	void* cd = reinterpret_cast<void*>(flag);
 	uint8_t tr = Waiter_AUTOMATIC_CREATED;
 	Waiter* w = new Waiter(a, ad, c, cd, tr);

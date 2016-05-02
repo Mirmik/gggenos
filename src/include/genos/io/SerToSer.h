@@ -10,112 +10,182 @@
 #include "utilxx/controlsum.h"
 #include "genos/terminal/readline.h"
 #include "genos/terminal/numcmd_list.h"
+#include "genos/gstl/utility.h"
+#include "kernel/mutex.h"
+#include "genos/time/sysclock.h"
 
+extern Serial_t<512,512> Serial6;
 class SerToSer
 {
+	constexpr static uint32_t BREAK_END_TIMEOUT = 10;
 public:
+	mutex mtx;
+
+	static constexpr uint8_t TIMEOUT = 0x0F;
+	static constexpr uint8_t OK = 0x00;
+
+	TimWaiter timsendWD;
+
+	delegate<void, void*> watchDogDlg;
 	direct_stream strm;
 	numcmd_list* ncmd;
-	Readline<40> rl;
+	Readline<20> rl;
+	charbuf<14> answer;
+	volatile uint8_t flag;
+	volatile uint8_t status;
 	int mode = 0;
 
+	string last_message;
+	
 public:
 
-	struct message
+	SerToSer() : strm(), mtx()
 	{
-		dlist_head lst;
-		string mes;
-		int addrfunc;
-		int id;
-		string ans;
-		uint8_t flag;
+		watchDogDlg = delegate_mtd(this,&SerToSer::watchDogFunc);
 	};
 
-	dlist<SerToSer::message, &SerToSer::message::lst> active_list;
-	dlist<SerToSer::message, &SerToSer::message::lst> passive_list;
-
-	dlist<SerToSer::message, &SerToSer::message::lst> input_list;
-	
-	SerToSer() : strm(), active_list(), passive_list() {};
-
-	void sendmessage(message& msg)
+	void watchDogFunc(void* ptr)
 	{
-		sreg_t save;
-		arch_atomic_temp(save);
-		active_list.push_back(msg);
-		arch_deatomic_temp(save);
+		//strm.print("TimeOut");
+		status = TIMEOUT;
+		flag = 1;
 	};
 
-	string mbuild(string mes, int addrfunc, int id)
+	charbuf<14> mbuild(int addrfunc, charbuf<8> mes)
 	{
-		charbuf<2> addrfunc_char = uint_to_hexcode2(addrfunc);
-		charbuf<4> id_char = uint_to_hexcode4(id);
-		charbuf<2> len_char = uint_to_hexcode2(mes.length());
-
-		string ret;
-		ret.reserve(128);
-		ret << (char)1
-		<< id_char 
-		<< addrfunc_char 
-		<< len_char
-		<< (char)2
-		<< mes
-		<< (char)3;
-		charbuf<2> controlsum_char = uint_to_hexcode2(controlsum(ret) & 0xFF);
-		ret << controlsum_char;		
+		charbuf<14> ret;
+		charbuf<2> addrfunc_char = uint8_to_hexcode(addrfunc);
+		ret[0] = 1;
+		ret[13]  = 3;
+		memcpy(&ret[1], addrfunc_char.to_buf(), 2);
+		memcpy(&ret[3], mes.to_buf(), 8);
+		ret[11] = ret[12] = 0;
+		uint8_t cs = ret.controlsum();
+		charbuf<2> ch_buf = uint8_to_hexcode(cs);
+		memcpy(&ret[11], ch_buf.to_buf(), 2); 
 		return ret;
 	};
 
-	void send_answer(string mes, uint16_t id)
+	charbuf<14> mbuild_answer(int addrfunc, charbuf<8> mes)
 	{
-		charbuf<4> id_char = uint_to_hexcode4(id);
-		charbuf<2> len_char = uint_to_hexcode2(mes.length());
-		string str;
-		str.reserve(128);
-		str << (char)2
-		<< id_char
-		<< len_char
-		<< mes
-		<< (char)3;
-		charbuf<2> controlsum_char = uint_to_hexcode2(controlsum(str) & 0xFF);
-		str << controlsum_char;
-		strm.print(str.c_str());	
+		charbuf<14> ret;
+		charbuf<2> addrfunc_char = uint8_to_hexcode(addrfunc);
+		ret[0] = 2;
+		ret[13]  = 3;
+		memcpy(&ret[1], addrfunc_char.to_buf(), 2);
+		memcpy(&ret[3], mes.to_buf(), 8);
+		ret[11] = ret[12] = 0;
+		uint8_t cs = ret.controlsum();
+		charbuf<2> ch_buf = uint8_to_hexcode(cs);
+		memcpy(&ret[11], ch_buf.to_buf(), 2); 
+		return ret;
 	};
 
-	void analize_received_message(string str, uint16_t id, uint8_t addr)
+	uint8_t send(charbuf<14>* msg)
 	{
-		//SerToSer::message* msg = new SerToSer::message();
+		mtx.enter();
+		flag = 0;
+		last_message = msg->c_str();
+		strm.print(last_message.c_str());
+		waitserver.delegate_on_simple_timer(watchDogDlg, 
+			(void*)0, &timsendWD, BREAK_END_TIMEOUT);
 
-		//msg->mes = str;
-		//msg->addrfunc = addr;
-		//msg->id = id;
-		
-		delegate<string,string> dlg;
-		int findsts = ncmd->find(addr,dlg);
+		charbuf<14> sim;
+		sim[0] = 2;
+		sim[13]  = 3;
+		memcpy(&sim[1], "FF", 2);
+		memcpy(&sim[3], "00000000", 8);
+		sim[11] = sim[12] = 0;
+		uint8_t cs = sim.controlsum();
+		charbuf<2> ch_buf = uint8_to_hexcode(cs);
+		memcpy(&sim[11], ch_buf.to_buf(), 2);
 
-		if (findsts == -1) return;
+		Serial6.simulation_input(sim.c_str(),14);
 
-		string ret = dlg(str);
-		send_answer(ret, id);
+
+		wait_subst((uint8_t*)&flag);
+		mtx.leave();
+		*msg = answer;
+		return status;
 	};
+
+
+	void send_answer(charbuf<14>* msg)
+	{
+		mtx.enter();
+		flag = 0;
+		last_message = msg->c_str();
+		strm.print(last_message.c_str());
+		mtx.leave();
+	};
+
+	uint8_t send(int addrfunc, uint32_t num)
+	{
+		auto msg = mbuild(addrfunc, uint32_to_hexcode(num));
+		return send(&msg);
+	};
+
+	void send_answer(uint32_t mes)
+	{	
+		auto msg = mbuild_answer(255, uint32_to_hexcode(mes));
+		send_answer(&msg);
+	};
+
+	uint8_t checksum(char* str)
+	{
+		uint8_t sum;
+		uint8_t csum;
+		for (int i = 0; i < 11; i++)
+			{
+				sum += *(str + i);
+			};
+		sum += *(str + 13);
+		csum = hexcode_to_uint8(str + 11);
+		if (sum != csum) return -1;
+		return 0;
+	};
+
+	void parse_answer(char* str)
+	{
+		memcpy(answer.to_buf(), str, 14);
+		status = 0;
+		//Serial6.print("XXXXXXXXX");
+  		waitserver.unwait((TimWaiter*)&timsendWD);
+		flag = 1;
+		rl.init();
+		mode = 0;
+	};
+
+	void parse_message(char* str)
+	{
+		uint8_t code = hexcode_to_uint8(str + 1);
+		delegate<uint32_t,uint32_t> dlg;
+		int f = ncmd->find(code,dlg);
+		string ret(str + 3, 8);
+		send_answer(dlg(hexcode_to_uint32(ret.c_str())));
+		rl.init();
+		mode = 0;
+	}
 
 	void parse(char* str)
 	{
-		if (*str != 1 && *str != 2) wrong_receive(2);
-		charptr id_char		(str + 1, 4);
-		charptr addr_char	(str + 5, 2);
-		charptr len_char	(str + 7, 2);
-		uint8_t len = hexcode_to_uint8(len_char.to_buf());
-		charptr mes_char(str + 10, len);	
-		string res(mes_char);
-		uint16_t id = hexcode_to_uint16(id_char.to_buf());
-		uint8_t addr = hexcode_to_uint8(addr_char.to_buf());	
-		analize_received_message(res, id, addr);
-	}
+		if (checksum(str)) {wrong_frame(); return;};
+		if (*str != 1 && *str != 2) {wrong_receive(7); return;};
+		if (*str == 2) parse_answer(str);
+		if (*str == 1) parse_message(str);
+	};
+
+	void wrong_frame()
+	{
+		strm.print("\001XX\003");	
+		rl.init();
+		mode = 0;	
+	};
 
 	void wrong_receive(int code)
 	{
-		strm.print("XXXX"); strm.print((int8_t)code);
+		rl.init();
+		mode = 0;
 	};
 
 	void receive()
@@ -125,19 +195,46 @@ public:
 		mode = 0;
 	};
 
+	void resend_impl()
+	{
+		strm.print(last_message.c_str());
+	}
+
+	void resend()
+	{
+		char* str = rl.get_line();
+		if (*(str + 0) == '\001' &&
+			*(str + 1) == 'X' &&
+			*(str + 2) == 'X' &&
+			*(str + 3) == '\003') resend_impl();
+		rl.init();
+		mode = 0;
+	};
+
+	uint32_t last_receive;
 	void exec()
 	{
 		while(1)
 		{
 			wait_subst(&strm);
+
+			if (rl.length() == 0) last_receive = millis();
+			if (millis() - last_receive > 20) wrong_receive(6);
+
 			_start:
 			while (strm.available())
 			{
 				int c = strm.getc();
-				if (c < 0) {wrong_receive(3); goto _start;};
+				if (c == 1) rl.init();
 				rl.putc(c);
-				if (mode!=0 || c==3) mode++;
-				if (mode == 3) receive();
+				if (c < 0) {wrong_receive(3); goto _start;};
+					if (rl.length() > 14) {wrong_receive(4); goto _start;}; 
+					if (c == 3 && rl.length() == 4) 
+						{resend();goto _start;};
+					if (c == 3 && rl.length() == 14) 
+						{receive();goto _start;};
+					if (c == 3 && rl.length() != 14) 
+						{wrong_receive(5);goto _start;};
 			};
 		};
 	};	  

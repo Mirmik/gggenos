@@ -2,10 +2,13 @@
 # error "Do not include this file directly!"
 #endif /* HAL_ARCH_H_ */
 
-#ifndef __BYTE_ORDER__
-#define __BYTE_ORDER __LITTLE_ENDIAN
-#define BYTE_ORDER    __BYTE_ORDER
-#endif
+//#ifndef __BYTE_ORDER__
+#define ARCH_LITTLE_ENDIAN 1234
+//#define __BYTE_ORDER__ LITTLE_ENDIAN
+//#define __LITTLE_ENDIAN LITTLE_ENDIAN
+//#define __BYTE_ORDER __LITTLE_ENDIAN
+//#define BYTE_ORDER    __BYTE_ORDER
+//#endif
 
 #define __PLATFORM_ARCH "stm32f401"
 

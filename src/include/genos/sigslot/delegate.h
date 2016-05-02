@@ -103,7 +103,7 @@ class delegate
 	//	return *this;
 	//};
 
-	delegate(const fastdelegate<R,Args...>& fd)
+	explicit delegate(const fastdelegate<R,Args...>& fd)
 	: object(fd.object)
 	{
 		method.attributes = 0;
@@ -147,7 +147,7 @@ class delegate
 
 	//Конструктор. Делегат функции.
 	//@1 указатель на функцию.
-	delegate(fnc_t func) : object(0)
+	explicit delegate(fnc_t func) : object(0)
 	{
 		method.function = func;
 		method.attributes = 0;
@@ -167,7 +167,12 @@ class delegate
 	//Вы можете использовать макрос method для создания пары.
 	//Пример delegate<void, int> d(method(a, A::func));
 	//template <typename T1, typename T2>
-	delegate(absmemb_t&& pr)
+	explicit delegate(const absmemb_t& pr)
+	{
+		set(pr);
+	};	
+
+	explicit delegate(absmemb_t&& pr)
 	{
 		set(pr);
 	};	

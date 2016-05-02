@@ -52,9 +52,3 @@ template<> void dprhex(float obj) { dprhex(horrible_cast<float_uint, float>(obj)
 template<> void dprhex(double obj) { dprhex(horrible_cast<double_uint, double>(obj));   };
 
 template<> void dpr(string obj) {dpr(obj.c_str());};
-
-
-//template<typename T> void dprhex_dump(T* obj, uint32_t size) { debug_print_dump((void*)obj, size);   };
-
-//template<typename T> void dprln(T obj) { dpr(obj); dln;   };
-//template<typename T> void dprhexln(T obj) { dprhex(obj); dln;   };

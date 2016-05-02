@@ -14,3 +14,6 @@
 
 #define __arch_atomic() 
 #define __arch_deatomic() 
+
+
+typedef unsigned int sreg_t;

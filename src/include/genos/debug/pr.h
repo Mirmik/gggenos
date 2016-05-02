@@ -2,8 +2,6 @@
 #define GENOS_DEBUG_PR_H
 
 #include "asm/to_uint.h"
-#include "genos/gstl/horrible_cast.h"
-
 
 template<typename T> void dpr(T obj);
 template<typename T> void dprbin(T obj);
@@ -29,11 +27,5 @@ template<typename T> void dpr_dump(T* obj, uint32_t size)
 
 template<typename T> void dpr_dump_ascii(T* obj, uint32_t size) 
 	{ debug_print_dump_ascii((void*)obj, size); dpl; };
-
-template<typename T> void dpr_obj(T& obj) 
-	{ dpr(obj.to_str()); };
-
-template<typename T> void dpr_obj_info(T& obj) 
-	{ dpr(obj.to_info()); };
 
 #endif

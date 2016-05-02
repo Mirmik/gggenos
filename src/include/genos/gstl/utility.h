@@ -19,10 +19,9 @@ namespace gstd{
 #include "genos/gstl/utility/type_traits.hpp"
 #include "genos/gstl/utility/type_transform.hpp"
 #include "genos/gstl/utility/type_relation.hpp"
-#include "genos/gstl/utility/type_obj_magic.hpp"
 #include "genos/gstl/utility/move.hpp"
 };
-
+/*
 template <typename T, T Ptr>
 struct function_pack;
  
@@ -69,7 +68,7 @@ struct function_pack<R(*)(Args...), Ptr>
  
 #define DECL_FUNC(a, F) function_pack<decltype(F), (F)>(a)
 
-
+*/
 
 
 #endif

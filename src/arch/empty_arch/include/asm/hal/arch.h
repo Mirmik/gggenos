@@ -14,3 +14,5 @@
 
 #define __arch_atomic() ((void*)0)
 #define __arch_deatomic() ((void*)0)
+
+typedef unsigned uint sreg_t;

@@ -36,7 +36,9 @@ __END_DECLS
 #define arch_atomic() __arch_atomic()
 #define arch_deatomic() __arch_deatomic()
 
-
+#define arch_atomic_save(s)  __arch_atomic_temp(s)
+#define arch_atomic_nosave() __arch_atomic()
+#define arch_atomic_restore(s) __arch_deatomic_temp(s)
 
 //#define __arch_ATOMIC_BLOCK(temp)  sreg_t temp;
 //#define arch_ATOMIC_BLOCK __arch_ATOMIC_BLOCK(MACRO_GUARD(save))

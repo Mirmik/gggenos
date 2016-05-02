@@ -4,17 +4,7 @@
 #include "genos.h"
 #include "genos/container/dlist_head.h"
 #include "utilxx/member.h" 
-/*
-template<typename type>
-class listed
-{
-public:
-	dlist_head lst;
-	type data;
-	listed(type _data): data(_data), lst() {};
-	listed(): lst() {};
-};
-*/
+
 template<typename type, dlist_head type::* member>
 class dlist 
 {
@@ -24,8 +14,12 @@ public:
 	dlist()
 	{
 		dlist_init_list(&list);
-	};
+	}
 
+	~dlist()
+	{
+		dlist_del(&list);
+	}
 	//void add_next(type& obj)
 	//{
 	//	dlist_add_next(&(obj.*member), &list);
