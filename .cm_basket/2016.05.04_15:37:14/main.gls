@@ -1,0 +1,33 @@
+
+
+module main {
+	cpp_source = ["main.cpp"];
+	cc_source = [];
+
+	depends = ["main.gls"];
+
+	mdepends = ["arch"]
+};
+
+
+application genos 
+{
+	modules = 
+	[
+	["main", ""],
+	["genos_assert", ""],
+	#["command_list", ""],
+	["arch", "arch_linux", ""],
+	["diag", "diag_impl", ""],
+	["debug_print", "debug_print_diag", ""],
+	["debug_printxx", ""],
+	["WString", ""],
+	["sched", ""],
+	["waitserver", ""],
+	["gstd", ""],
+	["time_service_linux", ""],
+	];
+
+	target = "genos";
+};
+

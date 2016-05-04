@@ -1,6 +1,7 @@
 
 
 #include "genos/time/sysclock.h"
+#include "genos/kernel/time.h"
 #include "hal/arch.h"
 //#include "kernel/printk.h"
 
@@ -60,7 +61,7 @@ time_t micros()
 {
 	return mmtime + mmtime_inc_wide * arch_systimer_state() + _minutes * 60000000;	
 };
-
+/*
 void delay(unsigned int d)
 {
 	time_t start = millis();
@@ -72,4 +73,4 @@ void udelay(unsigned int d)
 {
 	time_t start = micros();
 	while( micros() - start < d);
-};
+};*/

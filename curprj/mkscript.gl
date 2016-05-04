@@ -16,13 +16,13 @@ var filename = __filename__();
 var relpath = __relpath__();
 var dirpath = __dirpath__();
 
-var CC = "gcc";
-var CPP = "g++";
-var AR = "ar";
-var CFLAGS = "";
-var CXXFLAGS = "-std=gnu++11";
-
-var global_include = ["src/include", "curprj"];
+var CC = "arm-none-eabi-gcc";
+var CPP = "arm-none-eabi-g++";
+var AR = "arm-none-eabi-ar";
+var CFLAGS = "-std=gnu99 -mthumb -mcpu=cortex-m4 -static -fdata-sections -ffunction-sections -Wl,--gc-sections -O1";
+var CXXFLAGS = "-std=gnu++11 -mthumb -mcpu=cortex-m4 -static -fdata-sections -ffunction-sections -Wl,--gc-sections -O1";
+var LDFLAGS = CXXFLAGS;
+var global_include = ["src/include", "curprj", "src/compat/cxx/include"];
 var global_mdepends = ["arch"];
 };
 
@@ -30,8 +30,9 @@ fn init_application() downleveled
 {
 var modules = [];
 var target = name;
-var LDFLAGS = "";
-var LD = "g++";
+var LDFLAGS = "-T  src/arch/arm-stm32f401/STM32F401VC_FLASH.ld -mthumb -mcpu=cortex-m4 -static -std=c++11 -fdata-sections -ffunction-sections -Wl,--gc-sections -O1 curprj/stf_syscalls_minimal.o";
+var LD = "arm-none-eabi-g++";
 };
+
 
 

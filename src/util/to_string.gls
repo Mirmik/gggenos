@@ -1,0 +1,4 @@
+module to_string
+{
+	cpp_source = ["to_string.cpp"];
+}

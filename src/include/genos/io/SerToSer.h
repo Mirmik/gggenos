@@ -13,6 +13,7 @@
 #include "genos/gstl/utility.h"
 #include "kernel/mutex.h"
 #include "genos/time/sysclock.h"
+#include "genos/kernel/time.h"
 
 extern Serial_t<512,512> Serial6;
 class SerToSer
@@ -103,7 +104,7 @@ public:
 		Serial6.simulation_input(sim.c_str(),14);
 
 
-		wait_subst((uint8_t*)&flag);
+		wait((uint8_t*)&flag);
 		mtx.leave();
 		*msg = answer;
 		return status;
@@ -216,7 +217,7 @@ public:
 	{
 		while(1)
 		{
-			wait_subst(&strm);
+			wait(&strm);
 
 			if (rl.length() == 0) last_receive = millis();
 			if (millis() - last_receive > 20) wrong_receive(6);

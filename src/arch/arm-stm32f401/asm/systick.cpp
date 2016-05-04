@@ -1,4 +1,4 @@
-
+#include "genos/kernel/time.h"
 #include "genos/time/sysclock.h"
 #include "hal/arch.h"
 #include "inttypes.h"
@@ -26,9 +26,6 @@ time_t millis()
 	return systick;
 };
 
-time_t micros()
-{
-};
 
 
 //void udelay(unsigned int d)

@@ -1,4 +1,5 @@
 #include "genos/time/sysclock.h"
+#include "genos/kernel/time.h"
 
 void delay(unsigned int d)
 {

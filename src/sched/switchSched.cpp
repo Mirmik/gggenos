@@ -8,6 +8,11 @@ delegate<void>* volatile starter_delegate;
 		void switchScheduler::init(){bits_clr(sched_flags, NO_INIT);};					
 		
 		extern context* schedule_context;
+		void switchScheduler::reschedule()
+		{
+			context_switch(current_context_get(), schedule_context);
+		};
+
 		void switchScheduler::schedule(){	//вызов планировщика 
 			switchScheduler::process_switch* proc;
 

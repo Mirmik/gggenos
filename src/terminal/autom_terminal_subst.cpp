@@ -143,7 +143,7 @@ while(1)
 			};
 				
 			_exit:
-			wait_subst(&stdin);
+			wait(&stdin);
 
 			_unwait_exit:
 			break;				

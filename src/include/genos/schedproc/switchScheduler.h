@@ -47,6 +47,8 @@ void starter();
 		void init();				
 		
 		void schedule();		
+		void reschedule();		
+		
 		void schedee_set_running(schedee* sch);
 		void schedee_set_wait(schedee* sch);
 		void schedee_set_wait_child(schedee* sch);

@@ -20,7 +20,7 @@ public:
 		arch_atomic_save(save);
 		while (is_busy())
 			{
-				wait_subst((uint8_t*)&not_busy);
+				wait((uint8_t*)&not_busy);
 			};
 		not_busy = 0;
 		arch_atomic_restore(save);

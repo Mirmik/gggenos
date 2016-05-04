@@ -25,6 +25,12 @@ public:
 		list.push_back(*cmd);
 	};	
 
+	void add(uint8_t num, uint32_t(*func)(uint32_t)) 
+	{
+		numcmd_t* cmd = new numcmd_t(num, delegate<uint32_t,uint32_t>(func)); 
+		list.push_back(*cmd);
+	};	
+
 	int find(uint8_t _num, delegate<uint32_t, uint32_t>& dlg)
 	{
 		auto ret = gstd::find_if(list.begin(),list.end(),

@@ -80,7 +80,7 @@
 
 		void add(const char* str, void(*f)(int,char**)) 
 		{
-			delegate<void, int, char**>d = f;
+			delegate<void, int, char**>d(f);
 			command_t* cmd = new command_t(str, d); 
 			dlist_add_next(&cmd->lst, &list);
 		};	
@@ -88,7 +88,7 @@
 
 		void add(const char* str, void(*f)()) 
 		{
-			delegate<void, int, char**>d = (void(*)(int,char**)) f;
+			delegate<void, int, char**>d((void(*)(int,char**)) f);
 			command_t* cmd = new command_t(str, d); 
 			dlist_add_next(&cmd->lst, &list);
 		};
