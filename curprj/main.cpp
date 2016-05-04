@@ -32,11 +32,11 @@ void setup()
 	uSched.init();
 
 	mcommunicator.Open("/dev/ttyS3");
-	//mcommunicator.Send("\001201\00200\003F8",10);
+	mcommunicator.Send("\001201\00200\003F8",10);
 
 //delay(100);
 
-	//while(mcommunicator.mrs.available()) debug_putchar(mcommunicator.mrs.getc());
+//	while(mcommunicator.mrs.available()) debug_putchar(mcommunicator.mrs.getc());
 	//mcommunicator.mrs.close_out();
 	//mcommunicator.mrs.close_in();
 

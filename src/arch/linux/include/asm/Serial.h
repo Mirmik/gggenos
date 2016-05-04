@@ -22,6 +22,7 @@ class LinuxStdStream : public stream
 
 class LinuxFileStream : public stream
 {
+public:
 	std::ifstream i;
 	std::ofstream o;
 public:
