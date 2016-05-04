@@ -45,13 +45,17 @@ public:
 	int open_in(const char* str)
 	{
 		i.open(str);
+		if (i) dprln("OpenIn Succes");
+		else dprln("OpenIn Failed");
 	};
 
 	int open_out(const char* str)
 	{
 		o.open(str);
+		if (o) dprln("OpenOut Succes");
+		else dprln("OpenOut Failed");
 	};
-
+	
 	int close_in()
 	{
 		i.close();

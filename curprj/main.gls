@@ -1,10 +1,10 @@
 
 
 module main {
-	cpp_source = ["main.cpp"];
+	cpp_source = ["main.cpp", "mrs.cpp"];
 	cc_source = [];
 
-	depends = ["main.gls"];
+	depends = ["main.gls", "mrs.h"];
 
 	mdepends = ["arch"]
 };

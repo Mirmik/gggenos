@@ -15,6 +15,7 @@ class uScheduler : public scheduler
 	{
 		dlist_head lst;
 		ucontext uc;
+		void* mem_stack;
 	};
 public:
 	dlist<thread, &thread::lst> running_list; 
@@ -39,7 +40,10 @@ public:
 
 		while (!zombie_list.is_empty())
 		{
-			debug_panic("del_zomb todo");
+			ptr = &*zombie_list.begin();
+			zombie_list.pop(*ptr);
+			free(ptr->mem_stack);
+			delete ptr;
 		};
 
 		_start:
@@ -122,10 +126,24 @@ public:
 	{
 		thread* t = new thread;			
 		getcontext(&t->uc);
-		t->uc.uc_stack.ss_sp = malloc(1024 * 64);
+		t->mem_stack = malloc(1024 * 64);
+		t->uc.uc_stack.ss_sp = t->mem_stack;
 		t->uc.uc_stack.ss_size = 1024 * 64; 
 		t->uc.uc_stack.ss_flags = 0;
 		makecontext(&t->uc, func, 0);	
+		t->parent = current_schedee();
+		schedee_set_running(t);
+		return (schedee*) t;
+	};
+
+	schedee* registry(gstd::pair<AbstractDelegate*, void (AbstractDelegate::*)()> pr)
+	{
+		thread* t = new thread;			
+		getcontext(&t->uc);
+		t->uc.uc_stack.ss_sp = malloc(1024 * 64);
+		t->uc.uc_stack.ss_size = 1024 * 64; 
+		t->uc.uc_stack.ss_flags = 0;
+		makecontext(&t->uc, reinterpret_cast<void(*)()>(pr.second), 1, pr.first);	
 		t->parent = current_schedee();
 		schedee_set_running(t);
 		return (schedee*) t;

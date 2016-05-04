@@ -3,25 +3,49 @@
 #include "hal/arch.h"
 
 #include "asm/Serial.h"
+#include "genos/schedproc/ucontextScheduler.h"
+#include "genos/kernel/waitserver.h"
 #include "genos/kernel/time.h"
 
+#include "mrs.h"
+
 LinuxFileStream drv;
-LinuxFileStream mrs;
+
+uScheduler uSched;
+
+MitsubishiCommunicator mcommunicator;
+
+void loop();
+void setup();
 
 int main()
+{	setup();
+	while(1) loop();
+};
+
+void setup()
 {
+
 	arch_init();	
 	diag_init();
 
-	mrs.open_in("/dev/ttyS3");
-	//while(1)
-	//	{
-	//		std::cout << lfs.available() << std::endl;
-	//	};
-	mrs.print("\001201\00200\003F4");
+	uSched.init();
 
-dprln(millis());
-delay(1000);
+	mcommunicator.Open("/dev/ttyS3");
+	//mcommunicator.Send("\001201\00200\003F8",10);
 
-	mrs.close_in();
+//delay(100);
+
+	//while(mcommunicator.mrs.available()) debug_putchar(mcommunicator.mrs.getc());
+	//mcommunicator.mrs.close_out();
+	//mcommunicator.mrs.close_in();
+
+	//uSched.registry(task);
+	uSched.registry(delegate_mtd(&mcommunicator, &MitsubishiCommunicator::exec));
+};
+
+void loop()
+{
+	uSched.schedule();
+	waitserver.check();
 };
