@@ -12,8 +12,8 @@ time_t millis();
 time_t micros();
 time_t seconds();
 
-void delay(unsigned int);
-void udelay(unsigned int);
+void delay(time_t);
+void udelay(time_t);
 
 __END_DECLS
 

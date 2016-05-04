@@ -1,6 +1,6 @@
 module sysclock_func
 {
 	
-	cc_source = ["time.c"];
+	cpp_source = ["time.cpp"];
 
 };
