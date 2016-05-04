@@ -20,25 +20,11 @@ public:
 	{
 		dlist_del(&list);
 	}
-	//void add_next(type& obj)
-	//{
-	//	dlist_add_next(&(obj.*member), &list);
-	//};
-	
-	//void add_prev(type& obj)
-	//{
-	//	dlist_add_prev(&(obj.*member), &list);
-	//};
 
 	bool is_linked(type& obj)
 	{
 		return (obj.*member).top == &list; 
 	};
-
-	//bool is_linked(dlist_head* head)
-	//{
-	//	return head->top == &list; 
-	//};
 
 	bool is_empty()
 	{

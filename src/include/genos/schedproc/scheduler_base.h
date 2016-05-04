@@ -36,15 +36,14 @@ class scheduler
 									//Планировщик не готов, если установлен 
 									//Один из битов в BLOCK_MASK либо 
 									
-	virtual void schedee_set_running(schedee* proc)=0;
-	virtual void schedee_set_wait(schedee* proc)=0;
-	virtual void schedee_set_wait_child(schedee* sch)=0;
-	virtual void schedee_set_zombie(schedee* proc)=0;
-	virtual void schedee_set_stop(schedee* proc)=0;
-	virtual void schedee_exit(schedee* proc)=0;
-	virtual void schedee_unwait(schedee* proc)=0;
+	virtual void schedee_set_running(schedee* sch)=0;
+	virtual void schedee_set_wait(schedee* sch)=0;
+	virtual void schedee_set_zombie(schedee* sch)=0;
+	virtual void schedee_exit(schedee* sch)=0;
+	virtual void schedee_unwait(schedee* sch)=0;
 	
 	virtual void schedule()=0;
+	virtual void reschedule()=0;
 	
 	scheduler() : sched_flags(NO_INIT) {
 		assert(current_scheduler()==nullptr);
@@ -71,6 +70,7 @@ class scheduler
 void exit_autom();
 void exit_subst();
 void schedule_subst();
+void yield();
 void wait_child(schedee*);
 
 #endif

@@ -21,9 +21,11 @@ application genos
 	["diag", "diag_impl", ""],
 	["debug_print", "debug_print_diag", ""],
 	["debug_printxx", ""],
-	["kernel_waitserver", ""],
 	["WString", ""],
+	["sched", ""],
+	["waitserver", ""],
 	["gstd", ""],
+	["time_service_linux", ""],
 	];
 
 	target = "genos";

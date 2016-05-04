@@ -206,7 +206,6 @@ void void_func_execute(void* ptr)
 
 void schedee_run(void* ptr)
 {
-	//debug_print("run!!!");
 	schedee* sch = reinterpret_cast<schedee*>(ptr);
 	current_scheduler()->schedee_unwait(sch);
 };
@@ -314,36 +313,44 @@ TimWaiter* msleep_autom_bias(TimWaiter* timer, long int a)
 
 #include "kernel/context.h"
 extern context schedule_context;
-TimWaiter* msleep_subst(long int a) 
+TimWaiter* msleep(long int a) 
 { 
 //	debug_print("msleep");
 	current_scheduler()->schedee_set_wait(current_schedee());
 	TimWaiter* temp_timer = waitserver.schedee_on_simple_timer(current_schedee(), a);
-	context_switch(current_context_get(), &schedule_context);
+	current_scheduler()->reschedule();
 	return temp_timer; 
 }
 
-TimWaiter* msleep_subst_bias(TimWaiter* timer, long int a) 
+TimWaiter* msleep_bias(TimWaiter* timer, long int a) 
 { 
 //	debug_print("msleep");
 	current_scheduler()->schedee_set_wait(current_schedee());
 	TimWaiter* temp_timer = waitserver.schedee_on_bias_timer(current_schedee(), timer, a);
-	context_switch(current_context_get(), &schedule_context);
+	current_scheduler()->reschedule();
 	return temp_timer; 
 }
 
-Waiter* wait_subst(stream* strm)
+Waiter* wait(stream* strm)
 {
 	current_scheduler()->schedee_set_wait(current_schedee()); 
 	Waiter* waiter = waitserver.schedee_on_stream_available(current_schedee(), strm);
-	context_switch(current_context_get(), &schedule_context);
+	current_scheduler()->reschedule();
 	return waiter;
 }
 
-Waiter* wait_subst(uint8_t* flag)
+Waiter* wait(uint8_t* flag)
 {
 	current_scheduler()->schedee_set_wait(current_schedee()); 
 	Waiter* waiter = waitserver.schedee_on_u8flag(current_schedee(), flag); 
-	context_switch(current_context_get(), &schedule_context);
+	current_scheduler()->reschedule();
+	return waiter;	
+}
+
+Waiter* wait(volatile uint8_t* flag)
+{
+	current_scheduler()->schedee_set_wait(current_schedee()); 
+	Waiter* waiter = waitserver.schedee_on_u8flag(current_schedee(), (uint8_t*)flag); 
+	current_scheduler()->reschedule();
 	return waiter;	
 }

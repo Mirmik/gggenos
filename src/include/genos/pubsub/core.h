@@ -5,26 +5,26 @@
 #include "genos/io/stream.h"
 #include "genos/container/dlist.h"
 
-class Gate
+class Subscriber
 {
-public:
+	virtual void send_message();
 };
 
-class Node
+class TopicSub
 {
-public:
 	dlist_head lst;
+	Subscriber* sub;
 };
 
-class MessageBroker
+class Topic
 {
-public:
-	dlist<Node, &Node::lst> nodeList;
+	dlist_head lst;
+	dlist<TopicSub, &TopicSub::lst> subscribers;
 };
 
 class MessageCore
 {
-
+	dlist<Topic, Topic::lst> topicList;
 };
 
 #endif

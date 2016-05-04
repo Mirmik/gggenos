@@ -1,4 +1,4 @@
-module kernel_waitserver 
+module waitserver 
 {
 	cpp_source = ["waitserver.cpp"];
 }

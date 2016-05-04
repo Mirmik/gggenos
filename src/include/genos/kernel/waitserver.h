@@ -3,7 +3,8 @@
 
 #include "genos/container/dlist_head.h"
 #include "genos/sigslot/delegate.h"
-#include "defines/time_t.h"
+//#include "defines/time_t.h"
+#include "genos/kernel/time.h"
 #include "genos/time/basic_timer.h"
 #include "genos/schedproc/schedee_base.h"
 #include "genos/schedproc/scheduler_base.h"
@@ -120,10 +121,11 @@ Waiter* wait_autom(stream* strm);
 TimWaiter* msleep_autom(long int a);
 TimWaiter* msleep_autom_bias(TimWaiter* timer, long int a);
 
-TimWaiter* msleep_subst(long int a);
-TimWaiter* msleep_subst_bias(TimWaiter* timer, long int a);
-Waiter* wait_subst(uint8_t* flag);
-Waiter* wait_subst(stream* strm);
+TimWaiter* msleep(long int a);
+TimWaiter* msleep_bias(TimWaiter* timer, long int a);
+Waiter* wait(uint8_t* flag);
+Waiter* wait(volatile uint8_t* flag);
+Waiter* wait(stream* strm);
 
 
 #endif

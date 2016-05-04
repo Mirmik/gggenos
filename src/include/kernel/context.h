@@ -13,10 +13,10 @@ __BEGIN_DECLS
 void current_context_set(struct context*);
 struct context* current_context_get();
 
-extern void context_init(struct context *ctx, unsigned int flags,
+void context_init(struct context *ctx, unsigned int flags,
 		void (*routine_fn)(void), void *sp);
 
-extern void context_switch(struct context *prev, struct context *next);
+void context_switch(struct context *prev, struct context *next);
 
 __END_DECLS
 

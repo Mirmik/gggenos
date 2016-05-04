@@ -2,3 +2,8 @@ module time_service
 {
 	cpp_source = ["time.cpp"];
 };
+
+module time_service_linux
+{
+	cpp_source = ["time_linux.cpp"];
+};
