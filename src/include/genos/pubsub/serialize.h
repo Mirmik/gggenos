@@ -55,6 +55,7 @@ static inline unsigned int serialize(void* buf, const char* ptr, uint16_t sz)
 	return res;
 };
 
+/*
 static inline unsigned int serialize(void* buf, const string& str)
 {
 	uint16_t res = 0;
@@ -62,7 +63,7 @@ static inline unsigned int serialize(void* buf, const string& str)
 	res += serialize_object( buf, &len, 2 );
 	res += serialize_object( buf + 2, str.c_str(), len );
 	return res;
-};
+};*/
 
 static inline unsigned int deserialize(void* buf, uint8_t& ref)
 {
@@ -84,6 +85,7 @@ static inline unsigned int deserialize(void* buf, uint64_t& ref)
 	return deserialize_object(buf, &ref, 8);
 };
 
+/*
 static inline unsigned int deserialize(void* buf, string& str)
 {
 	uint16_t res = 0;
@@ -92,5 +94,5 @@ static inline unsigned int deserialize(void* buf, string& str)
 	str = string(charptr(((char*)buf) + 2,len));
 	res += len;
 	return res;
-};
+};*/
 #endif

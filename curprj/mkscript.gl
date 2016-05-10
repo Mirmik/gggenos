@@ -30,7 +30,7 @@ fn init_application() downleveled
 {
 var modules = [];
 var target = name;
-var LDFLAGS = "";
+var LDFLAGS = "-pthread";
 var LD = "g++";
 };
 
