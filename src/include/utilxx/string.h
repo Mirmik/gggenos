@@ -41,6 +41,8 @@
 
 // An inherited class for holding the result of a concatenation.  These
 // result objects are assumed to be writable by subsequent concatenations.
+namespace genos {
+
 class StringSumHelper;
 
 // The string class
@@ -73,9 +75,9 @@ public:
 	explicit string(float, unsigned char decimalPlaces=2);
 	explicit string(double, unsigned char decimalPlaces=2);
 	
-	template<typename T>
-	explicit string(T* ptr, unsigned char base=16) 
-	: string((uintptr_t)ptr,base) {};
+	//template<typename T>
+	//explicit string(T* ptr, unsigned char base=16) 
+	//: string((uintptr_t)ptr,base) {};
 
 	explicit string(charptr cptr);
 
@@ -234,6 +236,10 @@ public:
 	StringSumHelper(float num) : string(num) {}
 	StringSumHelper(double num) : string(num) {}
 };
+
+};
+
+using gstring = genos::string;
 
 #endif  // __cplusplus
 #endif  // String_class_h

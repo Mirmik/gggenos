@@ -3,6 +3,9 @@
 
 #include "asm/to_uint.h"
 
+
+void dprln();
+
 template<typename T> void dpr(T obj);
 template<typename T> void dprbin(T obj);
 template<typename T> void dprhex(T obj);

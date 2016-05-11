@@ -9,6 +9,8 @@
 #include "genos/sigslot/delegate.h"
 #include "util/stub.h"	
 
+namespace genos {
+
 class uScheduler : public scheduler
 {
 	struct thread : public schedee
@@ -148,6 +150,8 @@ public:
 		schedee_set_running(t);
 		return (schedee*) t;
 	};
+};
+
 };
 
 #endif

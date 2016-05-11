@@ -13,14 +13,22 @@
 #include "genos/pubsub/serialize.h"
 
 #include "mrs.h"
+#include "genos/pubsub/msgtypes.h"
+
+#include "genos/terminal/mserver.h"
+#include "utilxx/mstorage.h"
 
 #define MESSAGE_LEN 16
 
 LinuxFileStream drv;
 
-uScheduler uSched;
+genos::uScheduler uSched;
 
 MitsubishiCommunicator mcommunicator;
+
+genos::MServer mserv;
+
+using namespace genos::messagecore;
 
 void loop();
 void setup();
@@ -30,57 +38,41 @@ int main()
 	while(1) loop();
 };
 
-struct Message
+void message_parse(char* mes, unsigned int len)
 {
-	uint32_t a;
-	uint32_t b;
-	uint32_t c;
-	uint32_t d;	
+	genos::mstore* ms = new genos::mstore;
+	ms->reserve(len);
+	memcpy(ms->voidptr(), mes, len);
+	mserv.recv(ms);
 };
 
-
-void message_parse(char* mes)
+void recvall(int dsc, char* mes, unsigned need)
 {
-	Message msg;
-	mes += deserialize(mes, msg.a);
-	mes += deserialize(mes, msg.b);
-	mes += deserialize(mes, msg.c);
-	mes += deserialize(mes, msg.d);
-	
-	dprln(msg.a);
-	dprln(msg.b);
-	dprln(msg.c);
-	dprln(msg.d);
+    int cur = 0;
+    int k = 0;
+
+	while(1)
+    {
+    	k = recv(dsc, mes + cur, need, 0);
+    	cur += k;
+    	if (cur == need) break;
+    };
 };
 
 void* request_handler(void* _client)
 {
     TcpServer::Client* client = reinterpret_cast<TcpServer::Client*>(_client);
     int dsc = client->socket;
-
-    Readline<20> rl;
-
-    char c;
     char mes[MESSAGE_LEN];
-    char buffer[MESSAGE_LEN];
-    int k;
-
-    init:
-    rl.init();
-
-    start:
-	k = read(dsc,&c,1);
-	if (k == 0) goto start;
-	rl.putc(c);
-
-	if (rl.length() == MESSAGE_LEN)
-		{
-			memcpy(mes, rl.get_line(), MESSAGE_LEN);
-			message_parse(mes);			
-			goto init;
-		};
-
-	goto start;
+    
+    uint16_t len;
+    while(1)
+    {
+   		recvall(dsc, mes, 2);
+   		len = ((uint16_t)mes[0] << 8) + (uint16_t)mes[1];
+   		recvall(dsc, mes, len);
+   		message_parse(mes, len);
+   	};
 };
 
 void setup_command_server()
@@ -113,6 +105,8 @@ void setup()
 
 	mcommunicator.Open("/dev/ttyS3");
 	mcommunicator.Send("\001201\00200\003F8",10);
+
+
 
 //delay(100);
 

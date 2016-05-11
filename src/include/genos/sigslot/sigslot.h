@@ -17,6 +17,8 @@
 #include "genos/gstl/utility.h"	
 #include "genos/gstl/algorithm.h"
 
+namespace genos {
+
 template<typename R ,typename ... Args>
 class sigslot{
 	public:
@@ -191,6 +193,8 @@ class sigslot{
 		"length: " << length() << "\r\n";
 		return str;
 	};
+};
+
 };
 
 #endif

@@ -3,11 +3,14 @@
 #include "genos/gstl/horrible_cast.h"
 #include "utilxx/string.h"
 
+
+void dprln() {debug_print("\r\n");};
+
 template<> void dpr(char obj) { debug_putchar(obj); };
 template<> void dpr(char* obj) { debug_print(obj); };
 template<> void dpr(const char* obj) { debug_print(obj); };
 
-template<> void dpr(charptr obj) 
+template<> void dpr(genos::charptr obj) 
 { 
 	debug_write(obj.to_buf(),obj.length()); 
 };
@@ -51,4 +54,4 @@ template<> void dprhex(int64_t obj) { debug_printhex_uint64(obj);   };
 template<> void dprhex(float obj) { dprhex(horrible_cast<float_uint, float>(obj));   };
 template<> void dprhex(double obj) { dprhex(horrible_cast<double_uint, double>(obj));   };
 
-template<> void dpr(string obj) {dpr(obj.c_str());};
+template<> void dpr(genos::string obj) {dpr(obj.c_str());};

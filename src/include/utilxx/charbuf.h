@@ -1,6 +1,10 @@
 #ifndef GENOS_CHARBUF_H
 #define GENOS_CHARBUF_H
 
+#include "string.h"
+
+namespace genos {
+
 template<unsigned int size>
 class charbuf
 {
@@ -32,6 +36,14 @@ public:
 		for (int i = 0; i < size; i++)
 		sum += *(data + i);
 		return sum;	
+	};
+
+	charbuf<size>& operator= (const char* str)
+	{
+		int len = strlen(str);
+		if (len > size) len = size;		
+		memcpy(data, str, len);
+		memset(data + len, 0, size - len);
 	};
 
 	charbuf<size>& operator= (const charbuf<size>& src)
@@ -73,5 +85,6 @@ public:
 	charptr(char* d, int sz) : data(d), size(sz) {};
 };
 
+};
 
 #endif

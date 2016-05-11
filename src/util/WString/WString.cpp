@@ -22,6 +22,8 @@
 #include "utilxx/string.h"
 #include <gstd/stdlib.h>
 
+namespace genos {
+
 /*********************************************/
 /*  Constructors                             */
 /*********************************************/
@@ -753,3 +755,5 @@ float string::toFloat(void) const
 	if (buffer) return float(atof(buffer));
 	return 0;
 }
+
+};

@@ -25,6 +25,7 @@ application genos
 	["sched", ""],
 	["waitserver", ""],
 	["gstd", ""],
+	["to_string", ""],
 	["time_service_linux", ""],
 	["sysclock_func",""],
 	];

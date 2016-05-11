@@ -7,13 +7,13 @@ template<unsigned int READLINE_SIZE>
 class  Readline
 {
 private:
-	char cmdline[READLINE_SIZE];
+	char line[READLINE_SIZE];
 	char* cursor;								
 public:
 	
 	void init() 
 	{
-		cursor = cmdline;
+		cursor = line;
 	};
 	
 	int putc(char c) {
@@ -24,19 +24,24 @@ public:
 	
 	int backspace()
 	{
-		if (cursor == cmdline) return 0;
+		if (cursor == line) return 0;
 		--cursor;
 		return 1;
 	};
 
 	char* get_line()
 	{
-		*cursor = '\0'; return cmdline;
+		*cursor = '\0'; return line;
 	};
 
 	inline uint16_t length()
 	{
-		return cursor - cmdline;
+		return cursor - line;
+	};
+
+	char& operator[](int i)
+	{
+		return line[i];
 	};
 
 	Readline() {init();};

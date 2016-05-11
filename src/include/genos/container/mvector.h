@@ -7,6 +7,8 @@
 #include "string.h"
 #include "genos.h"
 
+namespace genos {
+
 template <typename type>
 class mvector
 {
@@ -277,6 +279,8 @@ public:
 	{
 		return ptr;
 	};
+};
+
 };
 
 #endif

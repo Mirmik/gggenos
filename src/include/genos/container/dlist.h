@@ -5,6 +5,8 @@
 #include "genos/container/dlist_head.h"
 #include "utilxx/member.h" 
 
+namespace genos {
+
 template<typename type, dlist_head type::* member>
 class dlist 
 {
@@ -158,10 +160,13 @@ dlist<type, member>* dlist_get_topic(dlist_head* head)
 	return list;
 };
 
+};
+
 #define dlist_topic(obj,lst) 						\
 ({													\
 	using type = decltype(obj);						\
 	dlist_get_topic<type, &type::lst>(&(obj).lst); 	\
 })
+
 
 #endif
